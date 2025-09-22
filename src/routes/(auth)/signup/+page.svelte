@@ -1,16 +1,17 @@
 <script lang="ts">
+	import { CheckCheckIcon,CheckCircle, CircleAlert, Loader2, X, XCircle } from '@lucide/svelte';
 	import { username } from 'better-auth/plugins';
-	import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
+	import { type Infer, superForm, type SuperValidated } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
-	import { signUpSchema } from '$lib/schemas';
+
 	import { goto } from '$app/navigation';
-	import { signUp, isUsernameAvailable } from '$lib/auth-client';
-	import * as Form from '$components/ui/form';
-	import { Input } from '$components/ui/input';
+	import * as Alert from '$components/ui/alert';
 	import { Button } from '$components/ui/button';
 	import * as Card from '$components/ui/card';
-	import * as Alert from '$components/ui/alert';
-	import { Loader2, X, CheckCircle, XCircle, CircleAlert, CheckCheckIcon } from '@lucide/svelte';
+	import * as Form from '$components/ui/form';
+	import { Input } from '$components/ui/input';
+	import { isUsernameAvailable,signUp } from '$lib/auth-client';
+	import { signUpSchema } from '$lib/schemas';
 
 	let image = $state<File | null>(null);
 	let imagePreview = $state<string | null>(null);

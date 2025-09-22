@@ -1,15 +1,16 @@
 <script lang="ts">
 	import { superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
-	import { resetPasswordSchema } from '$lib/schemas';
-	import { authClient } from '$lib/auth-client';
-	import * as Form from '$components/ui/form';
-	import { Input } from '$components/ui/input';
-	import { Button } from '$components/ui/button';
-	import * as Alert from '$components/ui/alert';
+
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
+	import * as Alert from '$components/ui/alert';
+	import { Button } from '$components/ui/button';
 	import * as Card from '$components/ui/card';
+	import * as Form from '$components/ui/form';
+	import { Input } from '$components/ui/input';
+	import { authClient } from '$lib/auth-client';
+	import { resetPasswordSchema } from '$lib/schemas';
 
 	let loading = $state(false);
 	let serverError = $state<string | null>(null);

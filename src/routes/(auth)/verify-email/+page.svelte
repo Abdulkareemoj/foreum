@@ -1,12 +1,13 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { page } from '$app/state';
-	import { authClient } from '$lib/auth-client';
-	import { goto } from '$app/navigation';
-	import * as Card from '$components/ui/card';
-	import * as Alert from '$components/ui/alert';
 	import { Loader2 } from '@lucide/svelte';
+	import { onMount } from 'svelte';
+
+	import { goto } from '$app/navigation';
+	import { page } from '$app/state';
+	import * as Alert from '$components/ui/alert';
 	import { Button } from '$components/ui/button';
+	import * as Card from '$components/ui/card';
+	import { authClient } from '$lib/auth-client';
 
 	let verifying = $state(true);
 	let error = $state<string | null>(null);

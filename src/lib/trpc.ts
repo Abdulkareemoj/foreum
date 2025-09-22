@@ -1,7 +1,8 @@
 import { createTRPCClient, httpBatchLink } from '@trpc/client';
+import superjson from 'superjson';
+
 import { browser } from '$app/environment';
 import type { AppRouter } from '$server/trpc/routers';
-import superjson from 'superjson';
 
 function getBaseUrl() {
 	if (browser) return '';

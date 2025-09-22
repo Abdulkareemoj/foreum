@@ -1,7 +1,9 @@
-import type { RequestHandler } from './$types';
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
-import { appRouter } from '$server/trpc/routers';
+
 import { createContext } from '$server/trpc/context';
+import { appRouter } from '$server/trpc/routers';
+
+import type { RequestHandler } from './$types';
 
 const handler: RequestHandler = async (event) => {
 	try {

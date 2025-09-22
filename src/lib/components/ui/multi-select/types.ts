@@ -1,4 +1,5 @@
 import { type Icon as IconType } from '@lucide/svelte';
+
 export interface MultiSelectOption {
 	label: string;
 	value: string;

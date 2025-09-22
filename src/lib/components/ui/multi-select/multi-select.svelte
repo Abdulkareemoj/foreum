@@ -1,15 +1,16 @@
 <script lang="ts">
+	import { Check,ChevronDown, X } from '@lucide/svelte';
 	import { createEventDispatcher, onMount } from 'svelte';
-	import { cn } from '$lib/utils';
+
 	import { Badge } from '$components/ui/badge';
 	import { Button } from '$components/ui/button';
-	import { Separator } from '$components/ui/separator';
-	import * as Popover from '$components/ui/popover';
 	import * as Command from '$components/ui/command';
-	import { ChevronDown, X, Check } from '@lucide/svelte';
+	import * as Popover from '$components/ui/popover';
+	import { Separator } from '$components/ui/separator';
+	import { cn } from '$lib/utils';
 
 	import { multiSelectVariants } from './multi-select-variants';
-	import type { MultiSelectOption, MultiSelectGroup } from './types';
+	import type { MultiSelectGroup,MultiSelectOption } from './types';
 
 	export let options: MultiSelectOption[] | MultiSelectGroup[] = [];
 	export let placeholder = 'Select options';

@@ -1,13 +1,14 @@
 // server/trpc/routers/messages.ts
+import { and,eq } from 'drizzle-orm';
 import { z } from 'zod';
-import { router, protectedProcedure } from '$server/trpc/init';
+
 import { db } from '$server/db';
 import {
-	conversations,
 	conversationParticipants,
+	conversations,
 	messages
 } from '$server/db/schema/messaging-schema';
-import { eq, and } from 'drizzle-orm';
+import { protectedProcedure,router } from '$server/trpc/init';
 
 export const messagesRouter = router({
 	startConversation: protectedProcedure

@@ -1,9 +1,10 @@
 // server/trpc/routers/gamification.ts
-import { z } from 'zod';
-import { router, protectedProcedure, publicProcedure } from '$server/trpc/init';
-import { db } from '$server/db';
-import { reputation, badges, userBadges } from '$server/db/schema/reputations-schema';
 import { eq } from 'drizzle-orm';
+import { z } from 'zod';
+
+import { db } from '$server/db';
+import { badges, reputation, userBadges } from '$server/db/schema/reputations-schema';
+import { protectedProcedure, publicProcedure,router } from '$server/trpc/init';
 
 export const reputationRouter = router({
 	getReputation: protectedProcedure.query(({ ctx }) =>

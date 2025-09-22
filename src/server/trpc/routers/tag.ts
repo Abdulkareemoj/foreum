@@ -1,8 +1,9 @@
+import { count, desc,eq } from 'drizzle-orm';
 import { z } from 'zod';
-import { router, publicProcedure } from '$server/trpc/init';
-import { tag, tagCount, threadTag } from '$server/db/schema/tag-schema';
-import { eq, count, desc } from 'drizzle-orm';
+
 import { db } from '$server/db';
+import { tag, tagCount, threadTag } from '$server/db/schema/tag-schema';
+import { publicProcedure,router } from '$server/trpc/init';
 
 export const tagRouter = router({
 	list: publicProcedure.query(async ({ ctx }) => {

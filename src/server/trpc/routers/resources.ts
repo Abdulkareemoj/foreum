@@ -1,9 +1,8 @@
-// server/trpc/routers/resources.ts
 import { z } from 'zod';
-import { router, protectedProcedure, publicProcedure } from '$server/trpc/init';
+
 import { db } from '$server/db';
 import { resources, resourceTags } from '$server/db/schema/resources-schema';
-import { eq } from 'drizzle-orm';
+import { protectedProcedure, publicProcedure, router } from '$server/trpc/init';
 
 export const resourcesRouter = router({
 	list: publicProcedure.query(() => db.select().from(resources)),

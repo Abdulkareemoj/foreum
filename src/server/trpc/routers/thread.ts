@@ -1,10 +1,11 @@
-import { z } from 'zod';
-import { router, publicProcedure, protectedProcedure } from '$server/trpc/init';
-import { thread, category, reply } from '$server/db/schema/thread-schema';
-import { user } from '$server/db/schema/auth-schema';
-import { eq, desc, asc, like, and, count } from 'drizzle-orm';
 import crypto from 'crypto';
+import { and, asc, count,desc, eq, like } from 'drizzle-orm';
+import { z } from 'zod';
+
+import { user } from '$server/db/schema/auth-schema';
 import { threadTag } from '$server/db/schema/tag-schema';
+import { category, reply,thread } from '$server/db/schema/thread-schema';
+import { protectedProcedure,publicProcedure, router } from '$server/trpc/init';
 
 export const threadRouter = router({
 	list: publicProcedure

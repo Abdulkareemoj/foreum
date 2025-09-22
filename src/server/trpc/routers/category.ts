@@ -1,8 +1,9 @@
-import { z } from 'zod';
-import { router, publicProcedure, protectedProcedure } from '$server/trpc/init';
-import { category, thread } from '$server/db/schema/thread-schema';
-import { eq, count, asc, desc } from 'drizzle-orm';
 import { TRPCError } from '@trpc/server';
+import { asc, count, desc,eq } from 'drizzle-orm';
+import { z } from 'zod';
+
+import { category, thread } from '$server/db/schema/thread-schema';
+import { protectedProcedure,publicProcedure, router } from '$server/trpc/init';
 
 export const categoryRouter = router({
 	list: publicProcedure.query(async ({ ctx }) => {

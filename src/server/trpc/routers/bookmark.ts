@@ -1,8 +1,9 @@
+import { and, desc,eq, lt } from 'drizzle-orm';
 import { z } from 'zod';
-import { router, protectedProcedure } from '$server/trpc/init';
+
 import { db } from '$server/db';
 import { bookmark } from '$server/db/schema/bookmark-schema';
-import { eq, and, lt, desc } from 'drizzle-orm';
+import { protectedProcedure,router } from '$server/trpc/init';
 
 export const bookmarksRouter = router({
 	getAll: protectedProcedure

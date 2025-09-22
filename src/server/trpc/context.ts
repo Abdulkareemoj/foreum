@@ -1,6 +1,7 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import { db } from '$server/db';
+
 import { auth } from '$server/auth';
+import { db } from '$server/db';
 
 export async function createContext(event: RequestEvent) {
 	const session = await auth.api.getSession({ headers: event.request.headers });

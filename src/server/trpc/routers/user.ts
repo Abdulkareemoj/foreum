@@ -1,12 +1,13 @@
-import { router, publicProcedure, protectedProcedure } from '$server/trpc/init';
+import { TRPCError } from '@trpc/server';
+import { desc,eq } from 'drizzle-orm';
 import { z } from 'zod';
-import { eq, desc } from 'drizzle-orm';
+
+import { profileSchema } from '$lib/schemas';
 import { user } from '$server/db/schema/auth-schema';
 import { profile } from '$server/db/schema/profile-schema';
-import { TRPCError } from '@trpc/server';
-import { profileSchema } from '$lib/schemas';
-import { normalizeUsername } from '$utils';
 import { reply, thread } from '$server/db/schema/thread-schema';
+import { protectedProcedure,publicProcedure, router } from '$server/trpc/init';
+import { normalizeUsername } from '$utils';
 
 export const userRouter = router({
 	byUsername: publicProcedure

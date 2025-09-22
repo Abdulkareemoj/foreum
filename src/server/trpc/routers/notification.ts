@@ -1,9 +1,10 @@
 // server/trpc/routers/notifications.ts
+import { and, desc,eq, lt } from 'drizzle-orm';
 import { z } from 'zod';
-import { router, publicProcedure, protectedProcedure } from '$server/trpc/init';
+
 import { db } from '$server/db';
 import { notification } from '$server/db/schema/notification-schema';
-import { eq, and, lt, desc } from 'drizzle-orm';
+import { protectedProcedure,publicProcedure, router } from '$server/trpc/init';
 
 export const notificationsRouter = router({
 	getAll: protectedProcedure

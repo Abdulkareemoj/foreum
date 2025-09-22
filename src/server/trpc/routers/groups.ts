@@ -1,9 +1,10 @@
 // server/trpc/routers/groups.ts
-import { z } from 'zod';
-import { router, protectedProcedure, publicProcedure } from '$server/trpc/init';
-import { db } from '$server/db';
-import { groups, groupMembers } from '$server/db/schema/groups-schema';
 import { eq } from 'drizzle-orm';
+import { z } from 'zod';
+
+import { db } from '$server/db';
+import { groupMembers,groups } from '$server/db/schema/groups-schema';
+import { protectedProcedure, publicProcedure,router } from '$server/trpc/init';
 
 export const groupsRouter = router({
 	list: publicProcedure.query(() => db.select().from(groups)),

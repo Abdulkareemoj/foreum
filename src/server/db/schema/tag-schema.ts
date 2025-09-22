@@ -1,4 +1,5 @@
 import { integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+
 import { thread } from './thread-schema';
 
 export const tag = pgTable('tag', {

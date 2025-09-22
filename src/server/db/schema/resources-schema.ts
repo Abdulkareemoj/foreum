@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, varchar, uuid, primaryKey } from 'drizzle-orm/pg-core';
+import { pgTable, primaryKey,text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
 
 // Resources
 export const resources = pgTable('resources', {

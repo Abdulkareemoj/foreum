@@ -1,6 +1,7 @@
 import { integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+
 import { user } from './auth-schema';
-import { thread, reply } from './thread-schema';
+import { reply,thread } from './thread-schema';
 
 export const reaction = pgTable('reaction', {
 	id: text('id').primaryKey(),

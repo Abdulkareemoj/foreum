@@ -1,4 +1,5 @@
-import { pgTable, text, timestamp, boolean } from 'drizzle-orm/pg-core';
+import { boolean,pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+
 import { user } from './auth-schema';
 
 export const notification = pgTable('notification', {

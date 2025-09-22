@@ -1,13 +1,13 @@
 import {
+	boolean,
+	integer,
+	json,
+	jsonb,
 	pgTable,
 	text,
 	timestamp,
-	boolean,
-	json,
-	integer,
-	unique,
-	jsonb
-} from 'drizzle-orm/pg-core';
+	unique} from 'drizzle-orm/pg-core';
+
 import { user } from './auth-schema';
 
 export const category = pgTable('category', {

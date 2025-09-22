@@ -1,6 +1,7 @@
 <script>
-	import Logo from '$components/shared/Logo.svelte';
 	import { onMount } from 'svelte';
+
+	import Logo from '$components/shared/Logo.svelte';
 
 	let stats = $state({
 		communities: 0,

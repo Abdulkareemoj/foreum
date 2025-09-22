@@ -1,16 +1,17 @@
 import { betterAuth } from 'better-auth';
-import { sveltekitCookies } from 'better-auth/svelte-kit';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
+import { emailOTP, oneTap, username } from 'better-auth/plugins';
 import { admin } from 'better-auth/plugins/admin';
-import { oneTap, emailOTP, username } from 'better-auth/plugins';
-import { db, schema } from '$server/db';
-import {
-	PUBLIC_GOOGLE_CLIENT_ID,
-	PUBLIC_GOOGLE_CLIENT_SECRET,
-	PUBLIC_DISCORD_CLIENT_ID,
-	PUBLIC_DISCORD_CLIENT_SECRET
-} from '$env/static/public';
+import { sveltekitCookies } from 'better-auth/svelte-kit';
+
 import { getRequestEvent } from '$app/server';
+import {
+	PUBLIC_DISCORD_CLIENT_ID,
+	PUBLIC_DISCORD_CLIENT_SECRET,
+	PUBLIC_GOOGLE_CLIENT_ID,
+	PUBLIC_GOOGLE_CLIENT_SECRET} from '$env/static/public';
+import { db, schema } from '$server/db';
+
 import { profile } from './db/schema/profile-schema';
 // import { organization } from "better-auth/plugins/organization";
 

@@ -1,6 +1,8 @@
-import type { LayoutServerLoad } from './$types';
-import { auth } from '$server/auth';
 import { redirect } from '@sveltejs/kit';
+
+import { auth } from '$server/auth';
+
+import type { LayoutServerLoad } from './$types';
 
 export const load: LayoutServerLoad = async ({ request, url }) => {
 	const session = await auth.api.getSession({ headers: request.headers });

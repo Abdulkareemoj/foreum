@@ -1,10 +1,11 @@
 <script>
+	import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
+
 	import { Button } from '$lib/components/ui/button/';
 	import { Input } from '$lib/components/ui/input/';
 	import { Label } from '$lib/components/ui/label/';
-
 	import { cn } from '$lib/utils';
-	import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
+
 	const links = [
 		{
 			group: 'Product',

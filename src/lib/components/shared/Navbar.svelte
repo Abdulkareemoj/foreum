@@ -1,9 +1,10 @@
 <script lang="ts">
-	import { Button } from '$components/ui/button';
-	import { cn } from '$lib/utils';
 	import Menu from '@lucide/svelte/icons/menu';
 	import X from '@lucide/svelte/icons/x';
 	import { scrollY } from 'svelte/reactivity/window';
+
+	import { Button } from '$components/ui/button';
+	import { cn } from '$lib/utils';
 
 	type MenuItem = {
 		name: string;

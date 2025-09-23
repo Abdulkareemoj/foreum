@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import Navbar from '$components/thread/Navbar.svelte';
 	import LeftSidebar from '$components/thread/LeftSidebar.svelte';
+	import Navbar from '$components/thread/Navbar.svelte';
 	import RightSidebar from '$components/thread/RightSidebar.svelte';
-	import { createTRPC } from '$lib/trpc';
 	import { Skeleton } from '$components/ui/skeleton';
+	import { createTRPC } from '$lib/trpc';
 
 	let { data, children } = $props<{
 		data: { user: any };

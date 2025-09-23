@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { createTRPC } from '$lib/trpc';
-	import * as Card from '$components/ui/card';
 	import { Badge } from '$components/ui/badge';
+	import * as Card from '$components/ui/card';
+	import { createTRPC } from '$lib/trpc';
 
 	const trpc = createTRPC();
 

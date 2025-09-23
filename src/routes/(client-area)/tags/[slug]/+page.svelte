@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { createTRPC } from '$lib/trpc';
 	import ThreadCard from '$lib/components/thread/ThreadCard.svelte';
+	import { createTRPC } from '$lib/trpc';
 
 	let { slug } = $props<{ slug: string }>();
 

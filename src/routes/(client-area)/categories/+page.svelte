@@ -1,9 +1,10 @@
 <script lang="ts">
+	import { Eye,MessageSquare } from '@lucide/svelte';
 	import { onMount } from 'svelte';
-	import { createTRPC } from '$lib/trpc';
-	import * as Card from '$lib/components/ui/card';
+
 	import { Badge } from '$lib/components/ui/badge';
-	import { MessageSquare, Eye } from '@lucide/svelte';
+	import * as Card from '$lib/components/ui/card';
+	import { createTRPC } from '$lib/trpc';
 
 	const trpc = createTRPC();
 	let categories = $state<any[]>([]);

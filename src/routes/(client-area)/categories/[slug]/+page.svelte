@@ -1,12 +1,13 @@
 <script lang="ts">
+	import { Plus,Search, SlidersHorizontal } from '@lucide/svelte';
 	import { onMount } from 'svelte';
-	import { createTRPC } from '$lib/trpc';
+
 	import ThreadCard from '$lib/components/thread/ThreadCard.svelte';
 	import { Button } from '$lib/components/ui/button';
-	import { Input } from '$lib/components/ui/input';
 	import * as Card from '$lib/components/ui/card';
+	import { Input } from '$lib/components/ui/input';
 	import * as Select from '$lib/components/ui/select';
-	import { SlidersHorizontal, Search, Plus } from '@lucide/svelte';
+	import { createTRPC } from '$lib/trpc';
 
 	let { slug } = $props<{ slug: string }>();
 

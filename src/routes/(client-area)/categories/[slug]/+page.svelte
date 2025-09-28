@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Plus,Search, SlidersHorizontal } from '@lucide/svelte';
+	import { Plus, Search, SlidersHorizontal } from '@lucide/svelte';
 	import { onMount } from 'svelte';
 
 	import ThreadCard from '$lib/components/thread/ThreadCard.svelte';
@@ -51,7 +51,7 @@
 			<h1 class="text-3xl font-bold">{category ? category.name : 'Loading…'}</h1>
 			<p class="text-muted-foreground">{category?.description}</p>
 		</div>
-		<Button href="/forum/new" class="flex items-center gap-2">
+		<Button href="/threads/new" class="flex items-center gap-2">
 			<Plus class="size-5" />
 			New Thread
 		</Button>

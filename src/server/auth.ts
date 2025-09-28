@@ -3,20 +3,24 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { emailOTP, oneTap, username } from 'better-auth/plugins';
 import { admin } from 'better-auth/plugins/admin';
 import { sveltekitCookies } from 'better-auth/svelte-kit';
+import { Resend } from 'resend';
 
 import { getRequestEvent } from '$app/server';
+import { BETTER_AUTH_EMAIL, RESEND_API_KEY, TEST_EMAIL } from '$env/static/private';
 import {
 	PUBLIC_DISCORD_CLIENT_ID,
 	PUBLIC_DISCORD_CLIENT_SECRET,
 	PUBLIC_GOOGLE_CLIENT_ID,
-	PUBLIC_GOOGLE_CLIENT_SECRET} from '$env/static/public';
+	PUBLIC_GOOGLE_CLIENT_SECRET
+} from '$env/static/public';
 import { db, schema } from '$server/db';
+import { resetConfirmTemplate, resetTemplate, verificationTemplate } from '$utils';
 
 import { profile } from './db/schema/profile-schema';
 // import { organization } from "better-auth/plugins/organization";
-
-// const from = process.env.BETTER_AUTH_EMAIL || "delivered@resend.dev";
-// const to = process.env.TEST_EMAIL || "";
+const resend = new Resend(RESEND_API_KEY);
+const from = BETTER_AUTH_EMAIL || 'delivered@resend.dev';
+const to = TEST_EMAIL || '';
 
 export const auth = betterAuth({
 	appName: 'Foreum',
@@ -63,26 +67,7 @@ export const auth = betterAuth({
 		//   },
 		// }
 		oneTap(),
-		emailOTP({
-			async sendVerificationOTP({ email, otp, type }) {
-				// For now, we'll just log the OTP to console
-				// In production, you would send this via email service like Resend, SendGrid, etc.
-				console.log(`[${type.toUpperCase()}] OTP for ${email}: ${otp}`);
-
-				// Example with Resend (uncomment when you have email service configured):
-				// await resend.emails.send({
-				//   from: "noreply@yourdomain.com",
-				//   to: email,
-				//   subject: type === "sign-in" ? "Sign In OTP" : type === "email-verification" ? "Email Verification OTP" : "Password Reset OTP",
-				//   html: `<p>Your OTP is: <strong>${otp}</strong></p><p>This code will expire in 5 minutes.</p>`,
-				// });
-			},
-			otpLength: 6,
-			expiresIn: 300, // 5 minutes
-			allowedAttempts: 3,
-
-			overrideDefaultEmailVerification: true
-		}),
+		// emailOTP(),
 		sveltekitCookies(getRequestEvent)
 	],
 	databaseHooks: {
@@ -104,23 +89,51 @@ export const auth = betterAuth({
 			}
 		}
 	},
+	emailVerification: {
+		async sendVerificationEmail({ user, url, token }) {
+			const emailContent = verificationTemplate
+				.replace('{{username}}', user.name || user.email)
+				.replace(/{{url}}/g, url);
+
+			const res = await resend.emails.send({
+				from,
+				to: to || user.email,
+				subject: 'Verify your email address',
+				html: emailContent
+			});
+			console.log(res, user.email);
+		},
+		sendOnSignUp: true,
+		autoSignInAfterVerification: true,
+		expiresIn: 3600 // 1 hour
+	},
 	emailAndPassword: {
 		enabled: true,
-		// async sendResetPassword({ user, url }) {
-		//   await resend.emails.send({
-		//     from,
-		//     to: user.email,
-		//     subject: "Reset your password",
-		//     react: reactResetPasswordEmail({
-		//       username: user.email,
-		//       resetLink: url,
-		//     }),
-		//   });
-		// },
-		onPasswordReset: async ({ user }, request) => {
-			// your logic here
-			console.log(`Password for user ${user.email} has been reset.`);
-		}
+		async sendResetPassword({ user, url }) {
+			const emailContent = resetTemplate
+				.replace('{{username}}', user.name || user.email)
+				.replace(/{{url}}/g, url);
+
+			const res = await resend.emails.send({
+				from,
+				to: user.email,
+				subject: 'Reset your password',
+				html: emailContent
+			});
+			console.log(res, `Password reset link sent to ${user.email}.`);
+		},
+		async onPasswordReset({ user }, request) {
+			const emailContent = resetConfirmTemplate.replace('{{username}}', user.name || user.email);
+
+			const res = await resend.emails.send({
+				from,
+				to: user.email,
+				subject: 'Password Reset Confirmation',
+				html: emailContent
+			});
+			console.log(res, `Password reset confirmation sent to ${user.email}.`);
+		},
+		requireEmailVerification: true
 	},
 	account: {
 		accountLinking: {
@@ -136,21 +149,5 @@ export const auth = betterAuth({
 			clientId: PUBLIC_DISCORD_CLIENT_ID || '',
 			clientSecret: PUBLIC_DISCORD_CLIENT_SECRET || ''
 		}
-	},
-	emailVerification: {
-		// async
-		sendVerificationEmail: async ({ user, url, token }) => {
-			// const res = await resend.emails.send({
-			//         from,
-			//         to: to || user.email,
-			//         subject: "Verify your email address",
-			//         html: `<a href="${url}">Verify your email address</a>`,
-			//       });
-			//       console.log(res, user.email);
-			//     },
-		},
-		sendOnSignUp: true,
-		autoSignInAfterVerification: true,
-		expiresIn: 3600 // 1 hour
 	}
 });

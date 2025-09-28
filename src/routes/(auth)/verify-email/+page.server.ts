@@ -1,4 +1,3 @@
-// +page.server.ts
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 

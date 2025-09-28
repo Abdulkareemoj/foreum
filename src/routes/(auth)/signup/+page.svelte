@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { CheckCheckIcon,CheckCircle, CircleAlert, Loader2, X, XCircle } from '@lucide/svelte';
-	import { username } from 'better-auth/plugins';
+	import { CheckCheckIcon, CheckCircle, CircleAlert, Loader2, X, XCircle } from '@lucide/svelte';
 	import { type Infer, superForm, type SuperValidated } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 
@@ -10,11 +9,12 @@
 	import * as Card from '$components/ui/card';
 	import * as Form from '$components/ui/form';
 	import { Input } from '$components/ui/input';
-	import { isUsernameAvailable,signUp } from '$lib/auth-client';
+	import { isUsernameAvailable, signUp } from '$lib/auth-client';
 	import { signUpSchema } from '$lib/schemas';
 
-	let image = $state<File | null>(null);
 	let imagePreview = $state<string | null>(null);
+	let files = $state<FileList | undefined>(undefined);
+	const image = $derived(files?.[0]);
 
 	let loading = $state(false);
 	let serverError = $state<string | null>(null);
@@ -36,22 +36,20 @@
 
 	const { form: formData, enhance } = form;
 
-	function handleImageChange(e: Event) {
-		const target = e.target as HTMLInputElement;
-		const file = target.files?.[0];
-		if (file) {
-			image = file;
+	$effect(() => {
+		if (image) {
 			const reader = new FileReader();
 			reader.onloadend = () => {
 				imagePreview = reader.result as string;
 			};
-			reader.readAsDataURL(file);
+			reader.readAsDataURL(image);
+		} else {
+			imagePreview = null;
 		}
-	}
+	});
 
 	function removeImage() {
-		image = null;
-		imagePreview = null;
+		files = undefined;
 	}
 
 	async function convertImageToBase64(file: File): Promise<string> {
@@ -222,28 +220,29 @@
 					<Form.Control>
 						<Form.Label>Profile Image (optional)</Form.Label>
 
-						<div class="flex items-end gap-4">
-							{#if imagePreview}
-								<div class="relative h-16 w-16 overflow-hidden rounded-sm">
-									<img
-										src={imagePreview}
-										alt="Profile preview"
-										class="h-full w-full object-cover"
-									/>
-								</div>
-							{/if}
+						<div class="flex flex-col items-center justify-center gap-4">
 							<div class="flex w-full items-center gap-2">
 								<Input
 									id="image"
+									name="image"
 									type="file"
 									accept="image/*"
-									on:change={handleImageChange}
+									bind:files
 									class="w-full"
 								/>
-								{#if imagePreview}
-									<X class="cursor-pointer" on:click={removeImage} />
-								{/if}
 							</div>
+							{#if imagePreview}
+								<div class="flex w-full justify-center gap-4">
+									<div class="relative flex size-25 overflow-hidden rounded-sm">
+										<img
+											src={imagePreview}
+											alt="Profile preview"
+											class="h-full w-full object-cover"
+										/>
+									</div>
+									<X class="cursor-pointer" onclick={removeImage} />
+								</div>
+							{/if}
 						</div>
 					</Form.Control><Form.FieldErrors />
 				</Form.Field>

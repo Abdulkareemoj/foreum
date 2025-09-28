@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { superForm } from 'sveltekit-superforms';
+	import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 
 	import * as Alert from '$components/ui/alert';
@@ -9,15 +9,18 @@
 	import { Input } from '$components/ui/input';
 	import { authClient } from '$lib/auth-client';
 	import { forgotPasswordSchema } from '$lib/schemas';
+	import { CheckCheckIcon, CircleAlert } from '@lucide/svelte';
 
 	let loading = $state(false);
 	let serverError = $state<string | null>(null);
 	let successMessage = $state<string | null>(null);
-
-	let { data } = $props<{
-		data: any;
+	const { data } = $props<{
+		form: SuperValidated<Infer<typeof forgotPasswordSchema>>;
+		message?: string;
 	}>();
-	const form = superForm(data.form, { validators: zodClient(forgotPasswordSchema) });
+	const form = superForm(data.form, {
+		validators: zodClient(forgotPasswordSchema)
+	});
 	const { form: formData, enhance } = form;
 
 	async function onSubmit() {
@@ -32,6 +35,9 @@
 				{
 					onSuccess: () => {
 						successMessage = 'Password reset link sent! Check your inbox.';
+					},
+					onError: (ctx) => {
+						serverError = ctx.error.message;
 					}
 				}
 			);
@@ -53,24 +59,30 @@
 
 	<Card.Content class="space-y-4">
 		{#if serverError}
-			<Alert.Root variant="destructive"
-				><Alert.Description>{serverError}</Alert.Description></Alert.Root
+			<Alert.Root class="border-destructive" variant="destructive">
+				<CircleAlert /><Alert.Title>Error</Alert.Title><Alert.Description
+					>{serverError}</Alert.Description
+				></Alert.Root
 			>
 		{/if}
 		{#if successMessage}
-			<Alert.Root><Alert.Description>{successMessage}</Alert.Description></Alert.Root>
+			<Alert.Root class="border-green-600 text-green-600 dark:border-green-400 dark:text-green-400"
+				><CheckCheckIcon />
+				<Alert.Title>Success</Alert.Title>
+				<Alert.Description>{successMessage}</Alert.Description></Alert.Root
+			>
 		{/if}
 
-		<form method="POST" use:enhance on:submit|preventDefault={onSubmit}>
+		<form on:submit|preventDefault={onSubmit}>
 			<Form.Field {form} name="email">
 				<Form.Control>
 					<Form.Label>Email</Form.Label>
-					<Input type="email" placeholder="Enter your email" />
+					<Input type="email" placeholder="Enter your email" bind:value={$formData.email} />
 				</Form.Control>
 				<Form.FieldErrors />
 			</Form.Field>
 
-			<Button class="w-full" disabled={loading}>
+			<Button class="w-full" type="submit" disabled={loading}>
 				{loading ? 'Sending...' : 'Send Reset Link'}
 			</Button>
 		</form>

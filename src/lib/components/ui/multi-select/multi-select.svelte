@@ -16,7 +16,7 @@
 	export let placeholder = 'Select options';
 	export let selected: string[] = [];
 	export let maxCount = 3;
-	export let hideSelectAll = false;
+	export const hideSelectAll = false;
 	export let searchable = true;
 	export let emptyIndicator = 'No results found.';
 	export let disabled = false;

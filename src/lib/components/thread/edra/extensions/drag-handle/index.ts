@@ -1,7 +1,8 @@
 import { Extension } from '@tiptap/core';
+import { Fragment, Node, Slice } from '@tiptap/pm/model';
 import { NodeSelection, Plugin, PluginKey, TextSelection } from '@tiptap/pm/state';
-import { Fragment, Slice, Node } from '@tiptap/pm/model';
 import { EditorView } from '@tiptap/pm/view';
+
 import { serializeForClipboard } from './ClipboardSerializer.js';
 
 export interface GlobalDragHandleOptions {

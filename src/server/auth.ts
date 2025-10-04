@@ -19,8 +19,7 @@ import { resetConfirmTemplate, resetTemplate, verificationTemplate } from '$util
 import { profile } from './db/schema/profile-schema';
 // import { organization } from "better-auth/plugins/organization";
 const resend = new Resend(RESEND_API_KEY);
-const from = BETTER_AUTH_EMAIL || 'delivered@resend.dev';
-const to = TEST_EMAIL || '';
+const from = BETTER_AUTH_EMAIL;
 
 export const auth = betterAuth({
 	appName: 'Foreum',
@@ -90,14 +89,14 @@ export const auth = betterAuth({
 		}
 	},
 	emailVerification: {
-		async sendVerificationEmail({ user, url, token }) {
+		async sendVerificationEmail({ user, url, token }, request) {
 			const emailContent = verificationTemplate
 				.replace('{{username}}', user.name || user.email)
 				.replace(/{{url}}/g, url);
 
 			const res = await resend.emails.send({
 				from,
-				to: to || user.email,
+				to: user.email,
 				subject: 'Verify your email address',
 				html: emailContent
 			});
@@ -109,7 +108,7 @@ export const auth = betterAuth({
 	},
 	emailAndPassword: {
 		enabled: true,
-		async sendResetPassword({ user, url }) {
+		async sendResetPassword({ user, url, token }, request) {
 			const emailContent = resetTemplate
 				.replace('{{username}}', user.name || user.email)
 				.replace(/{{url}}/g, url);

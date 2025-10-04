@@ -1,7 +1,6 @@
-<script>
+<script lang="ts">
+	import Button from '$components/ui/button/button.svelte';
 	import { onMount } from 'svelte';
-
-	import Logo from '$components/shared/Logo.svelte';
 
 	let stats = $state({
 		communities: 0,
@@ -38,35 +37,8 @@
 	/>
 </svelte:head>
 
-<!-- Navigation -->
-<!-- Updated navigation to use semantic design tokens -->
-<nav class="sticky top-0 z-50 border-b border-border bg-background">
-	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-		<div class="flex h-16 items-center justify-between">
-			<Logo />
-
-			<div class="hidden items-center space-x-8 md:flex">
-				<a href="/features" class="text-muted-foreground transition-colors hover:text-foreground"
-					>Features</a
-				>
-				<a href="/pricing" class="text-muted-foreground transition-colors hover:text-foreground"
-					>Pricing</a
-				>
-				<a href="/docs" class="text-muted-foreground transition-colors hover:text-foreground"
-					>Documentation</a
-				>
-				<button
-					class="rounded-lg bg-primary px-4 py-2 text-primary-foreground transition-colors hover:bg-primary/90"
-				>
-					Get Started
-				</button>
-			</div>
-		</div>
-	</div>
-</nav>
-
 <!-- Hero Section -->
-<!-- Updated hero section to use monochromatic design tokens -->
+
 <section class="bg-background py-20">
 	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 		<div class="mx-auto max-w-4xl text-center">
@@ -118,7 +90,6 @@
 </section>
 
 <!-- Features Section -->
-<!-- Updated features section to use monochromatic palette -->
 <section id="features" class="bg-muted/30 py-20">
 	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 		<div class="mb-16 text-center">
@@ -319,22 +290,24 @@
 			free trial today.
 		</p>
 		<div class="flex flex-col justify-center gap-4 sm:flex-row">
-			<button
+			<Button
+				size="2xl"
 				class="rounded-lg bg-background px-8 py-4 text-lg font-medium text-foreground shadow-lg transition-colors hover:bg-muted"
 			>
 				Start Free Trial
-			</button>
-			<button
+			</Button>
+			<Button
+				href="/threads"
+				size="2xl"
 				class="rounded-lg border-2 border-primary-foreground px-8 py-4 text-lg font-medium text-primary-foreground transition-colors hover:bg-primary-foreground hover:text-primary"
 			>
-				Schedule Demo
-			</button>
+				Demo Forum
+			</Button>
 		</div>
 	</div>
 </section>
 
 <!-- Footer -->
-<!-- Updated footer to use dark theme semantic colors -->
 <footer class="border-t border-border bg-card py-12">
 	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 		<div class="grid grid-cols-1 gap-8 md:grid-cols-4">

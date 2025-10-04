@@ -1,7 +1,6 @@
-import { z } from 'zod/v3';
+import { z } from 'zod';
 
 //signup
-
 export const signUpSchema = z
 	.object({
 		name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -31,7 +30,7 @@ export type SignUpFormValues = z.infer<typeof signUpSchema>;
 
 //signin
 export const signInSchema = z.object({
-	email: z.string().email({
+	email: z.email({
 		message: 'Email or username is required.'
 	}),
 	password: z.string().min(1, {
@@ -43,7 +42,7 @@ export type SignInFormValues = z.infer<typeof signInSchema>;
 
 //forgot-password
 export const forgotPasswordSchema = z.object({
-	email: z.string().email({
+	email: z.email({
 		message: 'Please enter a valid email address.'
 	})
 });
@@ -72,7 +71,7 @@ export const verifyEmailSchema = z.object({
 	otp: z.string().length(6, {
 		message: 'OTP is required.'
 	}),
-	email: z.string().email()
+	email: z.email()
 });
 
 export type VerifyEmailFormValues = z.infer<typeof verifyEmailSchema>;
@@ -84,7 +83,7 @@ export const threadSchema = z.object({
 	categoryId: z.string().min(1, { message: 'Category is required.' }),
 	tags: z
 		.array(z.string(), {
-			required_error: 'Tags are required.'
+			message: 'Tags are required.'
 		})
 		.optional()
 });

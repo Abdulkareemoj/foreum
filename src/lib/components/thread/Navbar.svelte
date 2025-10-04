@@ -166,12 +166,13 @@
 					<!-- Navigation Items -->
 					<nav class="flex flex-col gap-2 px-4">
 						{#each navigationItems as item}
+							{@const icon = item.icon}
 							<a
 								href={item.href}
 								class="flex items-center gap-3 rounded-lg px-3 py-2 transition-colors hover:bg-accent hover:text-accent-foreground"
 								onclick={() => (isSheetOpen = false)}
 							>
-								<svelte:component this={item.icon} class="size-5" />
+								<icon class="size-5" />
 								{item.label}
 							</a>
 						{/each}

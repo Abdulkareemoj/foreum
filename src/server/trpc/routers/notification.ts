@@ -1,10 +1,10 @@
 // server/trpc/routers/notifications.ts
-import { and, desc,eq, lt } from 'drizzle-orm';
+import { and, desc, eq, lt, sql } from 'drizzle-orm';
 import { z } from 'zod';
 
 import { db } from '$server/db';
 import { notification } from '$server/db/schema/notification-schema';
-import { protectedProcedure,publicProcedure, router } from '$server/trpc/init';
+import { protectedProcedure, publicProcedure, router } from '$server/trpc/init';
 
 export const notificationsRouter = router({
 	getAll: protectedProcedure
@@ -74,13 +74,15 @@ export const notificationsRouter = router({
 				...input
 			});
 			return { success: true };
-		})
-	// countUnread: protectedProcedure.query(async ({ ctx }) => {
-	// 	const userId = ctx.user.id;
-	// 	const result = await db.query.notification.findMany({
-	// 		where: eq(notification.userId, userId)
-	// 	});
-	// 	const count = result.filter((n) => !n.read).length;
-	// 	return { count };
-	// })
+		}),
+	countUnread: protectedProcedure.query(async ({ ctx }) => {
+		const userId = ctx.user.id;
+
+		const [result] = await db
+			.select({ count: sql<number>`count(*)` })
+			.from(notification)
+			.where(and(eq(notification.userId, userId), eq(notification.read, false)));
+
+		return { count: Number(result.count) };
+	})
 });

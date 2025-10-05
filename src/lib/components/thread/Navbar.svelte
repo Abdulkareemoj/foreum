@@ -22,10 +22,20 @@
 	import { Separator } from '$components/ui/separator';
 	import * as Sheet from '$components/ui/sheet';
 	import { Switch } from '$components/ui/switch';
+	import Logo from '$components/shared/Logo.svelte';
+	// import LeftSidebar from '$components/thread/LeftSidebar.svelte';
+	// import RightSidebar from '$components/thread/RightSidebar.svelte';
+	import { createTRPC } from '$lib/trpc';
 
+	import LeftSidebarMobile from './LeftMobile.svelte';
+	import RightSidebarMobile from './RightMobile.svelte';
 	import NavUser from './NavUser.svelte';
+	import { toast } from 'svelte-sonner';
+	import { onMount } from 'svelte';
 
-	let unreadCount = 0;
+	let unreadCount = $state(0);
+	let pollingInterval: ReturnType<typeof setInterval> | null = null;
+
 	let { user } = $props<{ user: { name: string; email: string; image?: string } }>();
 
 	// Data for sidebars
@@ -45,15 +55,24 @@
 		};
 		loadData();
 	});
+	async function loadUnreadCount() {
+		try {
+			const res = await trpc.notifications.countUnread.query();
+			unreadCount = res.count;
+		} catch {
+			toast.error('Failed to fetch notifications');
+		}
+	}
 
-	// ⬇️ Import your existing sidebar components
-	import Logo from '$components/shared/Logo.svelte';
-	import LeftSidebar from '$components/thread/LeftSidebar.svelte';
-	import RightSidebar from '$components/thread/RightSidebar.svelte';
-	import { createTRPC } from '$lib/trpc';
+	onMount(() => {
+		loadUnreadCount();
+		// Optional polling to keep count fresh (every 30s)
+		pollingInterval = setInterval(loadUnreadCount, 30000);
 
-	import LeftSidebarMobile from './LeftMobile.svelte';
-	import RightSidebarMobile from './RightMobile.svelte';
+		return () => {
+			if (pollingInterval) clearInterval(pollingInterval);
+		};
+	});
 
 	const trpc = createTRPC();
 
@@ -107,14 +126,22 @@
 			>
 				<PlusIcon class="size-5" /> New Thread
 			</Button>
-			<Button variant="outline" href="/notifications" size="icon" class="hidden md:inline-flex">
+			<Button
+				href="/notifications"
+				variant="outline"
+				size="icon"
+				class="relative hidden md:inline-flex"
+			>
 				<Bell class="size-5" />
-				<!-- {#if unreadCount > 0}
-					<span class="absolute -top-1 -right-1 rounded-full bg-red-500 px-1.5 text-xs text-white">
+				{#if unreadCount > 0}
+					<span
+						class="absolute -top-1 -right-1 flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-red-500 px-1.5 text-[0.65rem] font-bold text-white"
+					>
 						{unreadCount}
 					</span>
-				{/if} -->
+				{/if}
 			</Button>
+
 			<Button href="/settings" variant="outline" size="icon" class="hidden md:inline-flex">
 				<Settings class="size-5" />
 			</Button>

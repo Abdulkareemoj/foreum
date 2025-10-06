@@ -1,7 +1,9 @@
 <script lang="ts">
-	import Button from '$components/ui/button/button.svelte';
+	import { Button } from '$components/ui/button/';
+	import { Badge } from '$components/ui/badge/';
+	import * as Card from '$components/ui/card/';
 	import { onMount } from 'svelte';
-
+	import { BarChart3, Globe, MessageSquare, Shield, Users, Zap } from '@lucide/svelte';
 	let stats = $state({
 		communities: 0,
 		discussions: 0,
@@ -38,52 +40,53 @@
 </svelte:head>
 
 <!-- Hero Section -->
-
-<section class="bg-background py-20">
-	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-		<div class="mx-auto max-w-4xl text-center">
-			<h1 class="font-heading mb-6 text-5xl leading-tight font-bold text-foreground md:text-6xl">
-				Build Thriving Communities
-				<span class="text-muted-foreground">On Your Website</span>
-			</h1>
-
-			<p class="mx-auto mb-8 max-w-2xl text-xl leading-relaxed text-muted-foreground">
-				Add powerful discussion features to your website with Foreum. Easy integration, advanced
-				moderation tools, and everything you need to build engaged communities.
-			</p>
-
-			<div class="flex flex-col items-center justify-center gap-4 sm:flex-row">
-				<button
-					class="rounded-lg bg-primary px-8 py-4 text-lg font-medium text-primary-foreground shadow-lg transition-colors hover:bg-primary/90"
-				>
-					Start Free Trial
-				</button>
-				<button
-					class="rounded-lg border border-border px-8 py-4 text-lg font-medium text-foreground transition-colors hover:bg-muted"
-				>
-					View Demo
-				</button>
+<section class="py-20 lg:py-32">
+	<div class="container mx-auto px-4 sm:px-6 lg:px-8">
+		<div class="grid items-center gap-12 lg:grid-cols-2">
+			<div class="space-y-8">
+				<div class="space-y-4">
+					<Badge variant="secondary" class="border-accent/20 bg-accent/10 text-accent">
+						Modern Forum Platform
+					</Badge>
+					<h1 class="font-heading text-4xl leading-tight font-bold text-foreground lg:text-6xl">
+						Build Your Community with <span class="text-primary">Seamless Discussions</span>
+					</h1>
+					<p class="text-xl leading-relaxed text-muted-foreground">
+						Embed powerful discussion features into any website. Easy integration, robust moderation
+						tools, and engaging community features that grow with your audience.
+					</p>
+				</div>
+				<div class="flex flex-col gap-4 sm:flex-row">
+					<Button size="lg" class="bg-primary text-primary-foreground hover:bg-primary/90">
+						Start Free Trial
+					</Button>
+					<Button size="lg" variant="outline" class="border-border bg-transparent hover:bg-muted">
+						View Demo
+					</Button>
+				</div>
+				<div class="flex items-center space-x-6 text-sm text-muted-foreground">
+					<div class="flex items-center space-x-2">
+						<div class="size-2 rounded-full bg-primary"></div>
+						<span>5-minute setup</span>
+					</div>
+					<div class="flex items-center space-x-2">
+						<div class="size-2 rounded-full bg-primary"></div>
+						<span>No coding required</span>
+					</div>
+					<div class="flex items-center space-x-2">
+						<div class="size-2 rounded-full bg-primary"></div>
+						<span>Free 14-day trial</span>
+					</div>
+				</div>
 			</div>
-		</div>
-	</div>
-</section>
-
-<!-- Stats Section -->
-<!-- Updated stats section with semantic colors -->
-<section class="bg-card py-16">
-	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-		<div class="grid grid-cols-1 gap-8 text-center md:grid-cols-3">
-			<div class="space-y-2">
-				<div class="text-4xl font-bold text-foreground">{stats.communities.toLocaleString()}+</div>
-				<div class="text-muted-foreground">Active Communities</div>
-			</div>
-			<div class="space-y-2">
-				<div class="text-4xl font-bold text-foreground">{stats.discussions.toLocaleString()}+</div>
-				<div class="text-muted-foreground">Discussions Started</div>
-			</div>
-			<div class="space-y-2">
-				<div class="text-4xl font-bold text-foreground">{stats.members.toLocaleString()}+</div>
-				<div class="text-muted-foreground">Community Members</div>
+			<div class="relative">
+				<div class="rounded-lg border border-border bg-card p-6 shadow-lg">
+					<img
+						src="/placeholder.svg?height=400&width=600"
+						alt="Foreum Forum Interface"
+						class="h-auto w-full rounded-md"
+					/>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -91,289 +94,147 @@
 
 <!-- Features Section -->
 <section id="features" class="bg-muted/30 py-20">
-	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-		<div class="mb-16 text-center">
-			<h2 class="font-heading mb-4 text-4xl font-bold text-foreground">
+	<div class="container mx-auto px-4 sm:px-6 lg:px-8">
+		<div class="mb-16 space-y-4 text-center">
+			<h2 class="font-heading text-3xl font-bold text-foreground lg:text-4xl">
 				Everything You Need for Community Building
 			</h2>
 			<p class="mx-auto max-w-2xl text-xl text-muted-foreground">
-				Powerful features designed to help you create, manage, and grow thriving online communities.
+				Powerful features designed to foster engagement and maintain healthy discussions
 			</p>
 		</div>
 
-		<div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-			<!-- Feature 1 -->
-			<div
-				class="rounded-xl border border-border bg-card p-8 shadow-sm transition-shadow hover:shadow-md"
-			>
-				<div class="mb-6 flex h-12 w-12 items-center justify-center rounded-lg bg-muted">
-					<svg
-						class="h-6 w-6 text-foreground"
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M13 10V3L4 14h7v7l9-11h-7z"
-						/>
-					</svg>
-				</div>
-				<h3 class="font-heading mb-3 text-xl font-semibold text-card-foreground">
-					Lightning Fast Setup
-				</h3>
-				<p class="leading-relaxed text-muted-foreground">
-					Get your forum running in minutes with our simple embed code. No complex configuration
-					required.
-				</p>
-			</div>
+		<div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+			<Card.Root class="border-border bg-card transition-shadow hover:shadow-lg">
+				<Card.Header>
+					<div class="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+						<Zap class="size-6 text-primary" />
+					</div>
+					<Card.Title class="font-heading text-card-foreground">Easy Integration</Card.Title>
+					<Card.Description>
+						Embed discussions anywhere with a simple code snippet. Works with any website or CMS.
+					</Card.Description>
+				</Card.Header>
+			</Card.Root>
 
-			<!-- Feature 2 -->
-			<div
-				class="rounded-xl border border-border bg-card p-8 shadow-sm transition-shadow hover:shadow-md"
-			>
-				<div class="mb-6 flex h-12 w-12 items-center justify-center rounded-lg bg-muted">
-					<svg
-						class="h-6 w-6 text-foreground"
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-						/>
-					</svg>
-				</div>
-				<h3 class="font-heading mb-3 text-xl font-semibold text-card-foreground">
-					Advanced Moderation
-				</h3>
-				<p class="leading-relaxed text-muted-foreground">
-					Keep your community safe with AI-powered moderation, custom rules, and comprehensive admin
-					tools.
-				</p>
-			</div>
+			<Card.Root class="border-border bg-card transition-shadow hover:shadow-lg">
+				<Card.Header>
+					<div class="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+						<Shield class="size-6 text-primary" />
+					</div>
+					<Card.Title class="font-heading text-card-foreground">Advanced Moderation</Card.Title>
+					<Card.Description>
+						Comprehensive moderation tools with automated spam detection and custom rules.
+					</Card.Description>
+				</Card.Header>
+			</Card.Root>
 
-			<!-- Feature 3 -->
-			<div
-				class="rounded-xl border border-border bg-card p-8 shadow-sm transition-shadow hover:shadow-md"
-			>
-				<div class="mb-6 flex h-12 w-12 items-center justify-center rounded-lg bg-muted">
-					<svg
-						class="h-6 w-6 text-foreground"
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-						/>
-					</svg>
-				</div>
-				<h3 class="font-heading mb-3 text-xl font-semibold text-card-foreground">
-					Engagement Tools
-				</h3>
-				<p class="leading-relaxed text-muted-foreground">
-					Boost participation with reactions, voting, badges, and gamification features that keep
-					users coming back.
-				</p>
-			</div>
+			<Card.Root class="border-border bg-card transition-shadow hover:shadow-lg">
+				<Card.Header>
+					<div class="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+						<Users class="size-6 text-primary" />
+					</div>
+					<Card.Title class="font-heading text-card-foreground">User Management</Card.Title>
+					<Card.Description>
+						Role-based permissions, user profiles, and reputation systems to build trust.
+					</Card.Description>
+				</Card.Header>
+			</Card.Root>
 
-			<!-- Feature 4 -->
-			<div
-				class="rounded-xl border border-border bg-card p-8 shadow-sm transition-shadow hover:shadow-md"
-			>
-				<div class="mb-6 flex h-12 w-12 items-center justify-center rounded-lg bg-muted">
-					<svg
-						class="h-6 w-6 text-foreground"
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-						/>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-						/>
-					</svg>
-				</div>
-				<h3 class="font-heading mb-3 text-xl font-semibold text-card-foreground">
-					Full Customization
-				</h3>
-				<p class="leading-relaxed text-muted-foreground">
-					Match your brand perfectly with custom themes, CSS overrides, and flexible layout options.
-				</p>
-			</div>
+			<Card.Root class="border-border bg-card transition-shadow hover:shadow-lg">
+				<Card.Header>
+					<div class="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+						<Globe class="size-6 text-primary" />
+					</div>
+					<Card.Title class="font-heading text-card-foreground">Multi-Site Support</Card.Title>
+					<Card.Description>
+						Manage multiple communities from one dashboard with unified analytics.
+					</Card.Description>
+				</Card.Header>
+			</Card.Root>
 
-			<!-- Feature 5 -->
-			<div
-				class="rounded-xl border border-border bg-card p-8 shadow-sm transition-shadow hover:shadow-md"
-			>
-				<div class="mb-6 flex h-12 w-12 items-center justify-center rounded-lg bg-muted">
-					<svg
-						class="h-6 w-6 text-foreground"
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-						/>
-					</svg>
-				</div>
-				<h3 class="font-heading mb-3 text-xl font-semibold text-card-foreground">
-					Analytics & Insights
-				</h3>
-				<p class="leading-relaxed text-muted-foreground">
-					Track engagement, monitor growth, and understand your community with detailed analytics
-					and reporting.
-				</p>
-			</div>
+			<Card.Root class="border-border bg-card transition-shadow hover:shadow-lg">
+				<Card.Header>
+					<div class="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+						<BarChart3 class="size-6 text-primary" />
+					</div>
+					<Card.Title class="font-heading text-card-foreground">Analytics & Insights</Card.Title>
+					<Card.Description>
+						Track engagement, popular topics, and community growth with detailed analytics.
+					</Card.Description>
+				</Card.Header>
+			</Card.Root>
 
-			<!-- Feature 6 -->
-			<div
-				class="rounded-xl border border-border bg-card p-8 shadow-sm transition-shadow hover:shadow-md"
-			>
-				<div class="mb-6 flex h-12 w-12 items-center justify-center rounded-lg bg-muted">
-					<svg
-						class="h-6 w-6 text-foreground"
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-						/>
-					</svg>
-				</div>
-				<h3 class="font-heading mb-3 text-xl font-semibold text-card-foreground">
-					Enterprise Security
-				</h3>
-				<p class="leading-relaxed text-muted-foreground">
-					Bank-level security with SSO integration, data encryption, and compliance with privacy
-					regulations.
-				</p>
+			<Card.Root class="border-border bg-card transition-shadow hover:shadow-lg">
+				<Card.Header>
+					<div class="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+						<MessageSquare class="size-6 text-primary" />
+					</div>
+					<Card.Title class="font-heading text-card-foreground">Rich Discussions</Card.Title>
+					<Card.Description>
+						Threaded conversations, reactions, file uploads, and real-time notifications.
+					</Card.Description>
+				</Card.Header>
+			</Card.Root>
+		</div>
+	</div>
+</section>
+
+<!-- Community Stats Section -->
+<section id="community" class="py-20">
+	<div class="container mx-auto px-4 sm:px-6 lg:px-8">
+		<div class="mb-16 space-y-4 text-center">
+			<h2 class="font-heading text-3xl font-bold text-foreground lg:text-4xl">
+				Join Thousands of Growing Communities
+			</h2>
+			<p class="text-xl text-muted-foreground">
+				Trusted by websites worldwide to power their discussions
+			</p>
+		</div>
+
+		<div class="grid gap-8 text-center md:grid-cols-4">
+			<div class="space-y-2">
+				<div class="font-heading text-4xl font-bold text-primary">10K+</div>
+				<div class="text-muted-foreground">Active Communities</div>
+			</div>
+			<div class="space-y-2">
+				<div class="font-heading text-4xl font-bold text-primary">2M+</div>
+				<div class="text-muted-foreground">Monthly Discussions</div>
+			</div>
+			<div class="space-y-2">
+				<div class="font-heading text-4xl font-bold text-primary">500K+</div>
+				<div class="text-muted-foreground">Registered Users</div>
+			</div>
+			<div class="space-y-2">
+				<div class="font-heading text-4xl font-bold text-primary">99.9%</div>
+				<div class="text-muted-foreground">Uptime</div>
 			</div>
 		</div>
 	</div>
 </section>
 
 <!-- CTA Section -->
-<!-- Updated CTA section to use primary colors from design system -->
-<section class="bg-primary py-20">
-	<div class="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
-		<h2 class="font-heading mb-6 text-4xl font-bold text-primary-foreground">
-			Ready to Build Your Community?
-		</h2>
-		<p class="mx-auto mb-8 max-w-2xl text-xl text-primary-foreground/80">
-			Join thousands of websites using Foreum to create engaging discussion experiences. Start your
-			free trial today.
-		</p>
-		<div class="flex flex-col justify-center gap-4 sm:flex-row">
-			<Button
-				size="2xl"
-				class="rounded-lg bg-background px-8 py-4 text-lg font-medium text-foreground shadow-lg transition-colors hover:bg-muted"
-			>
-				Start Free Trial
-			</Button>
-			<Button
-				href="/threads"
-				size="2xl"
-				class="rounded-lg border-2 border-primary-foreground px-8 py-4 text-lg font-medium text-primary-foreground transition-colors hover:bg-primary-foreground hover:text-primary"
-			>
-				Demo Forum
-			</Button>
+<section class="bg-primary/5 py-20">
+	<div class="container mx-auto px-4 sm:px-6 lg:px-8">
+		<div class="mx-auto max-w-3xl space-y-8 text-center">
+			<h2 class="font-heading text-3xl font-bold text-foreground lg:text-4xl">
+				Ready to Build Your Community?
+			</h2>
+			<p class="text-xl text-muted-foreground">
+				Start your free trial today and see how easy it is to add engaging discussions to your
+				website.
+			</p>
+			<div class="flex flex-col justify-center gap-4 sm:flex-row">
+				<Button size="lg" class="bg-primary text-primary-foreground hover:bg-primary/90">
+					Start Free Trial
+				</Button>
+				<Button size="lg" variant="outline" class="border-border bg-transparent hover:bg-muted">
+					Schedule Demo
+				</Button>
+			</div>
+			<p class="text-sm text-muted-foreground">
+				No credit card required • 14-day free trial • Cancel anytime
+			</p>
 		</div>
 	</div>
 </section>
-
-<!-- Footer -->
-<!-- <footer class="border-t border-border bg-card py-12">
-	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-		<div class="grid grid-cols-1 gap-8 md:grid-cols-4">
-			<div class="space-y-4">
-				<div class="flex items-center space-x-2">
-					<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-						<span class="text-lg font-bold text-primary-foreground">F</span>
-					</div>
-					<span class="font-heading text-xl font-bold text-card-foreground">Foreum</span>
-				</div>
-				<p class="text-muted-foreground">
-					The modern forum platform for building thriving online communities.
-				</p>
-			</div>
-
-			<div>
-				<h3 class="mb-4 font-semibold text-card-foreground">Product</h3>
-				<ul class="space-y-2 text-muted-foreground">
-					<li>
-						<a href="/features" class="transition-colors hover:text-card-foreground">Features</a>
-					</li>
-					<li>
-						<a href="/pricing" class="transition-colors hover:text-card-foreground">Pricing</a>
-					</li>
-					<li>
-						<a href="/docs" class="transition-colors hover:text-card-foreground">Documentation</a>
-					</li>
-					<li><a href="/api" class="transition-colors hover:text-card-foreground">API</a></li>
-				</ul>
-			</div>
-
-			<div>
-				<h3 class="mb-4 font-semibold text-card-foreground">Company</h3>
-				<ul class="space-y-2 text-muted-foreground">
-					<li><a href="/about" class="transition-colors hover:text-card-foreground">About</a></li>
-					<li><a href="/blog" class="transition-colors hover:text-card-foreground">Blog</a></li>
-					<li>
-						<a href="/careers" class="transition-colors hover:text-card-foreground">Careers</a>
-					</li>
-					<li>
-						<a href="/contact" class="transition-colors hover:text-card-foreground">Contact</a>
-					</li>
-				</ul>
-			</div>
-
-			<div>
-				<h3 class="mb-4 font-semibold text-card-foreground">Support</h3>
-				<ul class="space-y-2 text-muted-foreground">
-					<li>
-						<a href="/help-center" class="transition-colors hover:text-card-foreground"
-							>Help Center</a
-						>
-					</li>
-					<li>
-						<a href="/community" class="transition-colors hover:text-card-foreground">Community</a>
-					</li>
-					<li><a href="/status" class="transition-colors hover:text-card-foreground">Status</a></li>
-					<li>
-						<a href="/privacy" class="transition-colors hover:text-card-foreground">Privacy</a>
-					</li>
-				</ul>
-			</div>
-		</div>
-
-		<div class="mt-8 border-t border-border pt-8 text-center text-muted-foreground">
-			<p>&copy; 2024 Foreum. All rights reserved.</p>
-		</div>
-	</div>
-</footer> -->

@@ -24,3 +24,7 @@ vite.config.ts.timestamp-*
 
 # Lock files
 pnpm-lock.yaml
+
+# Tests
+playwright-report/
+test-results/

@@ -1,50 +1,73 @@
 <script lang="ts">
-	import TextEditor from '$components/shared/TextEditor.svelte';
 	import { Button } from '$lib/components/ui/button';
-	import { Textarea } from '$lib/components/ui/textarea';
+	import DragHandle from '$components/thread/edra/drag-handle.svelte';
+	import { Edra, EdraToolbar, EdraBubbleMenu } from '$components/thread/edra/shadcn';
 	import { createTRPC } from '$lib/trpc';
+	import type { Editor } from '@tiptap/core';
 
 	// Props
 	export let threadId: string;
 	export let onSubmitted: () => void; // callback prop
 	const trpc = createTRPC();
-	let content = '';
+	let content: string = '<p></p>';
+	let isLoading = false;
 
-	const createReply = trpc.reply.create.useMutation({
-		onMutate: () => {
-			// Optimistically add reply
-			replies = [
-				...replies,
-				{
-					id: 'temp',
-					author: { id: 'me', name: 'You', image: null }, // fallback author info
-					content,
-					createdAt: new Date()
-				}
-			];
-			content = '';
-		},
-		onSuccess: () => {
-			trpc.reply.list.invalidate({ threadId });
-			onSubmitted?.();
-		}
-	});
+	let editor: Editor | undefined;
+	let showToolBar = true;
+	let showSlashCommands = true;
+	let showLinkBubbleMenu = true;
+	let showTableBubbleMenu = true;
 
-	function handleSubmit(e: Event) {
+	const onUpdate = ({ editor }: { editor: Editor }) => {
+		content = editor.getHTML();
+	};
+
+	async function handleSubmit(e: Event) {
 		e.preventDefault();
-		if (!content.trim()) return;
-		createReply.mutate({ threadId, content });
+		if (!content.trim() || content === '<p></p>') return;
+
+		isLoading = true;
+		try {
+			await trpc.reply.create.mutate({ threadId, content });
+			// Reset content and editor
+			content = '<p></p>';
+			editor?.commands.setContent(content);
+			// Notify parent
+			onSubmitted?.();
+		} catch (error) {
+			console.error('Failed to submit reply:', error);
+			// Optionally, show an error to the user
+		} finally {
+			isLoading = false;
+		}
 	}
 </script>
 
 <form on:submit|preventDefault={handleSubmit} class="mt-4 space-y-2">
-	<Textarea
-		bind:value={content}
-		placeholder="Your reply…"
-		on:keydown={(e) => e.ctrlKey && e.key === 'Enter' && handleSubmit(e)}
-	/>
-	<TextEditor />
-	<Button type="submit" disabled={createReply.isLoading}>
-		{createReply.isLoading ? 'Replying…' : 'Reply'}
+	{#if editor && showToolBar}
+		<div class="rounded-t border-x border-t">
+			<div class="overflow-x-auto">
+				<div class="min-w-full">
+					<EdraToolbar class="flex-nowrap px-2 py-1" {editor} />
+				</div>
+			</div>
+		</div>
+		<EdraBubbleMenu {editor} />
+		<DragHandle {editor} />
+	{/if}
+	<div class="rounded-b border">
+		<Edra
+			class="h-40 overflow-auto p-4"
+			bind:editor
+			{content}
+			{showSlashCommands}
+			{showLinkBubbleMenu}
+			{showTableBubbleMenu}
+			{onUpdate}
+		/>
+	</div>
+
+	<Button type="submit" disabled={isLoading}>
+		{isLoading ? 'Replying…' : 'Reply'}
 	</Button>
 </form>

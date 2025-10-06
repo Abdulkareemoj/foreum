@@ -308,7 +308,7 @@
 </section>
 
 <!-- Footer -->
-<footer class="border-t border-border bg-card py-12">
+<!-- <footer class="border-t border-border bg-card py-12">
 	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 		<div class="grid grid-cols-1 gap-8 md:grid-cols-4">
 			<div class="space-y-4">
@@ -376,4 +376,4 @@
 			<p>&copy; 2024 Foreum. All rights reserved.</p>
 		</div>
 	</div>
-</footer>
+</footer> -->

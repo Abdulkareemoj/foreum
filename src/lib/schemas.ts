@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v3';
 
 //signup
 export const signUpSchema = z
@@ -30,7 +30,7 @@ export type SignUpFormValues = z.infer<typeof signUpSchema>;
 
 //signin
 export const signInSchema = z.object({
-	email: z.email({
+	email: z.string().email({
 		message: 'Email or username is required.'
 	}),
 	password: z.string().min(1, {
@@ -42,7 +42,7 @@ export type SignInFormValues = z.infer<typeof signInSchema>;
 
 //forgot-password
 export const forgotPasswordSchema = z.object({
-	email: z.email({
+	email: z.string().email({
 		message: 'Please enter a valid email address.'
 	})
 });
@@ -71,7 +71,7 @@ export const verifyEmailSchema = z.object({
 	otp: z.string().length(6, {
 		message: 'OTP is required.'
 	}),
-	email: z.email()
+	email: z.string().email()
 });
 
 export type VerifyEmailFormValues = z.infer<typeof verifyEmailSchema>;

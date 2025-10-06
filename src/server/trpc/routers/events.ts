@@ -1,10 +1,9 @@
 // server/trpc/routers/events.ts
-import { eq } from 'drizzle-orm';
 import { z } from 'zod';
 
 import { db } from '$server/db';
-import { eventAttendees,events } from '$server/db/schema/events-schema';
-import { protectedProcedure, publicProcedure,router } from '$server/trpc/init';
+import { eventAttendees, events } from '$server/db/schema/events-schema';
+import { protectedProcedure, publicProcedure, router } from '$server/trpc/init';
 
 export const eventsRouter = router({
 	list: publicProcedure.query(() => db.select().from(events)),

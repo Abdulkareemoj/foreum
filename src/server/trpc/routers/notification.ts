@@ -84,5 +84,7 @@ export const notificationsRouter = router({
 			.where(and(eq(notification.userId, userId), eq(notification.read, false)));
 
 		return { count: Number(result.count) };
-	})
+	}),
+	
+
 });

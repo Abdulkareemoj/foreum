@@ -14,7 +14,7 @@
 		TrendingUp,
 		Users
 	} from '@lucide/svelte';
-
+	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import * as Avatar from '$components/ui/avatar';
 	import { Button, buttonVariants } from '$components/ui/button';
 	import * as Collapsible from '$components/ui/collapsible';
@@ -45,6 +45,8 @@
 	let recentPosts = $state<any[]>([]);
 	let announcements = $state<string[]>([]);
 
+	let recentNotifications: any[] = [];
+	let loading = false;
 	$effect(() => {
 		const loadData = async () => {
 			categories = await trpc.category.list.query();
@@ -78,6 +80,37 @@
 
 	let isDarkMode = $state(false);
 	let isSheetOpen = $state(false);
+
+	async function loadNotifications() {
+		try {
+			loading = true;
+			const [countRes, listRes] = await Promise.all([
+				trpc.notifications.countUnread.query(),
+				trpc.notifications.getAll.query({ limit: 5 })
+			]);
+			unreadCount = countRes.count;
+			recentNotifications = listRes.items;
+		} catch (err) {
+			console.error(err);
+			toast.error('Failed to load notifications');
+		} finally {
+			loading = false;
+		}
+	}
+
+	onMount(loadNotifications);
+
+	async function markAsRead(id: string) {
+		try {
+			await trpc.notifications.markAsRead.mutate({ id });
+			recentNotifications = recentNotifications.map((n) =>
+				n.id === id ? { ...n, read: true } : n
+			);
+			unreadCount = Math.max(0, unreadCount - 1);
+		} catch {
+			toast.error('Failed to mark as read');
+		}
+	}
 
 	$effect(() => {
 		document.documentElement.classList.toggle('dark', isDarkMode);
@@ -126,7 +159,7 @@
 			>
 				<PlusIcon class="size-5" /> New Thread
 			</Button>
-			<Button
+			<!-- <Button
 				href="/notifications"
 				variant="outline"
 				size="icon"
@@ -140,7 +173,58 @@
 						{unreadCount}
 					</span>
 				{/if}
-			</Button>
+			</Button> -->
+
+			<DropdownMenu.Root>
+				<DropdownMenu.Trigger>
+					<Button variant="outline" size="icon" class="relative inline-flex">
+						<Bell class="size-5" />
+						{#if unreadCount > 0}
+							<span
+								class="absolute -top-1 -right-1 flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-red-500 px-1.5 text-[0.65rem] font-bold text-white"
+							>
+								{unreadCount}
+							</span>
+						{/if}
+					</Button>
+				</DropdownMenu.Trigger>
+
+				<DropdownMenu.Content align="end" class="w-72">
+					<DropdownMenu.Label class="font-semibold">Notifications</DropdownMenu.Label>
+					<DropdownMenu.Separator />
+
+					{#if loading}
+						<div class="py-6 text-center text-sm text-muted-foreground">Loading...</div>
+					{:else if recentNotifications.length === 0}
+						<div class="py-6 text-center text-sm text-muted-foreground">No notifications yet</div>
+					{:else}
+						{#each recentNotifications as n (n.id)}
+							<DropdownMenu.Item
+								class="flex cursor-pointer flex-col gap-1"
+								on:click={() => markAsRead(n.id)}
+							>
+								<div class="flex items-center justify-between">
+									<p class="truncate text-sm font-medium">{n.title}</p>
+									{#if !n.read}
+										<span class="inline-block h-2 w-2 rounded-full bg-blue-500"></span>
+									{/if}
+								</div>
+								{#if n.body}
+									<p class="line-clamp-2 text-xs text-muted-foreground">{n.body}</p>
+								{/if}
+							</DropdownMenu.Item>
+						{/each}
+					{/if}
+
+					<DropdownMenu.Separator />
+					<DropdownMenu.Item
+						class="justify-center text-center text-sm font-medium text-primary hover:bg-transparent hover:text-primary/80"
+						on:click={() => (window.location.href = '/notifications')}
+					>
+						View all notifications →
+					</DropdownMenu.Item>
+				</DropdownMenu.Content>
+			</DropdownMenu.Root>
 
 			<Button href="/settings" variant="outline" size="icon" class="hidden md:inline-flex">
 				<Settings class="size-5" />
@@ -207,6 +291,25 @@
 
 					<Separator class="my-4" />
 
+					<!-- Inside your Sheet.Content near the bottom -->
+					<div class="px-4 py-2">
+						<a
+							href="/notifications"
+							class="flex items-center gap-3 rounded-lg px-3 py-2 transition-colors hover:bg-accent hover:text-accent-foreground"
+						>
+							<Bell class="size-5" />
+							<span>Notifications</span>
+							{#if unreadCount > 0}
+								<span
+									class="ml-auto flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-red-500 px-1.5 text-[0.65rem] font-bold text-white"
+								>
+									{unreadCount}
+								</span>
+							{/if}
+						</a>
+					</div>
+					<Separator class="my-4" />
+
 					<div class="flex flex-col gap-2 px-2">
 						<!-- Categories Section -->
 						<Collapsible.Root open>
@@ -261,6 +364,7 @@
 						<Switch bind:checked={isDarkMode} />
 					</div>
 					<Separator class="my-4" />
+
 					<!-- Footer -->
 					<div class="mt-auto py-4">
 						<p class="text-center text-xs text-muted-foreground">

@@ -4,9 +4,9 @@
 </script>
 
 <nav class="sticky top-0 z-50 border-b border-border bg-background">
-	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+	<div class="Ssm:px-6 mx-auto max-w-7xl px-4 lg:px-8">
 		<div class="flex h-16 items-center justify-between">
-			<Logo />
+			<a href="/"><Logo /></a>
 
 			<div class="hidden items-center space-x-8 md:flex">
 				<a href="/features" class="text-muted-foreground transition-colors hover:text-foreground"

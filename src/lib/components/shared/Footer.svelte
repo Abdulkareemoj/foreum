@@ -13,15 +13,15 @@
 			items: [
 				{
 					title: 'Features',
-					href: '#'
+					href: '/features'
 				},
 				{
 					title: 'Solution',
-					href: '#'
+					href: '/solution'
 				},
 				{
 					title: 'Pricing',
-					href: '#'
+					href: '/pricing'
 				},
 				{
 					title: 'Help',
@@ -37,32 +37,32 @@
 			group: 'Solution',
 			items: [
 				{
-					title: 'Startup',
-					href: '#'
+					title: 'Startups',
+					href: '/solution/startups'
 				},
 				{
 					title: 'Freelancers',
-					href: '#'
+					href: '/solution/freelancers'
 				},
 				{
 					title: 'Organizations',
-					href: '#'
+					href: '/solution/organizations'
 				},
 				{
 					title: 'Students',
-					href: '#'
+					href: '/solution/students'
 				},
 				{
 					title: 'Collaboration',
-					href: '#'
+					href: '/solution/collaboration'
 				},
 				{
 					title: 'Design',
-					href: '#'
+					href: '/solution/design'
 				},
 				{
 					title: 'Management',
-					href: '#'
+					href: '/solution/management'
 				}
 			]
 		},
@@ -104,11 +104,11 @@
 				},
 				{
 					title: 'Privacy',
-					href: '#'
+					href: '/privacy'
 				},
 				{
 					title: 'Cookies',
-					href: '#'
+					href: '/cookies'
 				},
 				{
 					title: 'Security',

@@ -3,41 +3,9 @@
 	<meta name="description" content="Privacy Policy for Foreum forum platform." />
 </svelte:head>
 
-Navigation
-<nav class="sticky top-0 z-50 border-b border-border bg-background">
-	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-		<div class="flex h-16 items-center justify-between">
-			<a href="/" class="flex items-center space-x-2">
-				<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-					<span class="text-lg font-bold text-primary-foreground">F</span>
-				</div>
-				<span class="font-heading text-xl font-bold text-foreground">Foreum</span>
-			</a>
-
-			<div class="hidden items-center space-x-8 md:flex">
-				<a href="/features" class="text-muted-foreground transition-colors hover:text-foreground"
-					>Features</a
-				>
-				<a href="/pricing" class="text-muted-foreground transition-colors hover:text-foreground"
-					>Pricing</a
-				>
-				<a href="/docs" class="text-muted-foreground transition-colors hover:text-foreground"
-					>Documentation</a
-				>
-				<button
-					class="rounded-lg bg-primary px-4 py-2 text-primary-foreground transition-colors hover:bg-primary/90"
-				>
-					Get Started
-				</button>
-			</div>
-		</div>
-	</div>
-</nav>
-
-Content
 <div class="mx-auto max-w-4xl px-4 py-20 sm:px-6 lg:px-8">
 	<h1 class="font-heading mb-4 text-4xl font-bold text-foreground">Privacy Policy</h1>
-	<p class="mb-8 text-muted-foreground">Last updated: January 1, 2024</p>
+	<p class="mb-8 text-muted-foreground">Last updated: January 1, 2025</p>
 
 	<div class="prose prose-lg max-w-none">
 		<div class="space-y-8 leading-relaxed text-muted-foreground">
@@ -202,72 +170,3 @@ Content
 		</div>
 	</div>
 </div>
-
-Footer
-<footer class="mt-20 border-t border-border bg-card py-12">
-	<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-		<div class="grid grid-cols-1 gap-8 md:grid-cols-4">
-			<div class="space-y-4">
-				<div class="flex items-center space-x-2">
-					<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-						<span class="text-lg font-bold text-primary-foreground">F</span>
-					</div>
-					<span class="font-heading text-xl font-bold text-card-foreground">Foreum</span>
-				</div>
-				<p class="text-muted-foreground">
-					The modern forum platform for building thriving online communities.
-				</p>
-			</div>
-
-			<div>
-				<h3 class="mb-4 font-semibold text-card-foreground">Product</h3>
-				<ul class="space-y-2 text-muted-foreground">
-					<li>
-						<a href="/features" class="transition-colors hover:text-card-foreground">Features</a>
-					</li>
-					<li>
-						<a href="/pricing" class="transition-colors hover:text-card-foreground">Pricing</a>
-					</li>
-					<li>
-						<a href="/docs" class="transition-colors hover:text-card-foreground">Documentation</a>
-					</li>
-				</ul>
-			</div>
-
-			<div>
-				<h3 class="mb-4 font-semibold text-card-foreground">Company</h3>
-				<ul class="space-y-2 text-muted-foreground">
-					<li><a href="/about" class="transition-colors hover:text-card-foreground">About</a></li>
-					<li><a href="/blog" class="transition-colors hover:text-card-foreground">Blog</a></li>
-					<li>
-						<a href="/contact" class="transition-colors hover:text-card-foreground">Contact</a>
-					</li>
-				</ul>
-			</div>
-
-			<div>
-				<h3 class="mb-4 font-semibold text-card-foreground">Legal</h3>
-				<ul class="space-y-2 text-muted-foreground">
-					<li>
-						<a href="/terms" class="transition-colors hover:text-card-foreground"
-							>Terms of Service</a
-						>
-					</li>
-					<li>
-						<a href="/privacy" class="transition-colors hover:text-card-foreground"
-							>Privacy Policy</a
-						>
-					</li>
-					<li>
-						<a href="/cookies" class="transition-colors hover:text-card-foreground">Cookie Policy</a
-						>
-					</li>
-				</ul>
-			</div>
-		</div>
-
-		<div class="mt-8 border-t border-border pt-8 text-center text-muted-foreground">
-			<p>&copy; 2025 Foreum. All rights reserved.</p>
-		</div>
-	</div>
-</footer>

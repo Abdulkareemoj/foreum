@@ -8,7 +8,7 @@
 
 	let threads = $state<any[]>([]);
 	let categories = $state<any[]>([]);
-	let isLoading = $state(false);
+	let isLoading = $state(true);
 
 	let searchQuery = $state('');
 	let categoryFilter = $state('all');
@@ -24,47 +24,65 @@
 		if (reset) {
 			offset = 0;
 			threads = [];
-			// a;
 			hasMore = true;
 		}
 		if (!hasMore || isLoading) return;
 
 		isLoading = true;
-		const newThreads = await trpc.thread.list.query({
-			search: searchQuery || undefined,
-			category: categoryFilter === 'all' ? undefined : categoryFilter,
-			sortBy,
-			limit,
-			offset
-		});
+		try {
+			const newThreads = await trpc.thread.list.query({
+				search: searchQuery || undefined,
+				category: categoryFilter === 'all' ? undefined : categoryFilter,
+				sortBy,
+				limit,
+				offset
+			});
 
-		if (newThreads.length < limit) hasMore = false;
+			if (newThreads.length < limit) {
+				hasMore = false;
+			}
 
-		threads = reset ? newThreads : [...threads, ...newThreads];
-		offset += limit;
-		isLoading = false;
+			threads = reset ? newThreads : [...threads, ...newThreads];
+			offset += newThreads.length;
+		} catch (error) {
+			console.error('Failed to load threads:', error);
+		} finally {
+			isLoading = false;
+		}
 	}
 
 	async function loadCategories() {
-		categories = await trpc.category.list.query();
+		try {
+			categories = await trpc.category.list.query();
+		} catch (error) {
+			console.error('Failed to load categories:', error);
+		}
 	}
 
 	$effect(() => {
-		(loadThreads(true), loadCategories());
+		loadThreads(true);
+		loadCategories();
 	});
 
 	onMount(() => {
-		loadThreads(true);
-
 		const observer = new IntersectionObserver(
 			(entries) => {
-				if (entries[0].isIntersecting) loadThreads();
+				if (entries[0].isIntersecting && !isLoading) {
+					loadThreads();
+				}
 			},
 			{ threshold: 1.0 }
 		);
 
-		if (sentinel) observer.observe(sentinel);
-		return () => observer.disconnect();
+		if (sentinel) {
+			observer.observe(sentinel);
+		}
+
+		return () => {
+			if (sentinel) {
+				observer.unobserve(sentinel);
+			}
+		};
 	});
 </script>
 
@@ -75,6 +93,9 @@
 	bind:searchQuery
 	bind:categoryFilter
 	bind:sortBy
-	{hasMore}
-	{sentinel}
+	onLoadMore={() => loadThreads()}
 />
+
+{#if hasMore}
+	<div bind:this={sentinel} class="h-10" />
+{/if}

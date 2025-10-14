@@ -138,8 +138,12 @@
 						<Form.Label>Tags</Form.Label>
 						<MultiSelect
 							options={tagOptions}
-							bind:selected={$formData.tags}
+							value={$formData.tags?.map((t) => ({ value: t, label: t })) ?? []}
+							onChange={(v) => {
+								$formData.tags = v.map((t) => t.value);
+							}}
 							placeholder="Select tags..."
+							creatable
 						/>
 					{/snippet}
 				</Form.Control>
@@ -148,16 +152,20 @@
 
 			<Form.Field {form} name="categoryId">
 				<Form.Control>
-					{#snippet children({ props })}
-						<Form.Label>Category</Form.Label>
-						<Select.Root type="single" bind:value={$formData.categoryId}>
-							<Select.Trigger {...props}>
-								{$formData.categoryId
-									? categories.find((cat) => cat.id === $formData.categoryId)?.name
-									: 'Select a category'}
-							</Select.Trigger>
-						</Select.Root>
-					{/snippet}
+					<Select.Root type="single" bind:value={$formData.categoryId}>
+						<Select.Trigger
+							class="w-full focus-visible:border-indigo-500 focus-visible:ring-indigo-500/20 dark:focus-visible:ring-indigo-500/40"
+						>
+							{$formData.categoryId
+								? categories.find((cat) => cat.id === $formData.categoryId)?.name
+								: 'Select a category'}
+						</Select.Trigger>
+						<Select.Content>
+							{#each categories as category (category.id)}
+								<Select.Item value={category.id}>{category.name}</Select.Item>
+							{/each}
+						</Select.Content>
+					</Select.Root>
 				</Form.Control>
 				<Form.FieldErrors />
 			</Form.Field>

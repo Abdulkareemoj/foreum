@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onDestroy,onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import { toast } from 'svelte-sonner';
 
 	import { Button } from '$components/ui/button';
@@ -110,7 +110,14 @@
 							</p>
 						</div>
 						{#if !n.read}
-							<Button size="sm" variant="outline" on:click={() => markAsRead(n.id)}>
+							<Button
+								size="sm"
+								variant="outline"
+								on:click={(e) => {
+									e.stopPropagation();
+									markAsRead(n.id);
+								}}
+							>
 								Mark as Read
 							</Button>
 						{/if}

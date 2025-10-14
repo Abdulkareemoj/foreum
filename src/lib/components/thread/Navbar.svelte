@@ -45,8 +45,8 @@
 	let recentPosts = $state<any[]>([]);
 	let announcements = $state<string[]>([]);
 
-	let recentNotifications: any[] = [];
-	let loading = false;
+	let recentNotifications = $state<any[]>([]);
+	let loading = $state(false);
 	$effect(() => {
 		const loadData = async () => {
 			categories = await trpc.category.list.query();
@@ -291,7 +291,6 @@
 
 					<Separator class="my-4" />
 
-					<!-- Inside your Sheet.Content near the bottom -->
 					<div class="px-4 py-2">
 						<a
 							href="/notifications"

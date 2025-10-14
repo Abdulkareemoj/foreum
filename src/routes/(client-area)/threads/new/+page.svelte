@@ -57,7 +57,7 @@
 	});
 
 	async function handleSubmit() {
-		if (!$formData.title.trim() || !$formData.content.trim() || !$formData.categoryId) {
+		if (!$formData.title.trim() || editor?.isEmpty || !$formData.categoryId) {
 			toast.error('Please fill in all required fields');
 			return;
 		}
@@ -71,7 +71,7 @@
 				tags: $formData.tags
 			});
 			toast.success('Thread created successfully!');
-			goto(`/thread/${result.id}`);
+			goto(`/threads/${result.id}`);
 		} catch (err) {
 			console.error(err);
 			toast.error('Failed to create thread');
@@ -102,10 +102,12 @@
 			const rawData: Content = JSON.parse(rawDataString);
 			content = rawData;
 		}
+		$formData.content = content;
 	}
 
 	function onUpdate(props: { editor: Editor; transaction: Transaction }) {
 		content = props.editor.getJSON();
+		$formData.content = content;
 	}
 </script>
 
@@ -176,7 +178,7 @@
 			<Form.Control>
 				{#snippet children({ props })}
 					<Form.Label>Content</Form.Label>
-					<Textarea {...props} class="mb-2" bind:value={$formData.content} />
+					<!-- <Textarea {...props} class="mb-2" bind:value={$formData.content} /> -->
 
 					{#if editor && showToolBar}
 						<div class="rounded-t border-x border-t">

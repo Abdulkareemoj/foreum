@@ -10,6 +10,7 @@
 	import * as Card from '$lib/components/ui/card';
 	import * as Select from '$lib/components/ui/select';
 	import { createTRPC } from '$lib/trpc';
+	import { renderTipTap } from '$utils';
 
 	const dispatch = createEventDispatcher<{ submitted: void }>();
 
@@ -89,7 +90,7 @@
 				</div>
 			</Card.Header>
 			<Card.Content>
-				<p class="whitespace-pre-line">{thread.content}</p>
+				<div class="prose dark:prose-invert max-w-none">{@html renderTipTap(thread.content)}</div>
 			</Card.Content>
 		</Card.Root>
 	{:else}
@@ -153,11 +154,9 @@
 				</Card.Header>
 				<Card.Content>
 					{#if reply.content}
-						<p class="whitespace-pre-line">
-							{reply.content.root?.children
-								?.map((c) => c.children?.map((t) => t.text).join(''))
-								.join('\n')}
-						</p>
+						<div class="prose dark:prose-invert max-w-none">
+							{@html renderTipTap(reply.content)}
+						</div>
 					{/if}
 				</Card.Content>
 			</Card.Root>

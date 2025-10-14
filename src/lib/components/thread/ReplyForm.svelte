@@ -3,28 +3,30 @@
 	import DragHandle from '$components/thread/edra/drag-handle.svelte';
 	import { Edra, EdraToolbar, EdraBubbleMenu } from '$components/thread/edra/shadcn';
 	import { createTRPC } from '$lib/trpc';
-	import type { Editor } from '@tiptap/core';
+	import type { Editor, Content } from '@tiptap/core';
 
 	// Props
-	export let threadId: string;
-	export let onSubmitted: () => void; // callback prop
+	let { threadId, onSubmitted } = $props<{
+		threadId: string;
+		onSubmitted: () => void;
+	}>(); // callback prop
 	const trpc = createTRPC();
-	let content: string = '<p></p>';
-	let isLoading = false;
+	let content = $state<Content>('<p></p>');
+	let isLoading = $state(false);
 
-	let editor: Editor | undefined;
-	let showToolBar = true;
-	let showSlashCommands = true;
-	let showLinkBubbleMenu = true;
-	let showTableBubbleMenu = true;
+	let editor = $state<Editor | undefined>();
+	let showToolBar = $state(true);
+	let showSlashCommands = $state(true);
+	let showLinkBubbleMenu = $state(true);
+	let showTableBubbleMenu = $state(true);
 
 	const onUpdate = ({ editor }: { editor: Editor }) => {
-		content = editor.getHTML();
+		content = editor.getJSON();
 	};
 
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
-		if (!content.trim() || content === '<p></p>') return;
+		if (!content || content === '<p></p>') return;
 
 		isLoading = true;
 		try {

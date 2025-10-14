@@ -20,6 +20,7 @@
 	import * as Tabs from '$lib/components/ui/tabs';
 
 	import ThreadCardView from './ThreadCardView.svelte';
+	import { Skeleton } from '$components/ui/skeleton';
 
 	let {
 		threads = [],
@@ -108,14 +109,14 @@
 		{#if isLoading}
 			<div class="space-y-4">
 				{#each Array(5) as _, i}
-					<Card.Root class="animate-pulse">
+					<Card.Root>
 						<Card.Content class="p-4">
 							<div class="flex gap-4">
-								<div class="h-20 w-12 rounded bg-muted"></div>
+								<Skeleton class="h-20 w-12 rounded" />
 								<div class="flex-1 space-y-2">
-									<div class="h-4 w-3/4 rounded bg-muted"></div>
-									<div class="h-3 w-1/2 rounded bg-muted"></div>
-									<div class="h-3 w-1/4 rounded bg-muted"></div>
+									<Skeleton class="h-4 w-3/4 rounded" />
+									<Skeleton class="h-3 w-1/2 rounded" />
+									<Skeleton class="h-3 w-1/4 rounded" />
 								</div>
 							</div>
 						</Card.Content>

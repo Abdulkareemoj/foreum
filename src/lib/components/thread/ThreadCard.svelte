@@ -1,12 +1,36 @@
 <script lang="ts">
-	import { Calendar,Eye, MessageSquare } from '@lucide/svelte';
+	import { renderTipTap } from '$utils';
+	import { Calendar, Eye, MessageSquare } from '@lucide/svelte';
 	import { formatDistanceToNow } from 'date-fns';
 
 	import * as Avatar from '$lib/components/ui/avatar';
 	import { Badge } from '$lib/components/ui/badge';
 	import * as Card from '$lib/components/ui/card';
 
-	export let thread: any; // ideally, import the Thread type
+	// type Thread = {
+	// 	id: string;
+	// 	title: string;
+	// 	content: string;
+	// 	pinned: boolean;
+	// 	locked: boolean;
+	// 	createdAt: string | Date;
+	// 	updatedAt: string | Date;
+	// 	author: {
+	// 		id: string;
+	// 		name: string | null;
+	// 		image: string | null;
+	// 	} | null;
+	// 	category: {
+	// 		id: string;
+	// 		name: string;
+	// 		slug: string;
+	// 	} | null;
+	// 	replyCount: number;
+	// 	_count?: {
+	// 		views: number;
+	// 	};
+	// };
+	let { thread } = $props();
 </script>
 
 <Card.Root class="transition-shadow hover:shadow-md">
@@ -18,9 +42,9 @@
 						{thread.title}
 					</h2>
 				</a>
-				<p class="mt-2 line-clamp-2 text-muted-foreground">
-					{thread.content.slice(0, 150)}...
-				</p>
+				<div class="mt-2 line-clamp-3 text-muted-foreground">
+					{@html renderTipTap(thread.content)}
+				</div>
 			</div>
 		</div>
 	</Card.Header>

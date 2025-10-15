@@ -19,7 +19,7 @@
 	// let isLeftOpen = $state(false);
 	// let isRightOpen = $state(false);
 	const trpc = createTRPC();
-	let isLoading = $state(false);
+	let isLoading = $state(true);
 
 	const sidebarConfig: Record<
 		string,
@@ -44,6 +44,26 @@
 				isLoading = false;
 			}
 		},
+		'/(client-area)/threads/[threadId]': {
+			left: true,
+			right: true,
+			load: async () => {
+				isLoading = true;
+				[categories, trendingTags, topContributors, recentPosts] = await Promise.all([
+					trpc.category.list.query(),
+					trpc.tag.popular.query({ limit: 10 }),
+					trpc.user.topContributors.query({ limit: 5 }),
+					trpc.thread.recent.query({ limit: 5 })
+				]);
+				announcements = [
+					'New feature: Bookmark threads!',
+					'Scheduled maintenance at 10 PM UTC',
+					'Community Q&A this weekend!'
+				];
+				isLoading = false;
+			}
+		},
+
 		'/(client-area)/bookmarks': {
 			left: true,
 			right: true,
@@ -137,16 +157,7 @@
 				{/if}
 			</div> -->
 
-			{#if isLoading}
-				<div class="space-y-6">
-					<Skeleton class="h-8 w-1/3" />
-					<Skeleton class="h-40 w-full" />
-					<Skeleton class="h-40 w-full" />
-					<Skeleton class="h-40 w-full" />
-				</div>
-			{:else}
-				{@render children?.()}
-			{/if}
+			{@render children?.()}
 		</main>
 
 		<!-- Right Sidebar (desktop) -->

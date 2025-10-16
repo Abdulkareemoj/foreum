@@ -1,3 +1,11 @@
+import Image from '@tiptap/extension-image';
+import Link from '@tiptap/extension-link';
+import { Table } from '@tiptap/extension-table';
+import TableCell from '@tiptap/extension-table-cell';
+import TableHeader from '@tiptap/extension-table-header';
+import TableRow from '@tiptap/extension-table-row';
+import { generateHTML } from '@tiptap/html';
+import StarterKit from '@tiptap/starter-kit';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -87,3 +95,22 @@ export const resetConfirmTemplate = `<!doctype html>
 	</body>
 </html>
 `;
+
+export function renderTipTap(content: any): string {
+	if (!content) return '';
+
+	try {
+		return generateHTML(content, [
+			StarterKit,
+			Link,
+			Image,
+			Table,
+			TableRow,
+			TableHeader,
+			TableCell
+		]);
+	} catch (err) {
+		console.error('Failed to render TipTap JSON:', err);
+		return '';
+	}
+}

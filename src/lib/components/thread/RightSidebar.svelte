@@ -49,15 +49,17 @@
 			<Card.Content class="space-y-2">
 				{#each recentPosts as post}
 					<div class="flex gap-3 rounded-lg p-1 hover:bg-accent">
-						<Avatar.Root class="size-10">
-							<Avatar.Image src={post.author?.image} alt={post.author.name} />
-							<Avatar.Fallback>
-								{post.author.name.slice(0, 2).toUpperCase()}
-							</Avatar.Fallback>
-						</Avatar.Root>
-						<div class="flex-1">
-							<p class="line-clamp-2 text-sm font-medium">{post.title}</p>
-						</div>
+						<a href={`/threads/${post.id}`} class="flex gap-2 py-1"
+							><Avatar.Root class="size-10">
+								<Avatar.Image src={post.author?.image} alt={post.author.name} />
+								<Avatar.Fallback>
+									{post.author.name.slice(0, 2).toUpperCase()}
+								</Avatar.Fallback>
+							</Avatar.Root>
+							<div class="flex-1">
+								<p class="line-clamp-2 text-sm font-medium">{post.title}</p>
+							</div>
+						</a>
 					</div>
 				{/each}
 			</Card.Content>

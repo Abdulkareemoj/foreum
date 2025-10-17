@@ -1,9 +1,9 @@
 import { TRPCError } from '@trpc/server';
-import { asc, count, desc,eq } from 'drizzle-orm';
+import { asc, count, desc, eq } from 'drizzle-orm';
 import { z } from 'zod';
 
 import { category, thread } from '$server/db/schema/thread-schema';
-import { protectedProcedure,publicProcedure, router } from '$server/trpc/init';
+import { protectedProcedure, publicProcedure, router } from '$server/trpc/init';
 
 export const categoryRouter = router({
 	list: publicProcedure.query(async ({ ctx }) => {
@@ -142,7 +142,7 @@ export const categoryRouter = router({
 				.from(category)
 				.leftJoin(thread, eq(category.id, thread.categoryId))
 				.groupBy(category.id)
-				.orderBy(desc(threadCount)) // ✅ correct
+				.orderBy(desc(threadCount))
 				.limit(input.limit);
 		})
 });

@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { db } from '$server/db';
 import { user } from '$server/db/schema/auth-schema';
 import { reply, thread } from '$server/db/schema/thread-schema';
-import { protectedProcedure, publicProcedure,router } from '$server/trpc/init';
+import { protectedProcedure, publicProcedure, router } from '$server/trpc/init';
 
 export const replyRouter = router({
 	list: publicProcedure
@@ -46,7 +46,7 @@ export const replyRouter = router({
 		.input(
 			z.object({
 				threadId: z.string(),
-				content: z.string().min(1).max(10000)
+				content: z.any()
 			})
 		)
 		.mutation(async ({ ctx, input }) => {

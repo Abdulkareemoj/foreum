@@ -1,12 +1,12 @@
 import { TRPCError } from '@trpc/server';
-import { desc,eq } from 'drizzle-orm';
+import { desc, eq } from 'drizzle-orm';
 import { z } from 'zod';
 
 import { profileSchema } from '$lib/schemas';
 import { user } from '$server/db/schema/auth-schema';
 import { profile } from '$server/db/schema/profile-schema';
 import { reply, thread } from '$server/db/schema/thread-schema';
-import { protectedProcedure,publicProcedure, router } from '$server/trpc/init';
+import { protectedProcedure, publicProcedure, router } from '$server/trpc/init';
 import { normalizeUsername } from '$utils';
 
 export const userRouter = router({
@@ -138,7 +138,8 @@ export const userRouter = router({
 			return await ctx.db
 				.select({
 					id: user.id,
-					name: user.name,
+					name: user.username,
+					username: user.username,
 					displayUsername: user.displayUsername,
 					image: user.image // or profiles.avatar if you join it
 				})

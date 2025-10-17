@@ -221,7 +221,7 @@
 						class="justify-center text-center text-sm font-medium text-primary hover:bg-transparent hover:text-primary/80"
 						on:click={() => (window.location.href = '/notifications')}
 					>
-						View all notifications →
+						<a href="/notifications">View all notifications →</a>
 					</DropdownMenu.Item>
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>

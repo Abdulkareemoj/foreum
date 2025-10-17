@@ -29,7 +29,7 @@
 		<h2 class="mb-2 text-sm font-semibold">Categories</h2>
 		{#each categories as cat}
 			<div class="flex cursor-pointer items-center justify-between rounded-lg p-2 hover:bg-accent">
-				<a href={`/catgories/${cat.slug}`} class="text-sm">{cat.name}</a>
+				<a href={`/categories/${cat.slug}`} class="text-sm">{cat.name}</a>
 			</div>
 		{/each}
 	</section>

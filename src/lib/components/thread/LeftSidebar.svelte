@@ -40,7 +40,7 @@
 				<div
 					class="flex cursor-pointer items-center justify-between rounded-lg p-2 hover:bg-accent"
 				>
-					<a href={`/catgories/${cat.slug}`} class="text-sm">{cat.name}</a>
+					<a href={`/categories/${cat.slug}`} class="text-sm">{cat.name}</a>
 				</div>
 			{/each}
 		</div>

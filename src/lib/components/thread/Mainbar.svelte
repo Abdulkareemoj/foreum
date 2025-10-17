@@ -19,7 +19,7 @@
 	import * as Select from '$components/ui/select';
 	import * as Tabs from '$lib/components/ui/tabs';
 
-	import ThreadCardView from './ThreadCardView.svelte';
+	import ThreadCardView from './ThreadCardList.svelte';
 	import { Skeleton } from '$components/ui/skeleton';
 
 	let {
@@ -71,32 +71,25 @@
 						class="relative w-full rounded-none border-b bg-background p-0 sm:max-w-screen-sm "
 					>
 						<Tabs.Trigger
-							value="best"
+							value="popular"
 							class="h-full rounded-none border-0 border-b-2 border-transparent bg-background text-muted-foreground hover:border-muted-foreground/30 hover:text-foreground data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:shadow-none dark:text-muted-foreground dark:hover:text-foreground dark:data-[state=active]:border-primary"
 						>
 							<TrendingUpIcon class="size-4" />
 							Popular
 						</Tabs.Trigger>
 						<Tabs.Trigger
-							value="hot"
-							class="h-full rounded-none border-0 border-b-2 border-transparent bg-background text-muted-foreground hover:border-muted-foreground/30 hover:text-foreground data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:shadow-none dark:text-muted-foreground dark:hover:text-foreground dark:data-[state=active]:border-primary"
-						>
-							<FlameIcon class="size-4" />
-							Hot
-						</Tabs.Trigger>
-						<Tabs.Trigger
-							value="new"
+							value="recent"
 							class="h-full rounded-none border-0 border-b-2 border-transparent bg-background text-muted-foreground hover:border-muted-foreground/30 hover:text-foreground data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:shadow-none dark:text-muted-foreground dark:hover:text-foreground dark:data-[state=active]:border-primary"
 						>
 							<ClockIcon class="size-4" />
 							New
 						</Tabs.Trigger>
 						<Tabs.Trigger
-							value="top"
+							value="oldest"
 							class="h-full rounded-none border-0 border-b-2 border-transparent bg-background text-muted-foreground hover:border-muted-foreground/30 hover:text-foreground data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:shadow-none dark:text-muted-foreground dark:hover:text-foreground dark:data-[state=active]:border-primary"
 						>
 							<TrophyIcon class="size-4" />
-							Top
+							Oldest
 						</Tabs.Trigger>
 					</Tabs.List>
 				</div>

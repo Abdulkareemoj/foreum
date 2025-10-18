@@ -31,9 +31,12 @@ export const threadRouter = router({
 				conditions.push(eq(thread.categoryId, input.category));
 			}
 
-			// 👇 handle tag filtering
 			if (input.tagId) {
-				conditions.push(eq(threadTag.tagId, input.tagId));
+				const taggedThreadIds = ctx.db
+					.select({ threadId: threadTag.threadId })
+					.from(threadTag)
+					.where(eq(threadTag.tagId, input.tagId));
+				conditions.push(inArray(thread.id, taggedThreadIds));
 			}
 
 			const orderBy =
@@ -62,15 +65,12 @@ export const threadRouter = router({
 						name: category.name,
 						slug: category.slug
 					},
-					replyCount: count(reply.id)
+					replyCount: thread.replyCount
 				})
 				.from(thread)
 				.leftJoin(user, eq(thread.authorId, user.id))
 				.leftJoin(category, eq(thread.categoryId, category.id))
-				.leftJoin(reply, eq(thread.id, reply.threadId))
-				.leftJoin(threadTag, eq(thread.id, threadTag.threadId)) // 👈 join threadTags
 				.where(conditions.length ? and(...conditions) : undefined)
-				.groupBy(thread.id, user.id, category.id)
 				.orderBy(orderBy)
 				.limit(input.limit)
 				.offset(input.offset);

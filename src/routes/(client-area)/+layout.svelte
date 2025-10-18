@@ -85,6 +85,18 @@
 		},
 		'/(client-area)/tags': {
 			right: true,
+			// left: true,
+			load: async () => {
+				isLoading = true;
+				[categories, trendingTags] = await Promise.all([
+					trpc.category.list.query(),
+					trpc.tag.popular.query({ limit: 10 })
+				]);
+				isLoading = false;
+			}
+		},
+
+		'/(client-area)/notifications': {
 			left: true,
 			load: async () => {
 				isLoading = true;
@@ -95,16 +107,18 @@
 				isLoading = false;
 			}
 		},
-		'/(client-area)/notifications': {
-			right: true,
+
+		'/(client-area)/categories': {
+			// right: true,
+			left: true,
 			load: async () => {
 				isLoading = true;
 				recentPosts = await trpc.thread.recent.query({ limit: 5 });
 				isLoading = false;
 			}
 		},
-		'/(client-area)/categories': {
-			right: true,
+		'/(client-area)/categories/[slug]': {
+			// right: true,
 			left: true,
 			load: async () => {
 				isLoading = true;

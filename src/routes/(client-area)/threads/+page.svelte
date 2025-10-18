@@ -8,25 +8,29 @@
 
 	let threads = $state<any[]>([]);
 	let categories = $state<any[]>([]);
-	let isLoading = $state(true);
+	let isLoading = $state(false);
 
 	let searchQuery = $state('');
 	let categoryFilter = $state('all');
 
-	let sortBy = $state<'recent' | 'popular' | 'oldest'>('recent');
+	let sortBy = $state<'recent' | 'popular' | 'oldest'>('popular');
 	let offset = 0;
 	const limit = 20;
 	let hasMore = $state<boolean>(true);
+	let prevSearch = searchQuery;
+	let prevCategory = categoryFilter;
+	let prevSort = sortBy;
 
 	let sentinel: HTMLDivElement | null = null;
 
 	async function loadThreads(reset = false) {
+		if (isLoading) return;
 		if (reset) {
 			offset = 0;
 			threads = [];
 			hasMore = true;
 		}
-		if (!hasMore || isLoading) return;
+		if (!hasMore) return;
 
 		isLoading = true;
 		try {
@@ -60,11 +64,18 @@
 	}
 
 	$effect(() => {
-		loadThreads(true);
-		loadCategories();
+		if (searchQuery !== prevSearch || categoryFilter !== prevCategory || sortBy !== prevSort) {
+			prevSearch = searchQuery;
+			prevCategory = categoryFilter;
+			prevSort = sortBy;
+			loadThreads(true);
+		}
 	});
 
 	onMount(() => {
+		loadThreads(true);
+		loadCategories();
+
 		const observer = new IntersectionObserver(
 			(entries) => {
 				if (entries[0].isIntersecting && !isLoading) {

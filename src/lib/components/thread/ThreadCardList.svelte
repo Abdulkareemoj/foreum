@@ -50,7 +50,7 @@
 		</div>
 
 		<!-- Title -->
-		<a href={`/forum/${thread.id}`} class="mb-2 block">
+		<a href={`/threads/${thread.id}`} class="mb-2 block">
 			<h3 class="line-clamp-2 text-base font-semibold transition-colors hover:text-primary">
 				{thread.title}
 			</h3>

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Calendar } from '@lucide/svelte';
 	import { formatDistanceToNow } from 'date-fns';
-	import { createEventDispatcher } from 'svelte';
+	// event dispatching is deprecated in Svelte 5; prefer callback props or direct calls
 
 	import { page } from '$app/state';
 	import { Button } from '$components/ui/button';
@@ -12,9 +12,8 @@
 	import { createTRPC } from '$lib/trpc';
 	import { renderTipTap } from '$utils';
 
-	const dispatch = createEventDispatcher<{ submitted: void }>();
-
-	let { threadId } = $props<{ threadId: string }>();
+	// ensure `threadId` is always a string when passed to child components
+	let threadId: string = page.params.threadId ?? '';
 
 	const trpc = createTRPC();
 
@@ -23,52 +22,57 @@
 	let sortBy = $state<'oldest' | 'newest'>('oldest');
 	let isLoading = $state(true);
 
+	// fetch controller to avoid racing responses when params change
+	let repliesFetchCounter = 0;
+
 	// ✅ grab user from layout data
 	let currentUser = $derived(page.data.user);
 
 	// ✅ Load thread once
 	$effect(() => {
-		(async () => {
-			thread = await trpc.thread.byId.query({ id: threadId });
-		})();
+		if (threadId) {
+			(async () => {
+				thread = await trpc.thread.byId.query({ id: threadId });
+			})();
+		}
 	});
 
 	// ✅ Reload replies whenever sortBy or threadId changes
-	$effect(() => {
-		(async () => {
-			isLoading = true;
-			replies = await trpc.reply.list.query({
-				threadId,
-				sortBy
-			});
+	// race-safe replies fetch; increments counter to ignore stale responses
+	async function fetchReplies() {
+		const id = ++repliesFetchCounter;
+		if (!threadId) {
+			replies = [];
 			isLoading = false;
-		})();
-	});
+			return;
+		}
 
-	async function refreshReplies() {
 		isLoading = true;
-		replies = await trpc.reply.list.query({
-			threadId,
-			sortBy
-		});
-		isLoading = false;
+		try {
+			const res = await trpc.reply.list.query({ threadId, sortBy });
+			// ignore stale responses
+			if (id !== repliesFetchCounter) return;
+			replies = res;
+		} catch (err) {
+			console.error('Failed to load replies', err);
+			if (id === repliesFetchCounter) replies = [];
+		} finally {
+			if (id === repliesFetchCounter) isLoading = false;
+		}
 	}
 
-	async function handleSubmit() {
-		if (!content.trim()) return;
-
-		// ✅ store minimal JSON
-		const jsonContent = {
-			root: {
-				type: 'root',
-				children: [{ type: 'paragraph', children: [{ text: content }] }]
-			}
-		};
-
-		await trpc.reply.add.mutate({ threadId, content: jsonContent });
-		content = '';
-		dispatch('submitted');
+	// public refresh helper used by ReplyForm via onSubmitted
+	async function refreshReplies() {
+		await fetchReplies();
 	}
+
+	// reactively load replies when threadId or sortBy changes
+	$effect(() => {
+		// reference reactive deps
+		threadId;
+		sortBy;
+		fetchReplies();
+	});
 </script>
 
 <div class="container mx-auto space-y-8 px-4 py-8">

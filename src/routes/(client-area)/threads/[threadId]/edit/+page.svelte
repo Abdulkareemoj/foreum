@@ -56,7 +56,7 @@
 		try {
 			await trpc.thread.update.mutate({ id: threadId, title, content, categoryId });
 			toast.success('Thread updated successfully');
-			goto(`/thread/${threadId}`);
+			goto(`/threads/${threadId}`);
 		} catch (err) {
 			console.error(err);
 			toast.error('Failed to update thread');
@@ -68,7 +68,7 @@
 
 <div class="container mx-auto max-w-3xl px-4 py-8">
 	<div class="mb-8 flex flex-col gap-4">
-		<a href={`/thread/${threadId}`} class="inline-flex items-center text-sm text-muted-foreground">
+		<a href={`/threads/${threadId}`} class="inline-flex items-center text-sm text-muted-foreground">
 			<Button variant="ghost" size="sm">
 				<ArrowLeft class="mr-2 size-4" /> Back to Thread
 			</Button>
@@ -111,7 +111,7 @@
 					</div>
 
 					<div class="flex justify-end gap-4">
-						<a href={`/thread/${threadId}`}>
+						<a href={`/threads/${threadId}`}>
 							<Button type="button" variant="outline">Cancel</Button>
 						</a>
 						<Button type="submit" disabled={saving}>

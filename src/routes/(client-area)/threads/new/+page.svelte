@@ -17,11 +17,9 @@
 	import { Input } from '$components/ui/input';
 	import MultiSelect from '$components/ui/multi-select/multi-select.svelte';
 	import * as Select from '$components/ui/select';
-	import { Textarea } from '$components/ui/textarea';
 	import { threadSchema } from '$lib/schemas';
 	import { createTRPC } from '$lib/trpc';
 
-	// Props
 	let { data } = $props<{
 		data: {
 			form: SuperValidated<Infer<typeof threadSchema>>;
@@ -210,7 +208,7 @@
 		</Form.Field>
 
 		<div class="flex justify-end gap-4">
-			<Button type="button" variant="outline" on:click={() => goto('/threads')}>Cancel</Button>
+			<Button type="button" variant="outline" onclick={() => goto('/threads')}>Cancel</Button>
 			<Button type="submit" disabled={creating}>
 				{creating ? 'Creating...' : 'Create Thread'}
 			</Button>

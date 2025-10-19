@@ -46,7 +46,7 @@
 			<Card.Header>
 				<Card.Title>Recent Posts</Card.Title>
 			</Card.Header>
-			<Card.Content class="space-y-2">
+			<Card.Content class="space-y-1">
 				{#each recentPosts as post}
 					<div class="flex gap-3 rounded-lg p-1 hover:bg-accent">
 						<a href={`/threads/${post.id}`} class="flex gap-2 py-1"

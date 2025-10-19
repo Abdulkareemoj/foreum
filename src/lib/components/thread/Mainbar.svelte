@@ -1,7 +1,7 @@
 <script lang="ts">
 	import {
+		CalendarIcon,
 		ClockIcon,
-		FlameIcon,
 		GridIcon,
 		ListIcon,
 		Plus,
@@ -10,8 +10,7 @@
 		SearchIcon,
 		SlidersHorizontal,
 		SlidersHorizontalIcon,
-		TrendingUpIcon,
-		TrophyIcon
+		TrendingUpIcon
 	} from '@lucide/svelte';
 
 	import { Button } from '$components/ui/button';
@@ -28,7 +27,7 @@
 		isLoading = false,
 		searchQuery = $bindable(''),
 		categoryFilter = $bindable('all'),
-		sortBy = $bindable('best'),
+		sortBy = $bindable('popular'),
 		onLoadMore = () => {}
 	}: {
 		threads?: any[];
@@ -88,7 +87,7 @@
 							value="oldest"
 							class="h-full rounded-none border-0 border-b-2 border-transparent bg-background text-muted-foreground hover:border-muted-foreground/30 hover:text-foreground data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:shadow-none dark:text-muted-foreground dark:hover:text-foreground dark:data-[state=active]:border-primary"
 						>
-							<TrophyIcon class="size-4" />
+							<CalendarIcon class="size-4" />
 							Oldest
 						</Tabs.Trigger>
 					</Tabs.List>

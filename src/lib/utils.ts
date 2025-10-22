@@ -5,6 +5,7 @@ import TableCell from '@tiptap/extension-table-cell';
 import TableHeader from '@tiptap/extension-table-header';
 import TableRow from '@tiptap/extension-table-row';
 import { generateHTML } from '@tiptap/html';
+import type { JSONContent } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -96,11 +97,67 @@ export const resetConfirmTemplate = `<!doctype html>
 </html>
 `;
 
-export function renderTipTap(content: any): string {
+export function renderTipTap(content: unknown): string {
 	if (!content) return '';
 
+	// If content is a string, it might already be HTML, plain text, or a
+	// stringified TipTap JSON document. Handle each case.
+	if (typeof content === 'string') {
+		const trimmed = content.trim();
+
+		// If it looks like HTML, return as-is (assume it's safe/already sanitized)
+		if (trimmed.startsWith('<')) return content;
+
+		// If it looks like JSON, try to parse and render
+		if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
+			try {
+				const parsed = JSON.parse(trimmed);
+				return generateHTML(parsed, [
+					StarterKit,
+					Link,
+					Image,
+					Table,
+					TableRow,
+					TableHeader,
+					TableCell
+				]);
+			} catch (err) {
+				console.error('Failed to parse TipTap JSON string:', err);
+				// fall through to treat as plain text
+			}
+		}
+
+		// Plain text: escape and wrap in a paragraph
+		return `<p>${String(trimmed)
+			.replaceAll('&', '&amp;')
+			.replaceAll('<', '&lt;')
+			.replaceAll('>', '&gt;')}</p>`;
+	}
+
+	// Otherwise assume it's already a TipTap JSON document/object
 	try {
-		return generateHTML(content, [
+		// Normalize a few legacy or alternate shapes we've seen in the wild:
+		// - { root: { children: [...] } }
+		// - { type: 'root', children: [...] }
+		// - { children: [...] } (no `content` key)
+		let doc: unknown = content;
+
+		if (typeof content === 'object' && content !== null) {
+			const c = content as Record<string, unknown>;
+
+			if (c.root && typeof c.root === 'object') {
+				const maybeRoot = c.root as Record<string, unknown>;
+				if (Array.isArray(maybeRoot.children)) {
+					doc = { type: 'doc', content: maybeRoot.children };
+				}
+			} else if (c.type === 'root' && Array.isArray(c.children)) {
+				doc = { type: 'doc', content: c.children };
+			} else if (Array.isArray(c.children) && !('content' in c)) {
+				doc = { type: 'doc', content: c.children };
+			}
+		}
+
+		return generateHTML(doc as JSONContent, [
 			StarterKit,
 			Link,
 			Image,

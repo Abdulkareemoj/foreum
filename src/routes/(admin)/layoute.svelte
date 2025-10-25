@@ -1,0 +1,14 @@
+<script lang="ts">
+	import * as Sidebar from '$lib/components/ui/sidebar/';
+	import AppSidebar from '$lib/components/admin/app-sidebar.svelte';
+
+	let { children } = $props();
+</script>
+
+<Sidebar.Provider>
+	<AppSidebar />
+	<main>
+		<Sidebar.Trigger />
+		{@render children?.()}
+	</main>
+</Sidebar.Provider>

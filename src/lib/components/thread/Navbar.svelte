@@ -29,14 +29,13 @@
 
 	import LeftSidebarMobile from './LeftMobile.svelte';
 	import RightSidebarMobile from './RightMobile.svelte';
-	import NavUser from './NavUser.svelte';
+	import NavUser from '../shared/NavUser.svelte';
 	import { toast } from 'svelte-sonner';
 	import { onMount } from 'svelte';
-
+	import NotificationBell from '$lib/components/shared/NotificationBell.svelte';
+	let { user } = $props<{ user: { name: string; email: string; image?: string } }>();
 	let unreadCount = $state(0);
 	let pollingInterval: ReturnType<typeof setInterval> | null = null;
-
-	let { user } = $props<{ user: { name: string; email: string; image?: string } }>();
 
 	// Data for sidebars
 	let categories = $state<any[]>([]);
@@ -175,56 +174,12 @@
 				{/if}
 			</Button> -->
 
-			<DropdownMenu.Root>
-				<DropdownMenu.Trigger>
-					<Button variant="outline" size="icon" class="relative inline-flex">
-						<Bell class="size-5" />
-						{#if unreadCount > 0}
-							<span
-								class="absolute -top-1 -right-1 flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-red-500 px-1.5 text-[0.65rem] font-bold text-white"
-							>
-								{unreadCount}
-							</span>
-						{/if}
-					</Button>
-				</DropdownMenu.Trigger>
-
-				<DropdownMenu.Content align="end" class="w-72">
-					<DropdownMenu.Label class="font-semibold">Notifications</DropdownMenu.Label>
-					<DropdownMenu.Separator />
-
-					{#if loading}
-						<div class="py-6 text-center text-sm text-muted-foreground">Loading...</div>
-					{:else if recentNotifications.length === 0}
-						<div class="py-6 text-center text-sm text-muted-foreground">No notifications yet</div>
-					{:else}
-						{#each recentNotifications as n (n.id)}
-							<DropdownMenu.Item
-								class="flex cursor-pointer flex-col gap-1"
-								on:click={() => markAsRead(n.id)}
-							>
-								<div class="flex items-center justify-between">
-									<p class="truncate text-sm font-medium">{n.title}</p>
-									{#if !n.read}
-										<span class="inline-block h-2 w-2 rounded-full bg-blue-500"></span>
-									{/if}
-								</div>
-								{#if n.body}
-									<p class="line-clamp-2 text-xs text-muted-foreground">{n.body}</p>
-								{/if}
-							</DropdownMenu.Item>
-						{/each}
-					{/if}
-
-					<DropdownMenu.Separator />
-					<DropdownMenu.Item
-						class="justify-center text-center text-sm font-medium text-primary hover:bg-transparent hover:text-primary/80"
-						on:click={() => (window.location.href = '/notifications')}
-					>
-						<a href="/notifications">View all notifications →</a>
-					</DropdownMenu.Item>
-				</DropdownMenu.Content>
-			</DropdownMenu.Root>
+			<NotificationBell
+				{unreadCount}
+				{loading}
+				{recentNotifications}
+				on:markAsRead={(event) => markAsRead(event.detail)}
+			/>
 
 			<Button href="/settings" variant="outline" size="icon" class="hidden md:inline-flex">
 				<Settings class="size-5" />
@@ -245,8 +200,7 @@
 			<Sheet.Content side="left" class="w-80">
 				<Sheet.Header class="text-left">
 					<Sheet.Title class="flex items-center gap-2">
-						<Package2 class="h-6 w-6" />
-						Foreum
+						<Logo />
 					</Sheet.Title>
 				</Sheet.Header>
 
@@ -258,13 +212,15 @@
 								href={`/profile/${user.username ?? user.id}`}
 								class="flex w-full items-center gap-3"
 							>
-								<Avatar.Root class="size-10">
+								<Avatar.Root class="size-8 rounded-lg grayscale">
 									<Avatar.Image src={user.image} alt={user.name} />
 									<Avatar.Fallback>{user.name?.slice(0, 2).toUpperCase()}</Avatar.Fallback>
 								</Avatar.Root>
-								<div class="min-w-0 flex-1">
-									<p class="truncate text-sm font-medium">{user.name}</p>
-									<p class="truncate text-xs text-muted-foreground">{user.email}</p>
+								<div class="grid flex-1 text-left text-sm leading-tight">
+									<span class="truncate font-medium">{user.name}</span>
+									<span class="truncate text-xs text-muted-foreground">
+										{user.email}
+									</span>
 								</div>
 							</a>
 						{:else}

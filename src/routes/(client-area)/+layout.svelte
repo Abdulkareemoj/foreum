@@ -7,10 +7,12 @@
 	import { createTRPC } from '$lib/trpc';
 
 	let { data, children } = $props<{
-		data: { user: any };
 		children: any;
 	}>();
-
+	const user = data.user;
+	$effect(() => {
+		console.log('NavUser received user:', user);
+	});
 	let categories = $state<any[]>([]);
 	let trendingTags = $state<any[]>([]);
 	let topContributors = $state<any[]>([]);
@@ -136,7 +138,7 @@
 </script>
 
 <div class="flex h-screen flex-col bg-background text-foreground">
-	<Navbar user={data.user} />
+	<Navbar {user} />
 
 	<!-- Main Layout Below Navbar -->
 	<div class="flex flex-1 overflow-hidden">

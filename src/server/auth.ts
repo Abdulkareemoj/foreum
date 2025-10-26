@@ -17,6 +17,7 @@ import { db, schema } from '$server/db';
 import { resetConfirmTemplate, resetTemplate, verificationTemplate } from '$utils';
 
 import { profile } from './db/schema/profile-schema';
+import { accessControl, adminRole, moderatorRole, userAc } from './permissions';
 // import { organization } from "better-auth/plugins/organization";
 const resend = new Resend(RESEND_API_KEY);
 const from = BETTER_AUTH_EMAIL;
@@ -28,7 +29,16 @@ export const auth = betterAuth({
 		schema
 	}),
 	plugins: [
-		admin(),
+		admin({
+			defaultRole: 'user',
+			adminRoles: ['admin', 'moderator'], // Both can access admin routes
+			accessControl,
+			roles: {
+				admin: adminRole,
+				moderator: moderatorRole,
+				user: userAc
+			}
+		}),
 		username({
 			minUsernameLength: 5,
 			maxUsernameLength: 25,

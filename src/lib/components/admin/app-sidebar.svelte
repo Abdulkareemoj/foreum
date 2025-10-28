@@ -24,13 +24,13 @@
 			{
 				title: 'Sections',
 				items: [
-					{ title: 'Dashboard', url: '/admin', icon: LayoutDashboard },
+					{ title: 'Dashboard', url: '/admin/dashboard', icon: LayoutDashboard },
 					{ title: 'Users', url: '/admin/users', icon: User },
 					{ title: 'Appearance', url: '/admin/appearance', icon: Sparkles, isActive: true },
 					{ title: 'Moderation Logs', url: '/admin/moderation-logs', icon: Building },
 					{ title: 'Reports', url: '/admin/reports', icon: List },
 					{ title: 'Settings', url: '/admin/settings-admin', icon: Settings },
-					{ title: 'Announcement', url: '/admin/announcements', icon: Speaker }
+					{ title: 'Announcements', url: '/admin/announcements', icon: Speaker }
 				]
 			},
 			{
@@ -54,6 +54,26 @@
 	</Sidebar.Header>
 
 	<Sidebar.Content>
+		<Sidebar.Group>
+			<div class=" items-center gap-3 rounded-lg bg-muted/50 p-2 sm:hidden">
+				{#if user}
+					<a href={`/profile/${user.username ?? user.id}`} class="flex w-full items-center gap-3">
+						<Avatar.Root class="size-8 rounded-lg grayscale">
+							<Avatar.Image src={user.image} alt={user.name} />
+							<Avatar.Fallback>{user.name?.slice(0, 2).toUpperCase()}</Avatar.Fallback>
+						</Avatar.Root>
+						<div class="grid flex-1 text-left text-sm leading-tight">
+							<span class="truncate font-medium">{user.name}</span>
+							<span class="truncate text-xs text-muted-foreground">
+								{user.email}
+							</span>
+						</div>
+					</a>
+				{:else}
+					<a href="/login" class="text-sm font-medium text-primary">Sign in</a>
+				{/if}
+			</div></Sidebar.Group
+		>
 		{#each data.navMain as section}
 			<Sidebar.Group>
 				<Sidebar.GroupLabel class="text-muted-foreground/60 uppercase">
@@ -61,33 +81,12 @@
 				</Sidebar.GroupLabel>
 				<Sidebar.GroupContent class="px-2">
 					<Sidebar.Menu>
-						<div class="flex items-center gap-3 rounded-lg bg-muted/50 p-2">
-							{#if user}
-								<a
-									href={`/profile/${user.username ?? user.id}`}
-									class="flex w-full items-center gap-3"
-								>
-									<Avatar.Root class="size-8 rounded-lg grayscale">
-										<Avatar.Image src={user.image} alt={user.name} />
-										<Avatar.Fallback>{user.name?.slice(0, 2).toUpperCase()}</Avatar.Fallback>
-									</Avatar.Root>
-									<div class="grid flex-1 text-left text-sm leading-tight">
-										<span class="truncate font-medium">{user.name}</span>
-										<span class="truncate text-xs text-muted-foreground">
-											{user.email}
-										</span>
-									</div>
-								</a>
-							{:else}
-								<a href="/login" class="text-sm font-medium text-primary">Sign in</a>
-							{/if}
-						</div>
-
 						<Separator class="my-4" />
+
 						{#each section.items as item}
 							<Sidebar.MenuItem>
 								<Sidebar.MenuButton
-									class="group/menu-button hover:from-sidebar.-accent hover:to-sidebar.-accent/40 h-9 gap-3 rounded-md bg-gradient-to-r font-medium hover:bg-transparent data-[active=true]:from-primary/20 data-[active=true]:to-primary/5 [&>svg]:size-auto"
+									class="group/menu-button hover:from-sidebar.-accent hover:to-sidebar.-accent/40 h-9 gap-3 rounded-md bg-linear-to-r font-medium hover:bg-transparent data-[active=true]:from-primary/20 data-[active=true]:to-primary/5 [&>svg]:size-auto"
 									data-active={item.isActive}
 								>
 									<a href={item.url} class="flex items-center gap-3">

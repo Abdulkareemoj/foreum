@@ -1,10 +1,7 @@
 <script>
-	import ChevronsUpDown from '@lucide/svelte/icons/chevrons-up-down';
-
 	import { Button } from '$lib/components/ui/button/';
 	import { Input } from '$lib/components/ui/input/';
 	import { Label } from '$lib/components/ui/label/';
-	import { cn } from '$lib/utils';
 	import ModeSwitch from './ModeSwitch.svelte';
 
 	const links = [
@@ -99,7 +96,7 @@
 			group: 'Legal',
 			items: [
 				{
-					title: 'Licence',
+					title: 'Lisence',
 					href: '#'
 				},
 				{
@@ -136,7 +133,7 @@
 
 			<div class="flex flex-wrap justify-center gap-6 text-sm">
 				<a
-					href="#"
+					href="https:/x.com"
 					target="_blank"
 					rel="noopener noreferrer"
 					aria-label="X/Twitter"

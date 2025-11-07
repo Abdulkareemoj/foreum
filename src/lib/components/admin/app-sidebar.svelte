@@ -16,28 +16,27 @@
 	import { Separator } from '$components/ui/separator';
 	import * as Avatar from '$components/ui/avatar';
 	import SearchForm from '$lib/components/admin/search-form.svelte';
-	import { authClient } from '$lib/auth-client';
-	import { goto } from '$app/navigation';
+
+	import { page } from '$app/state';
 	let { user } = $props<{ user: { name: string; email: string; image?: string } }>();
 	const data = {
 		navMain: [
 			{
 				title: 'Sections',
 				items: [
-					{ title: 'Dashboard', url: '/admin/dashboard', icon: LayoutDashboard },
-					{ title: 'Users', url: '/admin/users', icon: User },
-					{ title: 'Appearance', url: '/admin/appearance', icon: Sparkles, isActive: true },
-					{ title: 'Moderation Logs', url: '/admin/moderation-logs', icon: Building },
-					{ title: 'Reports', url: '/admin/reports', icon: List },
-					{ title: 'Settings', url: '/admin/settings-admin', icon: Settings },
-					{ title: 'Announcements', url: '/admin/announcements', icon: Speaker }
+					{ title: 'Dashboard', url: '/dashboard', icon: LayoutDashboard },
+					{ title: 'Users', url: '/users', icon: User },
+					{ title: 'Appearance', url: '/appearance', icon: Sparkles },
+					{ title: 'Moderation Logs', url: '/moderation-logs', icon: Building },
+					{ title: 'Reports', url: '/reports', icon: List },					{ title: 'Settings', url: '/settings-admin', icon: Settings },
+					{ title: 'Announcements', url: '/announcements', icon: Speaker }
 				]
 			},
 			{
 				title: 'Other',
 				items: [
-					{ title: 'Analytics', url: '/admin/analytics', icon: ChartArea },
-					{ title: 'Help Center', url: '/admin/help', icon: LifeBuoy }
+					{ title: 'Analytics', url: '/analytics', icon: ChartArea },
+					{ title: 'Help Center', url: '/help', icon: LifeBuoy }
 				]
 			}
 		]
@@ -62,6 +61,7 @@
 							<Avatar.Image src={user.image} alt={user.name} />
 							<Avatar.Fallback>{user.name?.slice(0, 2).toUpperCase()}</Avatar.Fallback>
 						</Avatar.Root>
+
 						<div class="grid flex-1 text-left text-sm leading-tight">
 							<span class="truncate font-medium">{user.name}</span>
 							<span class="truncate text-xs text-muted-foreground">
@@ -87,7 +87,7 @@
 							<Sidebar.MenuItem>
 								<Sidebar.MenuButton
 									class="group/menu-button hover:from-sidebar.-accent hover:to-sidebar.-accent/40 h-9 gap-3 rounded-md bg-linear-to-r font-medium hover:bg-transparent data-[active=true]:from-primary/20 data-[active=true]:to-primary/5 [&>svg]:size-auto"
-									data-active={item.isActive}
+									data-active={page.url.pathname.startsWith(item.url)}
 								>
 									<a href={item.url} class="flex items-center gap-3">
 										{#if item.icon}
@@ -144,3 +144,4 @@
 
 	<Sidebar.Rail />
 </Sidebar.Root>
+

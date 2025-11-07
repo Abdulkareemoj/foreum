@@ -3,13 +3,13 @@
 	import { NodeViewWrapper } from 'svelte-tiptap';
 	import type { NodeViewProps } from '@tiptap/core';
 
-	import AlignLeft from 'lucide-svelte/icons/align-left';
-	import AlignCenter from 'lucide-svelte/icons/align-center';
-	import AlignRight from 'lucide-svelte/icons/align-right';
-	import CopyIcon from 'lucide-svelte/icons/copy';
-	import Fullscreen from 'lucide-svelte/icons/fullscreen';
-	import Trash from 'lucide-svelte/icons/trash';
-	import Captions from 'lucide-svelte/icons/captions';
+	import AlignLeft from '@lucide/svelte/icons/align-left';
+	import AlignCenter from '@lucide/svelte/icons/align-center';
+	import AlignRight from '@lucide/svelte/icons/align-right';
+	import CopyIcon from '@lucide/svelte/icons/copy';
+	import Fullscreen from '@lucide/svelte/icons/fullscreen';
+	import Trash from '@lucide/svelte/icons/trash';
+	import Captions from '@lucide/svelte/icons/captions';
 
 	import { duplicateContent } from '../../utils.js';
 

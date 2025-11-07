@@ -30,7 +30,7 @@
 	import TableColMenu from './menus/table/table-col-menu.svelte';
 	import slashcommand from '../extensions/slash-command/slashcommand.js';
 	import SlashCommandList from './components/SlashCommandList.svelte';
-	import LoaderCircle from 'lucide-svelte/icons/loader-circle';
+	import LoaderCircle from '@lucide/svelte/icons/loader-circle';
 	import { focusEditor, type EdraProps } from '../utils.js';
 	import IFramePlaceholderComponent from './components/IFramePlaceholder.svelte';
 	import { IFramePlaceholder } from '../extensions/iframe/IFramePlaceholder.js';

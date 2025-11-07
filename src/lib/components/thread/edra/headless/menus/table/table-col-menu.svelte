@@ -2,9 +2,9 @@
 	import type { ShouldShowProps } from '../../../utils.js';
 	import { type Editor } from '@tiptap/core';
 	import { BubbleMenu } from 'svelte-tiptap';
-	import ArrowLeftFromLine from 'lucide-svelte/icons/arrow-left-from-line';
-	import ArrowRightFromLine from 'lucide-svelte/icons/arrow-right-from-line';
-	import Trash from 'lucide-svelte/icons/trash';
+	import ArrowLeftFromLine from '@lucide/svelte/icons/arrow-left-from-line';
+	import ArrowRightFromLine from '@lucide/svelte/icons/arrow-right-from-line';
+	import Trash from '@lucide/svelte/icons/trash';
 	import { isColumnGripSelected } from '../../../extensions/table/utils.js';
 	interface Props {
 		editor: Editor;

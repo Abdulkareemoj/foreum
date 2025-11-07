@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { NodeViewProps } from '@tiptap/core';
-	import Image from 'lucide-svelte/icons/image';
+	import Image from '@lucide/svelte/icons/image';
 	import { NodeViewWrapper } from 'svelte-tiptap';
 	const { editor }: NodeViewProps = $props();
 

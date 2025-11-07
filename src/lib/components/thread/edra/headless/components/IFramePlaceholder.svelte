@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { NodeViewProps } from '@tiptap/core';
-	import CodeXML from 'lucide-svelte/icons/code-xml';
+	import CodeXML from '@lucide/svelte/icons/code-xml';
 	import { NodeViewWrapper } from 'svelte-tiptap';
 	const { editor }: NodeViewProps = $props();
 

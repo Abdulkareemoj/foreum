@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { NodeViewProps } from '@tiptap/core';
-	import AudioLines from 'lucide-svelte/icons/audio-lines';
+	import AudioLines from '@lucide/svelte/icons/audio-lines';
 	import { NodeViewWrapper } from 'svelte-tiptap';
 	const { editor }: NodeViewProps = $props();
 

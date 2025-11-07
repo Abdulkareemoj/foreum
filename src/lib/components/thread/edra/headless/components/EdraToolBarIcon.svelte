@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { EdraCommand } from '../../commands/types.js';
 	import type { Editor } from '@tiptap/core';
-	import { icons } from 'lucide-svelte';
+	import { icons } from '@lucide/svelte';
 
 	interface Props {
 		command: EdraCommand;

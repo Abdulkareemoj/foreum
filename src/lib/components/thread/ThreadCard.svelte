@@ -53,13 +53,15 @@
 			<div class="flex items-center justify-between">
 				<div class="flex items-center gap-4 text-sm text-muted-foreground">
 					<div class="flex items-center gap-2">
-						<Avatar.Root class="h-6 w-6">
-							<Avatar.Image src={thread.author?.image} />
-							<Avatar.Fallback>
-								{thread.author?.name?.charAt(0).toUpperCase() || 'U'}
-							</Avatar.Fallback>
-						</Avatar.Root>
-						<span>{thread.author?.name || 'Anonymous'}</span>
+						<a href={`/profile/${thread.author.username}`}>
+							<Avatar.Root class="h-6 w-6">
+								<Avatar.Image src={thread.author?.image} />
+								<Avatar.Fallback>
+									{thread.author?.name?.charAt(0).toUpperCase() || 'U'}
+								</Avatar.Fallback>
+							</Avatar.Root>
+							<span>{thread.author?.username || 'Anonymous'}</span></a
+						>
 					</div>
 					<div class="flex items-center gap-1">
 						<Calendar class="size-4" />

@@ -1,5 +1,13 @@
 <script lang="ts">
-	import { BellIcon, CreditCardIcon, LogOutIcon, Moon, Sun, UserIcon } from '@lucide/svelte';
+	import {
+		BellIcon,
+		CreditCardIcon,
+		LogOutIcon,
+		Moon,
+		Sun,
+		UserIcon,
+		MessageSquare
+	} from '@lucide/svelte';
 
 	import { goto } from '$app/navigation';
 	import { Button } from '$components/ui/button';
@@ -76,8 +84,8 @@
 					</a>
 				</DropdownMenu.Item>
 				<DropdownMenu.Item>
-					<a class="items flex gap-2" href="/billing">
-						<CreditCardIcon class="size-4" /> Billing
+					<a class="items flex gap-2" href="/messages">
+						<MessageSquare class="size-4" /> Messages
 					</a>
 				</DropdownMenu.Item>
 			</DropdownMenu.Group>

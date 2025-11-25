@@ -36,18 +36,21 @@
 		<Card.Content class="px-4">
 			<!-- User Info Row -->
 			<div class="mb-3 flex items-center gap-2">
-				<Avatar.Root class="size-8">
-					<Avatar.Image src={thread.author?.image} alt={thread.author?.name} />
-					<Avatar.Fallback>{thread.author?.name?.slice(0, 1).toUpperCase()}</Avatar.Fallback>
-				</Avatar.Root>
-				<div class="flex items-center gap-2 text-sm">
-					<span class="font-semibold">{thread.author?.name || 'Anonymous'}</span>
-					{#if thread.author?.reputation}
-						<span class="text-xs font-medium text-muted-foreground">{thread.author.reputation}</span
-						>
-					{/if}
-					<span class="text-xs text-muted-foreground">• {thread.timeAgo || 'recently'}</span>
-				</div>
+				<a class="flex gap-2" href={`/profile/${thread.author.username}`}
+					><Avatar.Root class="size-8">
+						<Avatar.Image src={thread.author?.image} alt={thread.author?.name} />
+						<Avatar.Fallback>{thread.author?.username?.slice(0, 1).toUpperCase()}</Avatar.Fallback>
+					</Avatar.Root>
+					<div class="flex items-center gap-2 text-sm">
+						<span class="font-semibold">{thread.author?.name || 'Anonymous'}</span>
+						{#if thread.author?.reputation}
+							<span class="text-xs font-medium text-muted-foreground"
+								>{thread.author.reputation}</span
+							>
+						{/if}
+						<span class="text-xs text-muted-foreground">• {thread.timeAgo || 'recently'}</span>
+					</div></a
+				>
 			</div>
 
 			<!-- Title -->

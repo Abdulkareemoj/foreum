@@ -90,6 +90,7 @@ export const threadSchema = z.object({
 
 export type ThreadInput = z.infer<typeof threadSchema>;
 
+// profile
 export const profileSchema = z.object({
 	name: z.string().min(1, 'Name is required').max(100),
 	username: z
@@ -103,3 +104,25 @@ export const profileSchema = z.object({
 	website: z.string().url().optional().or(z.literal('')),
 	image: z.string().url().optional()
 });
+
+export type ProfileFormValues = z.infer<typeof profileSchema>;
+
+// event
+export const eventSchema = z.object({
+	title: z.string().min(1).max(200),
+	description: z.string().optional().nullable(),
+	eventType: z.enum(['physical', 'virtual', 'hybrid', 'other']).default('other'),
+	physicalLocation: z.string().max(255).optional().nullable(),
+	virtualUrl: z.string().url().optional().nullable(),
+	startsAt: z.string().min(1), // ISO string from date/time inputs
+	endsAt: z.string().min(1),
+	visibility: z.enum(['public', 'private', 'unlisted']).optional(),
+	coverImage: z.string().max(255).optional().nullable(),
+	category: z.string().max(100).optional().nullable(),
+	maxAttendees: z.preprocess(
+		(v) => (v === '' ? undefined : Number(v)),
+		z.number().int().positive().optional()
+	),
+	groupId: z.string().uuid().optional().nullable()
+});
+export type EventInput = z.infer<typeof eventSchema>;

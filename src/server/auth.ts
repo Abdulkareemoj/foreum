@@ -6,13 +6,14 @@ import { sveltekitCookies } from 'better-auth/svelte-kit';
 import { Resend } from 'resend';
 
 import { getRequestEvent } from '$app/server';
-import { BETTER_AUTH_EMAIL, RESEND_API_KEY, TEST_EMAIL } from '$env/static/private';
 import {
-	PUBLIC_DISCORD_CLIENT_ID,
-	PUBLIC_DISCORD_CLIENT_SECRET,
-	PUBLIC_GOOGLE_CLIENT_ID,
-	PUBLIC_GOOGLE_CLIENT_SECRET
-} from '$env/static/public';
+	BETTER_AUTH_EMAIL,
+	DISCORD_CLIENT_SECRET,
+	GOOGLE_CLIENT_SECRET,
+	RESEND_API_KEY,
+	TEST_EMAIL
+} from '$env/static/private';
+import { PUBLIC_DISCORD_CLIENT_ID, PUBLIC_GOOGLE_CLIENT_ID } from '$env/static/public';
 import { db, schema } from '$server/db';
 import { resetConfirmTemplate, resetTemplate, verificationTemplate } from '$utils';
 
@@ -152,11 +153,11 @@ export const auth = betterAuth({
 	socialProviders: {
 		google: {
 			clientId: PUBLIC_GOOGLE_CLIENT_ID || '',
-			clientSecret: PUBLIC_GOOGLE_CLIENT_SECRET || ''
+			clientSecret: GOOGLE_CLIENT_SECRET || ''
 		},
 		discord: {
 			clientId: PUBLIC_DISCORD_CLIENT_ID || '',
-			clientSecret: PUBLIC_DISCORD_CLIENT_SECRET || ''
+			clientSecret: DISCORD_CLIENT_SECRET || ''
 		}
 	}
 });

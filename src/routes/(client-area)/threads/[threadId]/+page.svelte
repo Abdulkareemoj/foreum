@@ -82,11 +82,13 @@
 			<Card.Header>
 				<h1 class="text-2xl font-bold">{thread.title}</h1>
 				<div class="flex items-center gap-3 text-sm text-muted-foreground">
-					<Avatar.Root class="h-6 w-6">
-						<Avatar.Image src={thread.author?.image} />
-						<Avatar.Fallback>{thread.author?.name?.[0] || 'U'}</Avatar.Fallback>
-					</Avatar.Root>
-					<span>{thread.author?.name || 'Anonymous'}</span>
+					<a class="flex gap-2" href={`/profile/${thread.author.username}`}
+						><Avatar.Root class="h-6 w-6">
+							<Avatar.Image src={thread.author?.image} />
+							<Avatar.Fallback>{thread.author?.name?.[0] || 'U'}</Avatar.Fallback>
+						</Avatar.Root>
+						<span>{thread.author?.name || 'Anonymous'}</span></a
+					>
 					<div class="flex items-center gap-1">
 						<Calendar class="size-4" />
 						{formatDistanceToNow(new Date(thread.createdAt), { addSuffix: true })}
@@ -129,11 +131,13 @@
 				<Card.Header>
 					<div class="flex items-center justify-between">
 						<div class="flex items-center gap-2 text-sm text-muted-foreground">
-							<Avatar.Root class="h-6 w-6">
-								<Avatar.Image src={reply.author?.image} />
-								<Avatar.Fallback>{reply.author?.name?.[0] || 'U'}</Avatar.Fallback>
-							</Avatar.Root>
-							<span>{reply.author?.name || 'Anonymous'}</span>
+							<a class="flex gap-2" href={`/profile/${thread.author.username}`}>
+								<Avatar.Root class="h-6 w-6">
+									<Avatar.Image src={reply.author?.image} />
+									<Avatar.Fallback>{reply.author?.name?.[0] || 'U'}</Avatar.Fallback>
+								</Avatar.Root>
+								<span>{reply.author?.name || 'Anonymous'}</span></a
+							>
 						</div>
 
 						{#if reply.author?.id === currentUser?.id}

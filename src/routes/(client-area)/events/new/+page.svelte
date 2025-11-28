@@ -26,9 +26,9 @@
 
 	<form method="POST" use:enhance class="space-y-6">
 		<Form.Field {form} name="title">
-			<Form.Label>Title</Form.Label>
 			<Form.Control>
 				{#snippet children({ props })}
+					<Form.Label>Title</Form.Label>
 					<Input {...props} bind:value={$formData.title} />
 				{/snippet}
 			</Form.Control>
@@ -36,18 +36,18 @@
 		</Form.Field>
 
 		<Form.Field {form} name="description">
-			<Form.Label>Description</Form.Label>
 			<Form.Control>
 				{#snippet children({ props })}
+					<Form.Label>Description</Form.Label>
 					<Textarea {...props} bind:value={$formData.description} rows={6} />
 				{/snippet}
 			</Form.Control><Form.FieldErrors />
 		</Form.Field>
 
 		<Form.Field {form} name="eventType">
-			<Form.Label>Event type</Form.Label>
 			<Form.Control>
 				{#snippet children({ props })}
+					<Form.Label>Event type</Form.Label>
 					<Select.Root type="single" bind:value={$formData.eventType}>
 						<Select.Trigger class="w-full">
 							{$formData.eventType || 'Select event type'}
@@ -66,9 +66,9 @@
 
 		{#if isPhysical || isHybrid}
 			<Form.Field {form} name="physicalLocation">
-				<Form.Label>Physical location (address)</Form.Label>
 				<Form.Control>
 					{#snippet children({ props })}
+						<Form.Label>Physical location (address)</Form.Label>
 						<Input {...props} bind:value={$formData.physicalLocation} />
 					{/snippet}
 				</Form.Control><Form.FieldErrors />
@@ -77,9 +77,9 @@
 
 		{#if isVirtual || isHybrid}
 			<Form.Field {form} name="virtualUrl">
-				<Form.Label>Virtual URL (Zoom, Meet, etc.)</Form.Label>
 				<Form.Control>
 					{#snippet children({ props })}
+						<Form.Label>Virtual URL (Zoom, Meet, etc.)</Form.Label>
 						<Input {...props} bind:value={$formData.virtualUrl} placeholder="https://..." />
 					{/snippet}
 				</Form.Control><Form.FieldErrors />
@@ -88,18 +88,18 @@
 
 		<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 			<Form.Field {form} name="startsAt">
-				<Form.Label>Starts at</Form.Label>
 				<Form.Control>
 					{#snippet children({ props })}
+						<Form.Label>Starts at</Form.Label>
 						<Input type="datetime-local" {...props} bind:value={$formData.startsAt} />
 					{/snippet}
 				</Form.Control><Form.FieldErrors />
 			</Form.Field>
 
 			<Form.Field {form} name="endsAt">
-				<Form.Label>Ends at</Form.Label>
 				<Form.Control>
 					{#snippet children({ props })}
+						<Form.Label>Ends at</Form.Label>
 						<Input type="datetime-local" {...props} bind:value={$formData.endsAt} />
 					{/snippet}
 				</Form.Control><Form.FieldErrors />
@@ -108,18 +108,18 @@
 
 		<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 			<Form.Field {form} name="maxAttendees">
-				<Form.Label>Max attendees (optional)</Form.Label>
 				<Form.Control>
 					{#snippet children({ props })}
+						<Form.Label>Max attendees (optional)</Form.Label>
 						<Input type="number" min="1" {...props} bind:value={$formData.maxAttendees} />
 					{/snippet}
 				</Form.Control><Form.FieldErrors />
 			</Form.Field>
 
 			<Form.Field {form} name="category">
-				<Form.Label>Category (optional)</Form.Label>
 				<Form.Control>
 					{#snippet children({ props })}
+						<Form.Label>Category (optional)</Form.Label>
 						<Input {...props} bind:value={$formData.category} />
 					{/snippet}
 				</Form.Control><Form.FieldErrors />

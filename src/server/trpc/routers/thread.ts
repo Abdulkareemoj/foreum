@@ -1,11 +1,11 @@
 import crypto from 'crypto';
-import { and, asc, count,desc, eq, like } from 'drizzle-orm';
+import { and, asc, count, desc, eq, like } from 'drizzle-orm';
 import { z } from 'zod';
 
 import { user } from '$server/db/schema/auth-schema';
 import { threadTag } from '$server/db/schema/tag-schema';
-import { category, reply,thread } from '$server/db/schema/thread-schema';
-import { protectedProcedure,publicProcedure, router } from '$server/trpc/init';
+import { category, reply, thread } from '$server/db/schema/thread-schema';
+import { protectedProcedure, publicProcedure, router } from '$server/trpc/init';
 
 export const threadRouter = router({
 	list: publicProcedure
@@ -58,7 +58,8 @@ export const threadRouter = router({
 					author: {
 						id: user.id,
 						name: user.name,
-						image: user.image
+						image: user.image,
+						username: user.username
 					},
 					category: {
 						id: category.id,

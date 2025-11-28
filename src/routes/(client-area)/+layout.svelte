@@ -127,6 +127,43 @@
 				recentPosts = await trpc.thread.recent.query({ limit: 5 });
 				isLoading = false;
 			}
+		},
+
+		'/(client-area)/events': {
+			right: true,
+			// left: true,
+			load: async () => {
+				isLoading = true;
+				[categories, trendingTags] = await Promise.all([
+					trpc.category.list.query(),
+					trpc.tag.popular.query({ limit: 10 })
+				]);
+				isLoading = false;
+			}
+		},
+		'/(client-area)/embed': {
+			right: true,
+			// left: true,
+			load: async () => {
+				isLoading = true;
+				[categories, trendingTags] = await Promise.all([
+					trpc.category.list.query(),
+					trpc.tag.popular.query({ limit: 10 })
+				]);
+				isLoading = false;
+			}
+		},
+		'/(client-area)/groups': {
+			right: true,
+			// left: true,
+			load: async () => {
+				isLoading = true;
+				[categories, trendingTags] = await Promise.all([
+					trpc.category.list.query(),
+					trpc.tag.popular.query({ limit: 10 })
+				]);
+				isLoading = false;
+			}
 		}
 	};
 

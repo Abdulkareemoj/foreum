@@ -152,8 +152,8 @@
 		<div class="flex items-center gap-4">
 			<Button
 				href="/threads/new"
-				variant="outline"
-				size="lg"
+				variant="secondary"
+				size="sm"
 				class="hidden rounded-lg md:inline-flex"
 			>
 				<PlusIcon class="size-5" /> New Thread

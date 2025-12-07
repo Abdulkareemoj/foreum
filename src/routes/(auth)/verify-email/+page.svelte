@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Loader2 } from '@lucide/svelte';
+	
 	import { onMount } from 'svelte';
 
 	import { goto } from '$app/navigation';
@@ -7,6 +7,7 @@
 	import * as Alert from '$components/ui/alert';
 	import { Button } from '$components/ui/button';
 	import * as Card from '$components/ui/card';
+	import { Spinner } from '$lib/components/ui/spinner';
 	import { authClient } from '$lib/auth-client';
 
 	let verifying = $state(true);
@@ -59,7 +60,7 @@
 	<Card.Content class="space-y-4 text-center">
 		{#if verifying}
 			<div class="flex items-center justify-center gap-2 text-muted-foreground">
-				<Loader2 class="animate-spin" size={20} />
+				<Spinner class="animate-spin" size={20} />
 				<span>Verifying your email...</span>
 			</div>
 		{/if}
@@ -70,7 +71,7 @@
 			</Alert.Root>
 
 			<div class="mt-4 flex justify-center">
-				<Button on:click={handleResend} disabled={loading}>
+				<Button onclick={handleResend} disabled={loading}>
 					{#if loading}
 						Sending...
 					{:else}

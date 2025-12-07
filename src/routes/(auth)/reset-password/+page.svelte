@@ -10,45 +10,41 @@
 	import * as Form from '$components/ui/form';
 	import { Input } from '$components/ui/input';
 	import { authClient } from '$lib/auth-client';
-	import { resetPasswordSchema } from '$lib/schemas';
+	import {  resetPasswordSchema } from '$lib/schemas';
+	import type { Infer, SuperValidated } from 'sveltekit-superforms';
 
-	let loading = $state(false);
 	let serverError = $state<string | null>(null);
 	let successMessage = $state<string | null>(null);
 
 	let { data } = $props<{
-		data: any;
+		data: { form: SuperValidated<Infer<typeof resetPasswordSchema>> };
 	}>();
 	const token = page.url.searchParams.get('token');
-	const form = superForm(data.form, { validators: zodClient(resetPasswordSchema) });
-	const { form: formData, enhance } = form;
-
-	async function onSubmit() {
-		serverError = null;
-		successMessage = null;
-		if (!token) {
-			serverError = 'Invalid or expired reset link.';
-			return;
-		}
-		try {
+	const form = superForm(data.form, {
+		validators: zodClient(resetPasswordSchema),
+		onSubmit: async ({ formData }) => {
+			serverError = null;
+			successMessage = null;
+			if (!token) {
+				// this will be caught by the onError callback
+				throw new Error('Invalid or expired reset link.');
+			}
 			await authClient.resetPassword(
 				{
-					newPassword: $formData.password,
+					newPassword: formData.get('password') as string,
 					token
-				},
-				{
-					onSuccess: async () => {
-						successMessage = 'Password reset successful!';
-						setTimeout(() => goto('/login'), 2000);
-					}
 				}
 			);
-		} catch (err: any) {
-			serverError = err.message || 'Something went wrong';
-		} finally {
-			loading = false;
+		},
+		onResult: () => {
+			successMessage = 'Password reset successful! Redirecting...';
+			setTimeout(() => goto('/login'), 2000);
+		},
+		onError: (event) => {
+			serverError = event.result.error.message;
 		}
-	}
+	});
+	const { form: formData, enhance, submitting } = form;
 </script>
 
 <Card.Root class="w-full max-w-md">
@@ -68,24 +64,29 @@
 			<Alert.Root><Alert.Description>{successMessage}</Alert.Description></Alert.Root>
 		{/if}
 
-		<form method="POST" use:enhance on:submit|preventDefault={onSubmit}>
+		<form method="POST" use:enhance class="space-y-4">
 			<Form.Field {form} name="password">
-				<Form.Control
-					><Form.Label>New Password</Form.Label>
-					<Input type="password" placeholder="Enter new password" />
-				</Form.Control><Form.FieldErrors />
+				<Form.Control>
+					<Form.Label>New Password</Form.Label>
+					<Input type="password" placeholder="Enter new password" bind:value={$formData.password} />
+				</Form.Control>
+				<Form.FieldErrors />
 			</Form.Field>
 
 			<Form.Field {form} name="confirmPassword">
 				<Form.Control>
 					<Form.Label>Confirm Password</Form.Label>
-					<Input type="password" placeholder="Confirm new password" /></Form.Control
-				>
+					<Input
+						type="password"
+						placeholder="Confirm new password"
+						bind:value={$formData.confirmPassword}
+					/>
+				</Form.Control>
 				<Form.FieldErrors />
 			</Form.Field>
 
-			<Button class="w-full" disabled={loading}>
-				{loading ? 'Resetting...' : 'Reset Password'}
+			<Button class="w-full" type="submit" disabled={$submitting}>
+				{$submitting ? 'Resetting...' : 'Reset Password'}
 			</Button>
 		</form>
 	</Card.Content>

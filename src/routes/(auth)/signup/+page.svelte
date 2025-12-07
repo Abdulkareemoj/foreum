@@ -1,27 +1,22 @@
 <script lang="ts">
-	import { CheckCheckIcon, CheckCircle, CircleAlert, Loader2, X, XCircle } from '@lucide/svelte';
+	import { CheckCheckIcon, CircleCheck, CircleAlert, X, CircleX } from '@lucide/svelte';
 	import { type Infer, superForm, type SuperValidated } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 
-	import { goto } from '$app/navigation';
 	import * as Alert from '$components/ui/alert';
 	import { Button } from '$components/ui/button';
 	import * as Card from '$components/ui/card';
 	import * as Form from '$components/ui/form';
 	import { Input } from '$components/ui/input';
+	import { Spinner } from '$lib/components/ui/spinner';
 	import { isUsernameAvailable, signUp } from '$lib/auth-client';
 	import { signUpSchema } from '$lib/schemas';
 
 	let imagePreview = $state<string | null>(null);
 	let files = $state<FileList | undefined>(undefined);
 	const image = $derived(files?.[0]);
-
-	let loading = $state(false);
 	let serverError = $state<string | null>(null);
 	let successMessage = $state<string | null>(null);
-
-	// username availability state
-	// TODO: probably check length and valid chars before calling API
 	let usernameStatus = $state<'available' | 'unavailable' | 'checking' | null>(null);
 	let usernameError = $state<string | null>(null);
 
@@ -31,7 +26,34 @@
 	}>();
 
 	const form = superForm(data.form, {
-		validators: zodClient(signUpSchema)
+		validators: zodClient(signUpSchema),
+		onSubmit: async ({ formData }) => {
+			serverError = null;
+			successMessage = null;
+
+			try {
+				await signUp.email({
+					email: formData.get('email') as string,
+					password: formData.get('password') as string,
+					name: formData.get('name') as string,
+					username: (formData.get('username') as string).toLowerCase(),
+					displayUsername: formData.get('username') as string,
+					image: image ? await convertImageToBase64(image) : ''
+				});
+			} catch (err) {
+				serverError = (err as Error)?.message || 'An unexpected error occurred.';
+				throw err;
+			}
+		},
+		onResult: () => {
+			// form will be reset, and we'll show a message asking the user to check their email.
+			successMessage = 'Account created! Please check your inbox to verify your email.';
+		},
+		onError: (event) => {
+			//  catch errors from the submission, including the one we re-throw.
+			serverError = event.result.error.message;
+		},
+		resetForm: true
 	});
 
 	const { form: formData, enhance } = form;
@@ -61,67 +83,48 @@
 		});
 	}
 
-	//real-time username check with debounce
+	//  real-time username check with debounce
 	let usernameTimeout: ReturnType<typeof setTimeout>;
 	$effect(() => {
-		if ($formData.username) {
-			clearTimeout(usernameTimeout);
-			usernameTimeout = setTimeout(async () => {
-				usernameStatus = 'checking';
-				usernameError = null;
-				try {
-					const res = await isUsernameAvailable({ username: $formData.username });
-					if (res.data?.available) {
-						usernameStatus = 'available';
-					} else {
-						usernameStatus = 'unavailable';
-						usernameError = 'Username is already taken';
-					}
-				} catch (err) {
-					usernameStatus = null;
-					usernameError = 'Could not verify username';
-				}
-			}, 500);
+		const username = $formData.username;
+		clearTimeout(usernameTimeout);
+
+		if (!username) {
+			usernameStatus = null;
+			usernameError = null;
+			return;
 		}
+
+		if (username.length < 3 || username.length > 20) {
+			usernameStatus = 'unavailable';
+			usernameError = 'Username must be 3-20 characters long.';
+			return;
+		}
+
+		if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+			usernameStatus = 'unavailable';
+			usernameError = 'Username can only contain letters, numbers, and underscores.';
+			return;
+		}
+
+		usernameTimeout = setTimeout(async () => {
+			usernameStatus = 'checking';
+			usernameError = null;
+			try {
+				const res = await isUsernameAvailable({ username });
+				if (res.data?.available) {
+					usernameStatus = 'available';
+				} else {
+					usernameStatus = 'unavailable';
+					usernameError = 'Username is already taken';
+				}
+			} catch (err) {
+				usernameStatus = null;
+				usernameError = 'Could not verify username';
+			}
+		}, 500);
 	});
 
-	async function handleSignUp() {
-		loading = true;
-		serverError = null;
-		successMessage = null;
-
-		try {
-			await signUp.email({
-				email: $formData.email,
-				password: $formData.password,
-				name: $formData.name,
-
-				username: $formData.username.toLowerCase(),
-				displayUsername: $formData.username,
-				image: image ? await convertImageToBase64(image) : '',
-				callbackURL: '/threads',
-				fetchOptions: {
-					onResponse: () => {
-						loading = false;
-					},
-					onRequest: () => {
-						loading = true;
-					},
-					onError: (ctx) => {
-						serverError = ctx.error.message;
-					},
-					onSuccess: async () => {
-						successMessage = 'Account created successfully!';
-						setTimeout(() => goto('/threads	'), 1500);
-					}
-				}
-			});
-		} catch (err) {
-			serverError = (err as Error)?.message || 'Something went wrong';
-		} finally {
-			loading = false;
-		}
-	}
 </script>
 
 <Card.Root class="mx-auto w-full max-w-md">
@@ -131,8 +134,8 @@
 			Enter your details to create a new account
 		</Card.Description>
 	</Card.Header>
-
-	<form on:submit|preventDefault={handleSignUp}>
+	
+	<form method="POST" use:enhance>
 		<Card.Content class="space-y-4">
 			<!-- Alerts -->
 			{#if serverError}
@@ -169,11 +172,11 @@
 					<div class="relative flex items-center">
 						<Input placeholder="Choose a username" class="pr-10" bind:value={$formData.username} />
 						{#if usernameStatus === 'checking'}
-							<Loader2 size={18} class="absolute right-3 animate-spin text-muted-foreground" />
+							<Spinner size={18} class="absolute right-3 animate-spin text-muted-foreground" />
 						{:else if usernameStatus === 'available'}
-							<CheckCircle size={18} class="absolute right-3 text-green-500" />
+							<CircleCheck size={18} class="absolute right-3 text-green-500" />
 						{:else if usernameStatus === 'unavailable'}
-							<XCircle size={18} class="absolute right-3 text-red-500" />
+							<CircleX size={18} class="absolute right-3 text-red-500" />
 						{/if}
 					</div>
 				</Form.Control>
@@ -248,9 +251,9 @@
 				</Form.Field>
 			</div>
 
-			<Button class="w-full" type="submit" disabled={loading || usernameStatus === 'unavailable'}>
-				{#if loading}
-					<Loader2 size={16} class="animate-spin" />
+			<Button class="w-full" type="submit" disabled={$formData.submitting || usernameStatus === 'unavailable'}>
+				{#if $formData.submitting}
+					<Spinner size={16} class="animate-spin" />
 				{:else}
 					Create an account
 				{/if}

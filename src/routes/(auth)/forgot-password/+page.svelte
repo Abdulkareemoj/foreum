@@ -11,7 +11,6 @@
 	import { forgotPasswordSchema } from '$lib/schemas';
 	import { CheckCheckIcon, CircleAlert } from '@lucide/svelte';
 
-	let loading = $state(false);
 	let serverError = $state<string | null>(null);
 	let successMessage = $state<string | null>(null);
 	const { data } = $props<{
@@ -19,34 +18,24 @@
 		message?: string;
 	}>();
 	const form = superForm(data.form, {
-		validators: zodClient(forgotPasswordSchema)
+		validators: zodClient(forgotPasswordSchema),
+		onSubmit: async ({ formData }) => {
+			serverError = null;
+			successMessage = null;
+			await authClient.requestPasswordReset({
+				email: formData.get('email') as string,
+				redirectTo: `${window.location.origin}/reset-password`
+			});
+		},
+		onResult: () => {
+			successMessage = 'Password reset link sent! Check your inbox.';
+		},
+		onError: (event) => {
+			serverError = event.result.error.message;
+		},
+		resetForm: true
 	});
-	const { form: formData, enhance } = form;
-
-	async function onSubmit() {
-		serverError = null;
-		successMessage = null;
-		try {
-			await authClient.requestPasswordReset(
-				{
-					email: $formData.email,
-					redirectTo: `${window.location.origin}/reset-password`
-				},
-				{
-					onSuccess: () => {
-						successMessage = 'Password reset link sent! Check your inbox.';
-					},
-					onError: (ctx) => {
-						serverError = ctx.error.message;
-					}
-				}
-			);
-		} catch (err: any) {
-			serverError = err.message || 'Something went wrong';
-		} finally {
-			loading = false;
-		}
-	}
+	const { form: formData, enhance, submitting } = form;
 </script>
 
 <Card.Root class="w-full max-w-md">
@@ -73,7 +62,7 @@
 			>
 		{/if}
 
-		<form on:submit|preventDefault={onSubmit}>
+		<form method="POST" use:enhance>
 			<Form.Field {form} name="email">
 				<Form.Control>
 					<Form.Label>Email</Form.Label>
@@ -82,8 +71,8 @@
 				<Form.FieldErrors />
 			</Form.Field>
 
-			<Button class="w-full" type="submit" disabled={loading}>
-				{loading ? 'Sending...' : 'Send Reset Link'}
+			<Button class="w-full" type="submit" disabled={$submitting}>
+				{$submitting ? 'Sending...' : 'Send Reset Link'}
 			</Button>
 		</form>
 	</Card.Content><Card.Footer class="flex flex-col py-4 text-sm text-muted-foreground">

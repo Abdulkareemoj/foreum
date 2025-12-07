@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { Loader2 } from '@lucide/svelte';
 	import { toast } from 'svelte-sonner';
 	import { type Infer, superForm, type SuperValidated } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
@@ -9,6 +8,7 @@
 	import { Button } from '$components/ui/button';
 	import * as Card from '$components/ui/card';
 	import { Checkbox } from '$components/ui/checkbox';
+	import { Spinner } from '$lib/components/ui/spinner';
 	import * as Form from '$components/ui/form';
 	import { Input } from '$components/ui/input';
 	import { Label } from '$components/ui/label';
@@ -16,7 +16,6 @@
 	import { signInSchema } from '$lib/schemas';
 	import { cn } from '$lib/utils';
 
-	let loading = $state(false);
 	let serverError = $state<string | null>(null);
 	let rememberMe = $state(false);
 
@@ -26,59 +25,33 @@
 	}>();
 
 	const form = superForm(data.form, {
-		validators: zodClient(signInSchema)
+		validators: zodClient(signInSchema),
+		onSubmit: async ({ formData }) => {
+			serverError = null;
+			await signIn.email({
+				email: formData.get('email') as string,
+				password: formData.get('password') as string,
+				rememberMe
+			});
+		},
+		onResult: () => {
+			toast.success('Logged in successfully');
+			goto('/threads', { invalidateAll: true });
+		},
+		onError: (event) => {
+			if (event.result.error.status === 403) {
+				serverError = 'Please verify your email before signing in.';
+			} else {
+				serverError = event.result.error.message;
+			}
+		}
 	});
 
-	const { form: formData, enhance, submitting, message } = form;
-	async function onSubmit() {
-		serverError = null;
-		try {
-			await signIn.email(
-				{ email: $formData.email, password: $formData.password, rememberMe },
-				{
-					onResponse: () => {
-						loading = false;
-					},
-					onRequest: () => {
-						loading = true;
-					},
-					onError: (ctx) => {
-						if (ctx.error.status === 403) {
-							serverError = 'Please verify your email before signing in.';
-						} else {
-							serverError = ctx.error.message;
-						}
-					},
-					onSuccess: async () => {
-						toast.success('Logged in successfully!');
-						goto('/threads');
-					}
-				}
-			);
-		} catch (err: any) {
-			serverError = err?.message || 'Something went wrong';
-		}
-	}
+	const { form: formData, enhance, submitting } = form;
 
 	async function handleSocialLogin(provider: 'google' | 'discord') {
 		try {
-			await signIn.social(
-				{ provider, callbackURL: '/dashboard' },
-				{
-					onResponse: () => {
-						loading = false;
-					},
-					onRequest: () => {
-						loading = true;
-					},
-					onError: (ctx) => {
-						toast.error(ctx.error.message);
-					},
-					onSuccess: async () => {
-						goto('/threads');
-					}
-				}
-			);
+			await signIn.social({ provider, callbackURL: '/threads' });
 		} catch (err: any) {
 			serverError = err?.message || 'Social login failed';
 		}
@@ -93,7 +66,7 @@
 		</Card.Description>
 	</Card.Header>
 
-	<form on:submit|preventDefault={onSubmit}>
+	<form method="POST" use:enhance>
 		<Card.Content class="space-y-4">
 			{#if serverError}
 				<Alert.Root variant="destructive">
@@ -138,7 +111,7 @@
 
 			<Button class="w-full" type="submit" disabled={$submitting}>
 				{#if $submitting}
-					<Loader2 class="size-5 animate-spin" />
+					<Spinner class="size-5 animate-spin" />
 				{:else}
 					Login
 				{/if}
@@ -146,7 +119,7 @@
 
 			<div class="relative my-4">
 				<div class="absolute inset-0 flex items-center">
-					<div class="w-full border-t border-gray-300" />
+					<div class="w-full border-t border-gray-300" ></div>
 				</div>
 				<div class="relative flex justify-center text-sm">
 					<span class="bg-background px-2 text-muted-foreground">Or continue with</span>

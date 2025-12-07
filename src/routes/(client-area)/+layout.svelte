@@ -164,6 +164,25 @@
 				]);
 				isLoading = false;
 			}
+		},
+		'/(client-area)/messages': {
+			left: true,
+			right: true,
+			load: async () => {
+				isLoading = true;
+				[categories, trendingTags, topContributors, recentPosts] = await Promise.all([
+					trpc.category.list.query(),
+					trpc.tag.popular.query({ limit: 10 }),
+					trpc.user.topContributors.query({ limit: 5 }),
+					trpc.thread.recent.query({ limit: 5 })
+				]);
+				announcements = [
+					'New feature: Bookmark threads!',
+					'Scheduled maintenance at 10 PM UTC',
+					'Community Q&A this weekend!'
+				];
+				isLoading = false;
+			}
 		}
 	};
 

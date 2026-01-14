@@ -8,7 +8,6 @@
 		Moon,
 		Package2,
 		PlusIcon,
-		Search,
 		Settings,
 		Sun,
 		TrendingUp,
@@ -33,6 +32,7 @@
 	import { toast } from 'svelte-sonner';
 	import { onMount } from 'svelte';
 	import NotificationBell from '$lib/components/shared/NotificationBell.svelte';
+	import Search from '$components/shared/Search.svelte';
 	let { user } = $props<{ user: { name: string; email: string; image?: string } }>();
 	let unreadCount = $state(0);
 	let pollingInterval: ReturnType<typeof setInterval> | null = null;

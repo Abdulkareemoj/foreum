@@ -1,4 +1,6 @@
 // messaging.ts
+
+import { TRPCError } from '@trpc/server';
 import { and, asc, desc, eq, ne } from 'drizzle-orm';
 import { z } from 'zod';
 
@@ -45,70 +47,82 @@ export const messagesRouter = router({
 	getConversation: protectedProcedure
 		.input(z.object({ conversationId: z.string() }))
 		.query(async ({ ctx, input }) => {
-			// Verify user is a participant
-			const userParticipant = await db.query.conversationParticipants.findFirst({
-				where: and(
-					eq(conversationParticipants.conversationId, input.conversationId),
-					eq(conversationParticipants.userId, ctx.user.id)
-				)
-			});
+			try {
+				// Verify user is a participant
+				const userParticipant = await db.query.conversationParticipants.findFirst({
+					where: and(
+						eq(conversationParticipants.conversationId, input.conversationId),
+						eq(conversationParticipants.userId, ctx.user.id)
+					)
+				});
 
-			if (!userParticipant) {
-				throw new Error('Not authorized to view this conversation');
+				if (!userParticipant) {
+					throw new TRPCError({
+						code: 'FORBIDDEN',
+						message: 'Not authorized to view this conversation'
+					});
+				}
+
+				const convo = await db.query.conversations.findFirst({
+					where: eq(conversations.id, input.conversationId)
+				});
+
+				if (!convo) {
+					throw new TRPCError({ code: 'NOT_FOUND', message: 'Conversation not found' });
+				}
+
+				// Get participants
+				const participants = await db.query.conversationParticipants.findMany({
+					where: eq(conversationParticipants.conversationId, input.conversationId)
+				});
+
+				// Get the other user (not the current user)
+				const otherUserId = participants.find((p) => p.userId !== ctx.user.id)?.userId;
+
+				if (!otherUserId) {
+					throw new TRPCError({ code: 'NOT_FOUND', message: 'Other participant not found' });
+				}
+
+				// Fetch user details from your user table
+				const otherUser = await db.query.user.findFirst({
+					where: eq(user.id, otherUserId)
+				});
+
+				if (!otherUser) {
+					throw new TRPCError({ code: 'NOT_FOUND', message: 'Other user not found' });
+				}
+
+				const currentUser = ctx.user;
+
+				const msgs = await db.query.messages.findMany({
+					where: eq(messages.conversationId, input.conversationId),
+					orderBy: [asc(messages.createdAt)]
+				});
+
+				return {
+					conversation: convo,
+					messages: msgs,
+					currentUser: {
+						id: currentUser.id,
+						name: currentUser.name,
+						img: currentUser.image
+					},
+					otherUser: {
+						id: otherUser.id,
+						name: otherUser.name,
+						img: otherUser.image,
+						lastActive: 5
+					},
+					currentUserId: currentUser.id
+				};
+			} catch (error) {
+				if (error instanceof TRPCError) throw error;
+				console.error('[messages.getConversation]', error);
+				throw new TRPCError({
+					code: 'INTERNAL_SERVER_ERROR',
+					message: 'Failed to fetch conversation'
+				});
 			}
-
-			const convo = await db.query.conversations.findFirst({
-				where: eq(conversations.id, input.conversationId)
-			});
-
-			if (!convo) {
-				throw new Error('Conversation not found');
-			}
-
-			// Get participants
-			const participants = await db.query.conversationParticipants.findMany({
-				where: eq(conversationParticipants.conversationId, input.conversationId)
-			});
-
-			// Get the other user (not the current user)
-			const otherUserId = participants.find((p) => p.userId !== ctx.user.id)?.userId;
-
-			if (!otherUserId) {
-				throw new Error('Other participant not found');
-			}
-
-			// Fetch user details from your user table
-			const otherUser = await db.query.user.findFirst({
-				where: eq(user.id, otherUserId)
-			});
-
-			if (!otherUser) {
-				throw new Error('Other user not found');
-			}
-
-			const currentUser = ctx.user;
-
-			const msgs = await db.query.messages.findMany({
-				where: eq(messages.conversationId, input.conversationId),
-				orderBy: [asc(messages.createdAt)]
-			});
-
-			return {
-				conversation: convo,
-				messages: msgs,
-				currentUser: {
-					id: currentUser.id,
-					name: currentUser.name,
-					img: currentUser.image
-				},
-				otherUser: {
-					id: otherUser.id,
-					name: otherUser.name,
-					img: otherUser.image,
-					lastActive: 5
-				},
-				currentUserId: currentUser.id
-			};
 		}),
 
 	// Send a message
@@ -142,13 +156,19 @@ export const messagesRouter = router({
 			});
 
 			if (!participant) {
-				throw new Error('Not authorized to send messages in this conversation');
+				throw new TRPCError({
+					code: 'FORBIDDEN',
+					message: 'Not authorized to send messages in this conversation'
+				});
 			}
 
 			// Validate message has content OR attachments
 
 			if (!input.content && !input.attachments?.length) {
-				throw new Error('Message must contain text or at least one attachment');
+				throw new TRPCError({
+					code: 'BAD_REQUEST',
+					message: 'Message must contain text or at least one attachment'
+				});
 			}
 
 			// Transaction: insert message + attachments

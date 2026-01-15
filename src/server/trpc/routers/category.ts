@@ -7,43 +7,53 @@ import { protectedProcedure, publicProcedure, router } from '$server/trpc/init';
 
 export const categoryRouter = router({
 	list: publicProcedure.query(async ({ ctx }) => {
-		// Return all categories with thread count
-		return ctx.db
-			.select({
-				id: category.id,
-				name: category.name,
-				slug: category.slug,
-				description: category.description,
-				createdAt: category.createdAt,
-				threadCount: count(thread.id).as('thread_count')
-			})
-			.from(category)
-			.leftJoin(thread, eq(category.id, thread.categoryId))
-			.groupBy(category.id)
-			.orderBy(asc(category.name));
+		try {
+			// Return all categories with thread count
+			return ctx.db
+				.select({
+					id: category.id,
+					name: category.name,
+					slug: category.slug,
+					description: category.description,
+					createdAt: category.createdAt,
+					threadCount: count(thread.id).as('thread_count')
+				})
+				.from(category)
+				.leftJoin(thread, eq(category.id, thread.categoryId))
+				.groupBy(category.id)
+				.orderBy(asc(category.name));
+		} catch (error) {
+			console.error('[category.list]', error);
+			throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Failed to fetch categories' });
+		}
 	}),
 
 	bySlug: publicProcedure.input(z.object({ slug: z.string() })).query(async ({ ctx, input }) => {
-		const [result] = await ctx.db
-			.select({
-				id: category.id,
-				name: category.name,
-				slug: category.slug,
-				description: category.description,
-				createdAt: category.createdAt
-			})
-			.from(category)
-			.where(eq(category.slug, input.slug));
+		try {
+			const [result] = await ctx.db
+				.select({
+					id: category.id,
+					name: category.name,
+					slug: category.slug,
+					description: category.description,
+					createdAt: category.createdAt
+				})
+				.from(category)
+				.where(eq(category.slug, input.slug));
 
-		if (!result) return null;
+			if (!result) return null;
 
-		// Count threads in this category
-		const [{ count: threadCount } = { count: 0 }] = await ctx.db
-			.select({ count: count() })
-			.from(thread)
-			.where(eq(thread.categoryId, result.id));
+			// Count threads in this category
+			const [{ count: threadCount } = { count: 0 }] = await ctx.db
+				.select({ count: count() })
+				.from(thread)
+				.where(eq(thread.categoryId, result.id));
 
-		return { ...result, threadCount };
+			return { ...result, threadCount };
+		} catch (error) {
+			console.error('[category.bySlug]', error);
+			throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Failed to fetch category' });
+		}
 	}),
 
 	create: protectedProcedure

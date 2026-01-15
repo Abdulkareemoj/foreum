@@ -6,7 +6,8 @@ import {
 	pgTable,
 	text,
 	timestamp,
-	unique} from 'drizzle-orm/pg-core';
+	unique
+} from 'drizzle-orm/pg-core';
 
 import { user } from './auth-schema';
 

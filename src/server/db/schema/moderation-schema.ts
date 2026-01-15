@@ -1,7 +1,7 @@
-import { boolean, pgTable, primaryKey,text, timestamp } from 'drizzle-orm/pg-core';
+import { boolean, pgTable, primaryKey, text, timestamp } from 'drizzle-orm/pg-core';
 
 import { user } from './auth-schema';
-import { reply,thread } from './thread-schema';
+import { reply, thread } from './thread-schema';
 
 export const report = pgTable('report', {
 	id: text('id').primaryKey(),

@@ -3,18 +3,18 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 
-> A powerful, modern forum platform built with SvelteKit, tRPC, and Drizzle ORM — designed for both developers and community managers.
+> A powerful, modern forum platform built with React, TanStack Router, tRPC, and Drizzle ORM — designed for both developers and community managers.
 
 ## 🌟 Why Foreum?
 
 Foreum is your all-in-one solution for building engaging community spaces. Whether you're creating a product support forum, an internal discussion board, or a vibrant community platform, Foreum provides everything you need out of the box:
 
 - 🔒 **Enterprise-grade Authentication** with Better Auth
-- 🎨 **Beautiful UI** powered by shadcn-svelte components
-- 🚄 **Lightning-fast Performance** with SvelteKit
+- 🎨 **Beautiful UI** powered by shadcn/ui components
+- 🚄 **Lightning-fast Performance** with React and TanStack Router
 - 🔧 **Type-safe Backend** using tRPC and Drizzle ORM
 - 📱 **Responsive Design** for all devices
-- 🌓 **Dark/Light Themes** built-in, also customizable in the admin section
+- 🌓 **Dark/Light Themes** built-in, also customizable in admin section
 
 ## 📚 Table of Contents
 
@@ -24,29 +24,130 @@ Foreum is your all-in-one solution for building engaging community spaces. Wheth
 - [Contributing](#contributing)
 - [License](#license)
 
-## Installation
+## Self-Hosted Installation
 
-Get started with Foreum in minutes:
+Foreum can be deployed on any platform that supports Node.js. Choose your preferred deployment method:
+
+### 🐳 Docker Deployment
+
+```bash
+# Pull and run with Docker
+docker pull ghcr.io/abdulkareemoj/foreum:latest
+docker run -p 3000:3000 \
+  -e DATABASE_URL="postgresql://user:pass@host:5432/foreum" \
+  -e BETTER_AUTH_SECRET="your-secret" \
+  ghcr.io/abdulkareemoj/foreum
+```
+
+For production deployment with Docker Compose:
+
+```yaml
+# docker-compose.yml
+version: "3.8"
+services:
+  app:
+    image: ghcr.io/abdulkareemoj/foreum:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://foreum:password@db:5432/foreum
+    depends_on:
+      - db
+  db:
+    image: postgres:14-alpine
+    environment:
+      - POSTGRES_USER=foreum
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=foreum
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+```
+
+### 💻 Manual Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/foreum.git
+git clone https://github.com/abdulkareemoj/foreum.git
 cd foreum
 
 # Install dependencies
 pnpm install
 
-# Set up environment variables
+# Configure environment
 cp .env.example .env
+# Edit .env with your database and SMTP settings
 
-# Run database migrations
+# Run migrations
 pnpm db:migrate
 
-# Start development server
-pnpm dev
+# Build and start
+pnpm build
+pnpm start
 ```
 
-Visit `http://localhost:5173` to see your forum in action!
+### 🚀 Deployment Options
+
+#### Cloud Platforms
+
+- **Railway**
+
+  [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/foreum)
+
+- **Digital Ocean**
+
+  [![Deploy to DigitalOcean](https://www.deploytodo.com/do-btn-blue.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/abdulkareemoj/foreum)
+
+- **Render**
+
+  [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/abdulkareemoj/foreum)
+
+#### Self-Hosted
+
+##### VPS/Bare Metal Setup
+
+1. Install system requirements:
+
+   ```bash
+   # On Ubuntu/Debian
+   apt update && apt install -y nodejs npm postgresql
+   ```
+
+2. Set up process management:
+
+   ```bash
+   # Using PM2
+   npm install -g pm2
+   pm2 start npm --name "foreum" -- start
+   pm2 startup
+   pm2 save
+   ```
+
+3. Configure Nginx (optional):
+
+   ```nginx
+   server {
+       listen 80;
+       server_name your-domain.com;
+
+       location / {
+           proxy_pass http://localhost:3000;
+           proxy_set_header Host $host;
+           proxy_set_header X-Real-IP $remote_addr;
+       }
+   }
+   ```
+
+### System Requirements
+
+- Node.js 18 or later
+- PostgreSQL 13 or later
+- SMTP server for email notifications
+- 1GB RAM minimum (2GB recommended)
+- 10GB storage space
 
 ## Features
 
@@ -72,25 +173,19 @@ Visit `http://localhost:5173` to see your forum in action!
 ### Technical Features
 
 - ⚡ **Performance-First Architecture**
-  - Server-side rendering with SvelteKit
+  - Server-side rendering with React and TanStack Router
   - Type-safe APIs with tRPC
   - Efficient database queries with Drizzle ORM
 
-- 🎨 **Modern UI/UX**
-  - Responsive design
-  - Dark/light themes
-  - Customizable components
-  - Loading states & animations
+- **Modern UI/UX** Responsive design with customizable Dark/light themes and Loading states & animations
 
-## Key Features & Unique Selling Points
-
-- **Modern stack**: SvelteKit + tRPC + Drizzle + Better Auth, great DX and strong type-safety across the stack.
-- **Plug-and-play authentication**: email/password with optional username support, email OTP for verification and reset flows, and social sign-in support hooks.
-- **User profiles & settings**: per-user settings (theme, privacy, notification preferences) with Drizzle schemas and a router to manage them.
-- **Bookmarks & Notifications**: built-in systems with pagination/infinite scroll and server-side routers.
-- **Excellent UX**: skeleton loaders, mobile-friendly navbar that collapses sidebars into a single sheet, avatar uploader, toast + alert patterns for different message types.
-- **Extensible design**: clearly split components (LeftSidebar, Mainbar, RightSidebar, ThreadCard, etc.) to make adding features easy and localized.
-- **Open-source friendly**: intentionally readable code, helpful comments and a focus on community contribution.
+- **Modern stack**: React + TanStack Router + tRPC + Drizzle + Better Auth, great DX and strong type-safety across the stack.
+  - **Plug-and-play authentication**: email/password with optional username support, email OTP for verification and reset flows, and social sign-in support hooks.
+  - **User profiles & settings**: per-user settings (theme, privacy, notification preferences) with Drizzle schemas and a router to manage them.
+  - **Bookmarks & Notifications**: built-in systems with pagination/infinite scroll and server-side routers.
+  - **Excellent UX**: skeleton loaders, mobile-friendly navbar that collapses sidebars into a single sheet, avatar uploader, toast + alert patterns for different message types.
+  - **Extensible design**: clearly split components (LeftSidebar, Mainbar, RightSidebar, ThreadCard, etc.) to make adding features easy and localized.
+  - **Open-source friendly**: intentionally readable code, helpful comments and a focus on community contribution.
 
 ## Use Cases
 
@@ -100,64 +195,70 @@ Foreum can be used for:
 - Internal company discussion board or knowledge-sharing hub.
 - A feature-rich comment + discussion layer for an existing app.
 - An MVP for social/community features when validating product-market fit.
-- A teaching template for modern full-stack SvelteKit + tRPC apps.
+- A teaching template for modern full-stack React + TanStack Router + tRPC apps.
 
-## Installation (Quick Start)
+## Local Development
 
 > The instructions below assume you have Node.js (v18+) and a Postgres database ready. Adjust package manager (npm / pnpm / yarn) as you prefer.
 
-1.  **Clone the repo**
-    '''bash
-    git clone https://your-repo-url/foreum.git
-    cd foreum
-    '''
+1. **Clone the repo**
 
-2.  **Install dependencies**
-    '''bash
-    npm install
+   ```bash
+   git clone https://your-repo-url/foreum.git
+   cd foreum
+   ```
 
-    # or
+2. **Install dependencies**
 
-    pnpm install
-    '''
+   ```bash
+   npm install
 
-3.  **Environment**
-    Create a `.env` (copy `.env.example` if present) and set the important variables:
-    '''
-    DATABASE_URL=postgres://user:pass@localhost:5432/foreum
-    VITE_PUBLIC_BASE_URL=http://localhost:5173
-    BETTER_AUTH_SECRET=some-super-secret
-    SMTP_HOST=smtp.example.com
-    SMTP_PORT=587
-    SMTP_USER=...
-    SMTP_PASS=...
-    '''
+   # or
 
-4.  **Database migrations & schema**
-    If you use Drizzle migrations or the Better Auth CLI, run the migration commands needed to create tables (users, accounts, sessions, profile, settings, bookmarks, notifications, etc.). Example command placeholders:
-    '''bash
+   npm install
+   ```
 
-    # Drizzle (if configured)
+3. **Environment**
+   Create a `.env` (copy `.env.example` if present) and set the important variables:
 
-    npx drizzle-kit generate:migration
-    npx drizzle-kit migrate
+   ```env
+   DATABASE_URL=postgres://user:pass@localhost:5432/foreum
+   VITE_PUBLIC_BASE_URL=http://localhost:5173
+   BETTER_AUTH_SECRET=some-super-secret
+   SMTP_HOST=smtp.example.com
+   SMTP_PORT=587
+   SMTP_USER=...
+   SMTP_PASS=...
+   ```
 
-    # If using Better Auth CLI for plugin migrations
+4. **Database migrations & schema**
+   If you use Drizzle migrations or Better Auth CLI, run the migration commands needed to create tables (users, accounts, sessions, profile, settings, bookmarks, notifications, etc.). Example command placeholders:
 
-    npx @better-auth/cli migrate
-    '''
-    (Adjust according to your setup — Foreum includes Drizzle schema files for auth, profile, settings, bookmark, notification, etc.)
+   ```bash
 
-5.  **Run the dev server**
-    '''bash
-    npm run dev
+   # Drizzle (if configured)
 
-    # typically runs `svelte-kit dev`
+   npx drizzle-kit generate:migration
+   npx drizzle-kit migrate
 
-    '''
+   # If using Better Auth CLI for plugin migrations
 
-6.  **Open the app**
-    Visit `http://localhost:5173` (or whatever your Vite server prints) and explore.
+   npx @better-auth/cli migrate
+   ```
+
+   (Adjust according to your setup — Foreum includes Drizzle schema files for auth, profile, settings, bookmark, notification, etc.)
+
+5. **Run the dev server**
+
+   ```bash
+   npm run dev
+
+   # typically runs the React development server with Vite
+
+   ```
+
+6. **Open the app**
+   Visit `http://localhost:5173` (or whatever your Vite server prints) and explore.
 
 ## Usage
 
@@ -194,8 +295,8 @@ pnpm lint        # Run linters
 
 ### Quick notes
 
-- Authentication flows: sign up/sign in, verify email (via link or OTP), forgot-password (OTP or reset link) are included in the UI and wired into Better Auth client APIs.
-- Frontend forms use `sveltekit-superforms` with `zod` schemas for validation and client-server parity.
+- Authentication flows: sign up/sign in, verify email (via link or OTP), forgot-password (OTP or reset link) are included in UI and wired into Better Auth client APIs.
+- Frontend forms use React Hook Form with `zod` schemas for validation and client-server parity.
 - TRPC routers live under `src/server/trpc/routers` and are intended to be small, single-responsibility units (threads, category, tag, user, bookmarks, notifications, settings).
 
 ## Contribution Guidelines

@@ -1,16 +1,28 @@
 {
-	"$schema": "https://shadcn-svelte.com/schema.json",
-	"tailwind": {
-		"css": "src/app.css",
-		"baseColor": "neutral"
-	},
-	"aliases": {
-		"components": "$lib/components",
-		"utils": "$lib/utils",
-		"ui": "$lib/components/ui",
-		"hooks": "$lib/hooks",
-		"lib": "$lib"
-	},
-	"typescript": true,
-	"registry": "https://shadcn-svelte.com/registry"
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "new-york",
+  "rsc": false,
+  "tsx": true,
+  "tailwind": {
+    "config": "",
+    "css": "src/styles/app.css",
+    "baseColor": "neutral",
+    "cssVariables": true,
+    "prefix": ""
+  },
+  "iconLibrary": "lucide",
+  "aliases": {
+    "components": "~/components",
+    "utils": "~/lib/utils",
+    "ui": "~/components/ui",
+    "lib": "~/lib",
+    "hooks": "~/hooks"
+  },
+  "registries": {
+    "@plate": "https://platejs.org/r/{name}.json",
+    "@better-upload": "https://better-upload.com/r/{name}.json",
+    "@billingsdk": "https://billingsdk.com/r/{name}.json",
+    "@cardcn": "https://cardcn.dev/r/{name}.json",
+    "@magicui": "https://magicui.design/r/{name}"
+  }
 }

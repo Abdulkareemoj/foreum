@@ -1,38 +1,45 @@
+import { createAuthClient } from "better-auth/react";
 import {
-	adminClient,
-	emailOTPClient,
-	oneTapClient,
-	usernameClient
-} from 'better-auth/client/plugins';
-import { createAuthClient } from 'better-auth/svelte';
-
-import { PUBLIC_BETTER_AUTH_URL, PUBLIC_GOOGLE_CLIENT_ID } from '$env/static/public';
+  adminClient,
+  usernameClient,
+  emailOTPClient,
+  oneTapClient,
+} from "better-auth/client/plugins";
+import { accessControl, adminRole, userAc } from "~/server/permissions";
 
 export const authClient = createAuthClient({
-	/** The base URL of the server (optional if you're using the same domain) */
-	baseURL: PUBLIC_BETTER_AUTH_URL,
-	plugins: [
-		adminClient(),
-		oneTapClient({
-			clientId: PUBLIC_GOOGLE_CLIENT_ID!,
-			promptOptions: {
-				maxAttempts: 1
-			}
-		}),
-		emailOTPClient(),
-		usernameClient()
-	]
+  baseURL: process.env.BASE_URL!,
+  fetchOptions: {
+    credentials: "include", // This sends cookies with cross-origin requests
+  },
+  plugins: [
+    adminClient({
+      accessControl,
+      roles: {
+        admin: adminRole,
+        user: userAc,
+      },
+    }),
+    usernameClient(),
+    oneTapClient({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      promptOptions: {
+        maxAttempts: 1,
+      },
+    }),
+    emailOTPClient(),
+  ],
 });
 
 export const {
-	signUp,
-	signIn,
-	signOut,
-	useSession,
-	getSession,
-	forgetPassword,
-	resetPassword,
-	isUsernameAvailable,
-	sendVerificationEmail,
-	requestPasswordReset
+  signUp,
+  signIn,
+  signOut,
+  useSession,
+  getSession,
+  forgetPassword,
+  resetPassword,
+  isUsernameAvailable,
+  sendVerificationEmail,
+  requestPasswordReset,
 } = authClient;

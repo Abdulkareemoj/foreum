@@ -1,8 +1,8 @@
-<script>
-	import { Button } from '$lib/components/ui/button/';
-	import { Input } from '$lib/components/ui/input/';
-	import { Label } from '$lib/components/ui/label/';
-	import ModeSwitch from './ModeSwitch.svelte';
+import { Button } from '~/components/ui/button';
+import { Input } from '~/components/ui/input';
+import { Label } from '~/components/ui/label';
+import ThemeToggle from './ModeToggle';
+import { Link } from '@tanstack/react-router';
 
 	const links = [
 		{
@@ -114,33 +114,34 @@
 			]
 		}
 	];
-</script>
 
-<footer class="border-b bg-white pt-10 dark:bg-transparent">
-	<div class="mb-8 border-b md:mb-12">
-		<div class="mx-auto flex max-w-7xl flex-wrap items-end justify-between gap-6 px-6 pb-6">
-			<div class="space-y-4">
-				<div class="flex items-center space-x-2">
-					<div class="flex size-8 items-center justify-center rounded-lg bg-primary">
-						<span class="text-lg font-bold text-primary-foreground">F</span>
+export default function Footer(){
+	return(
+<footer className="border-b bg-white pt-10 dark:bg-transparent">
+	<div className="mb-8 border-b md:mb-12">
+		<div className="mx-auto flex max-w-7xl flex-wrap items-end justify-between gap-6 px-6 pb-6">
+			<div className="space-y-4">
+				<div className="flex items-center space-x-2">
+					<div className="flex size-8 items-center justify-center rounded-lg bg-primary">
+						<span className="text-lg font-bold text-primary-foreground">F</span>
 					</div>
-					<span class="font-heading text-xl font-bold text-card-foreground">Foreum</span>
+					<span className="font-heading text-xl font-bold text-card-foreground">Foreum</span>
 				</div>
-				<p class="text-muted-foreground">
+				<p className="text-muted-foreground">
 					The modern forum platform for building thriving online communities.
 				</p>
 			</div>
 
-			<div class="flex flex-wrap justify-center gap-6 text-sm">
+			<div className="flex flex-wrap justify-center gap-6 text-sm">
 				<a
 					href="https://x.com"
 					target="_blank"
 					rel="noopener noreferrer"
 					aria-label="X/Twitter"
-					class="block text-muted-foreground hover:text-primary"
+					className="block text-muted-foreground hover:text-primary"
 				>
 					<svg
-						class="size-6"
+						className="size-6"
 						xmlns="http://www.w3.org/2000/svg"
 						width="1em"
 						height="1em"
@@ -158,10 +159,10 @@
 					target="_blank"
 					rel="noopener noreferrer"
 					aria-label="Facebook"
-					class="block text-muted-foreground hover:text-primary"
+					className="block text-muted-foreground hover:text-primary"
 				>
 					<svg
-						class="size-6"
+						className="size-6"
 						xmlns="http://www.w3.org/2000/svg"
 						width="1em"
 						height="1em"
@@ -179,10 +180,10 @@
 					target="_blank"
 					rel="noopener noreferrer"
 					aria-label="Instagram"
-					class="block text-muted-foreground hover:text-primary"
+					className="block text-muted-foreground hover:text-primary"
 				>
 					<svg
-						class="size-6"
+						className="size-6"
 						xmlns="http://www.w3.org/2000/svg"
 						width="1em"
 						height="1em"
@@ -199,10 +200,10 @@
 					target="_blank"
 					rel="noopener noreferrer"
 					aria-label="TikTok"
-					class="block text-muted-foreground hover:text-primary"
+					className="block text-muted-foreground hover:text-primary"
 				>
 					<svg
-						class="size-6"
+						className="size-6"
 						xmlns="http://www.w3.org/2000/svg"
 						width="1em"
 						height="1em"
@@ -217,45 +218,46 @@
 			</div>
 		</div>
 	</div>
-	<div class="mx-auto max-w-6xl px-6">
-		<div class="grid gap-12 md:grid-cols-5 md:gap-0 lg:grid-cols-4">
-			<div class="grid grid-cols-2 gap-6 sm:grid-cols-4 md:col-span-5 md:row-start-1 lg:col-span-3">
-				{#each links as link}
-					<div class="space-y-4 text-sm">
-						<span class="block font-semibold">{link.group}</span>
-						{#each link.items as item}
-							<a
-								href={item.href}
-								class="block text-muted-foreground duration-150 hover:text-primary"
+	<div className="mx-auto max-w-6xl px-6">
+		<div className="grid gap-12 md:grid-cols-5 md:gap-0 lg:grid-cols-4">
+			<div className="grid grid-cols-2 gap-6 sm:grid-cols-4 md:col-span-5 md:row-start-1 lg:col-span-3">
+				{links.map(link => (
+					<div className="space-y-4 text-sm">
+						<span className="block font-semibold">{link.group} </span>
+						{link.items.map(item => (
+							<Link  key={link.group}
+								to={item.href}
+								className="block text-muted-foreground duration-150 hover:text-primary"
 							>
-								<span>{item.title}</span>
-							</a>
-						{/each}
+								<span >{item.title}</span>
+							</Link>
+						))}
 					</div>
-				{/each}
+				))}
 			</div>
-			<form class="row-start-1 border-b pb-8 text-sm md:col-span-2 md:border-none lg:col-span-1">
-				<div class="space-y-4">
-					<Label for="mail" class="block font-medium">Newsletter</Label>
-					<div class="flex gap-2">
+			<form className="row-start-1 border-b pb-8 text-sm md:col-span-2 md:border-none lg:col-span-1">
+				<div className="space-y-4">
+					<Label htmlFor="mail" className="block font-medium">Newsletter</Label>
+					<div className="flex gap-2">
 						<Input
 							type="email"
 							id="mail"
 							name="mail"
 							placeholder="Your email"
-							class="h-8 text-sm"
+							className="h-8 text-sm"
 						/>
 						<Button size="sm">Submit</Button>
 					</div>
-					<span class="block text-sm text-muted-foreground">Don't miss any update!</span>
+					<span className="block text-sm text-muted-foreground">Don't miss any update!</span>
 				</div>
 			</form>
 		</div>
-		<div class="mt-12 flex flex-wrap items-end justify-between gap-6 border-t py-6">
-			<small class="order-last block text-center text-sm text-muted-foreground md:order-first"
-				>© {new Date().getFullYear()} Foreum. All rights reserved</small
-			>
-			<ModeSwitch />
+		<div className="mt-12 flex flex-wrap items-end justify-between gap-6 border-t py-6">
+			<small className="order-last block text-center text-sm text-muted-foreground md:order-first"
+				>© {new Date().getFullYear()} Foreum. All rights reserved</small>
+			<ThemeToggle />
 		</div>
 	</div>
 </footer>
+)
+}

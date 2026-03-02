@@ -1,190 +1,144 @@
-import { TRPCError } from '@trpc/server';
-import { desc, eq } from 'drizzle-orm';
-import { count } from 'drizzle-orm/sql';
-import { z } from 'zod';
-
-import { profileSchema } from '$lib/schemas';
-import { user } from '$server/db/schema/auth-schema';
-import { profile } from '$server/db/schema/profile-schema';
-import { reply, thread } from '$server/db/schema/thread-schema';
-import { protectedProcedure, publicProcedure, router } from '$server/trpc/init';
-import { normalizeUsername } from '$utils';
+import { TRPCError } from '@trpc/server'
+import { eq, ilike } from 'drizzle-orm'
+import { z } from 'zod'
+import { db } from '~/server/db'
+import { user } from '~/server/db/schema/auth-schema'
+import { profile } from '~/server/db/schema/profile-schema'
+import { thread, reply } from '~/server/db/schema/thread-schema'
+import { protectedProcedure, publicProcedure, router } from '~/server/trpc/init'
 
 export const userRouter = router({
-	byUsername: publicProcedure
-		.input(z.object({ username: z.string().min(1) }))
-		.query(async ({ ctx, input }) => {
-			try {
-				const normalizedUsername = normalizeUsername(input.username);
-				const [found] = await ctx.db
-					.select({
-						id: user.id,
-						name: user.name,
-						username: user.username,
-						displayUsername: user.displayUsername,
-						image: user.image,
-						role: user.role,
-						createdAt: user.createdAt,
-						profile: {
-							bio: profile.bio,
-							location: profile.location,
-							website: profile.website
-						}
-					})
-					.from(user)
-					.leftJoin(profile, eq(user.id, profile.id))
-					.where(eq(user.username, normalizedUsername));
+  byUsername: publicProcedure
+    .input(z.object({ username: z.string() }))
+    .query(async ({ input }) => {
+      try {
+        const [result] = await db
+          .select({
+            id: user.id,
+            name: user.name,
+            username: user.username,
+            image: user.image,
+            createdAt: user.createdAt,
+            bio: profile.bio,
+            location: profile.location,
+            website: profile.website,
+          })
+          .from(user)
+          .leftJoin(profile, eq(profile.id, user.id))
+          .where(eq(user.username, input.username.toLowerCase()))
 
-				if (!found) return null;
+        return result ?? null
+      } catch (error) {
+        console.error('[user.byUsername]', error)
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to fetch user',
+        })
+      }
+    }),
 
-				const threads = await ctx.db
-					.select({
-						id: thread.id,
-						title: thread.title,
-						createdAt: thread.createdAt
-					})
-					.from(thread)
-					.where(eq(thread.authorId, found.id))
-					.orderBy(desc(thread.createdAt))
-					.limit(20);
+  updateProfile: protectedProcedure
+    .input(
+      z.object({
+        name: z.string().min(1).max(100),
+        username: z.string().min(3).max(30).regex(/^[a-z0-9_-]+$/),
+        image: z.string().url().optional(),
+        bio: z.string().max(500).optional(),
+        location: z.string().max(100).optional(),
+        website: z.string().url().optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        // Check username not taken by another user
+        const [existing] = await db
+          .select({ id: user.id })
+          .from(user)
+          .where(eq(user.username, input.username))
 
-				const replies = await ctx.db
-					.select({
-						id: reply.id,
-						content: reply.content,
-						createdAt: reply.createdAt,
-						threadId: reply.threadId
-					})
-					.from(reply)
-					.where(eq(reply.authorId, found.id))
-					.orderBy(desc(reply.createdAt))
-					.limit(20);
+        if (existing && existing.id !== ctx.user.id) {
+          throw new TRPCError({ code: 'CONFLICT', message: 'Username already taken' })
+        }
 
-				return { ...found, threads, replies };
-			} catch (error) {
-				console.error('[user.byUsername]', error);
-				throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Failed to fetch user' });
-			}
-		}),
+        // Update user
+        await db
+          .update(user)
+          .set({ name: input.name, username: input.username, image: input.image })
+          .where(eq(user.id, ctx.user.id))
 
-	updateProfile: protectedProcedure.input(profileSchema).mutation(async ({ ctx, input }) => {
-		try {
-			const currentUserId = ctx.user.id;
+        // Upsert profile
+        await db
+          .insert(profile)
+          .values({
+            id: ctx.user.id,
+            bio: input.bio,
+            location: input.location,
+            website: input.website,
+          })
+          .onConflictDoUpdate({
+            target: profile.id,
+            set: {
+              bio: input.bio,
+              location: input.location,
+              website: input.website,
+              updatedAt: new Date(),
+            },
+          })
 
-			const normalizedUsername = normalizeUsername(input.username);
+        return { success: true }
+      } catch (error) {
+        if (error instanceof TRPCError) throw error
+        console.error('[user.updateProfile]', error)
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to update profile',
+        })
+      }
+    }),
 
-			const [existing] = await ctx.db
-				.select({ id: user.id })
-				.from(user)
-				.where(eq(user.username, normalizedUsername));
+  search: publicProcedure
+    .input(z.object({ query: z.string().min(1) }))
+    .query(async ({ input }) => {
+      try {
+        return db
+          .select({
+            id: user.id,
+            name: user.name,
+            username: user.username,
+            image: user.image,
+          })
+          .from(user)
+          .where(ilike(user.name, `%${input.query}%`))
+          .limit(10)
+      } catch (error) {
+        console.error('[user.search]', error)
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to search users',
+        })
+      }
+    }),
 
-			if (existing && existing.id !== currentUserId) {
-				throw new TRPCError({ code: 'CONFLICT', message: 'Username already taken' });
-			}
-
-			await ctx.db
-				.update(user)
-				.set({
-					name: input.name,
-					username: normalizedUsername,
-					displayUsername: input.displayUsername || input.name,
-					updatedAt: new Date()
-				})
-				.where(eq(user.id, currentUserId));
-
-			await ctx.db
-				.update(profile)
-				.set({
-					bio: input.bio || '',
-					location: input.location || '',
-					website: input.website || '',
-					image: input.image
-				})
-				.where(eq(profile.id, currentUserId));
-
-			return { success: true };
-		} catch (error) {
-			if (error instanceof TRPCError) throw error;
-			console.error('[user.updateProfile]', error);
-			throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Failed to update profile' });
-		}
-	}),
-
-	list: publicProcedure.query(async ({ ctx }) => {
-		return ctx.db
-			.select({
-				id: user.id,
-				username: user.username,
-				displayUsername: user.displayUsername,
-				image: user.image
-			})
-			.from(user);
-	}),
-	updateSettings: protectedProcedure
-		.input(
-			z.object({
-				emailNotifications: z.boolean(),
-				privateProfile: z.boolean()
-			})
-		)
-		.mutation(async ({ ctx, input }) => {
-			await ctx.db
-				.update(user)
-				.set({
-					emailNotifications: input.emailNotifications,
-					privateProfile: input.privateProfile
-				})
-				.where(eq(user.id, ctx.user.id));
-			return { success: true };
-		}),
-
-	getSettings: protectedProcedure.query(async ({ ctx }) => {
-		const result = await ctx.db.select().from(user).where(eq(user.id, ctx.user.id)).limit(1);
-		return result[0];
-	}),
-	topContributors: publicProcedure
-		.input(z.object({ limit: z.number().optional() }))
-		.query(async ({ ctx, input }) => {
-			const limit = input.limit ?? 5;
-
-			return await ctx.db
-				.select({
-					id: user.id,
-					name: user.username,
-					username: user.username,
-					displayUsername: user.displayUsername,
-					image: user.image // or profiles.avatar if you join it
-				})
-				.from(user)
-				.groupBy(user.id)
-				.limit(limit);
-		}),
-
-	stats: publicProcedure.query(async ({ ctx }) => {
-		try {
-			const totalUsers = await ctx.db
-				.select({ count: count() })
-				.from(user)
-				.then((result) => result[0]?.count || 0);
-
-			const activeThreads = await ctx.db
-				.select({ count: count() })
-				.from(thread)
-				.where(eq(thread.deleted, false))
-				.then((result) => result[0]?.count || 0);
-
-			const monthlyGrowth = Math.floor(Math.random() * 10); // Placeholder
-			const engagementScore = 78; // Placeholder
-
-			return {
-				totalUsers,
-				activeThreads,
-				monthlyGrowth,
-				engagementScore
-			};
-		} catch (error) {
-			console.error('[user.stats]', error);
-			throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Failed to fetch stats' });
-		}
-	})
-});
+  getThreads: publicProcedure
+    .input(z.object({ userId: z.string(), limit: z.number().default(10) }))
+    .query(async ({ input }) => {
+      try {
+        return db
+          .select({
+            id: thread.id,
+            title: thread.title,
+            createdAt: thread.createdAt,
+            replyCount: thread.replyCount,
+          })
+          .from(thread)
+          .where(eq(thread.authorId, input.userId))
+          .limit(input.limit)
+      } catch (error) {
+        console.error('[user.getThreads]', error)
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to fetch user threads',
+        })
+      }
+    }),
+})

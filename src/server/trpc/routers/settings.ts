@@ -1,13 +1,13 @@
 import { eq } from 'drizzle-orm';
 import { z } from 'zod';
 
-import { db } from '$server/db';
+import { db } from '~/server/db';
 import {
 	notificationSetting,
 	privacySetting,
 	themeSetting
-} from '$server/db/schema/settings-schema';
-import { protectedProcedure,router } from '$server/trpc/init';
+} from '~/server/db/schema/settings-schema';
+import { protectedProcedure,router } from '~/server/trpc/init';
 
 export const settingsRouter = router({
 	getAll: protectedProcedure.query(async ({ ctx }) => {

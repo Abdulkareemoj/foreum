@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
-import { db } from '$server/db';
-import { resources, resourceTags } from '$server/db/schema/resources-schema';
-import { protectedProcedure, publicProcedure, router } from '$server/trpc/init';
+import { db } from '~/server/db';
+import { resources, resourceTags } from '~/server/db/schema/resources-schema';
+import { protectedProcedure, publicProcedure, router } from '~/server/trpc/init';
 
 export const resourcesRouter = router({
 	list: publicProcedure.query(() => db.select().from(resources)),

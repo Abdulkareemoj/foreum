@@ -3,10 +3,10 @@ import crypto from 'crypto';
 import { asc, desc, eq, sql } from 'drizzle-orm';
 import { z } from 'zod';
 
-import { db } from '$server/db';
-import { user } from '$server/db/schema/auth-schema';
-import { reply, thread } from '$server/db/schema/thread-schema';
-import { protectedProcedure, publicProcedure, router } from '$server/trpc/init';
+import { db } from '~/server/db';
+import { user } from '~/server/db/schema/auth-schema';
+import { reply, thread } from '~/server/db/schema/thread-schema';
+import { protectedProcedure, publicProcedure, router } from '~/server/trpc/init';
 
 export const replyRouter = router({
 	list: publicProcedure

@@ -2,26 +2,18 @@ import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { emailOTP, oneTap, username } from 'better-auth/plugins';
 import { admin } from 'better-auth/plugins/admin';
-import { sveltekitCookies } from 'better-auth/svelte-kit';
 import { Resend } from 'resend';
 
-import { getRequestEvent } from '$app/server';
-import {
-	BETTER_AUTH_EMAIL,
-	DISCORD_CLIENT_SECRET,
-	GOOGLE_CLIENT_SECRET,
-	RESEND_API_KEY,
-	TEST_EMAIL
-} from '$env/static/private';
-import { PUBLIC_DISCORD_CLIENT_ID, PUBLIC_GOOGLE_CLIENT_ID } from '$env/static/public';
-import { db, schema } from '$server/db';
-import { resetConfirmTemplate, resetTemplate, verificationTemplate } from '$utils';
+import { tanstackStartCookies } from "better-auth/tanstack-start";
 
-import { profile } from './db/schema/profile-schema';
-import { accessControl, adminRole, moderatorRole, userAc } from './permissions';
+import { db, schema } from '~/server/db';
+import { resetConfirmTemplate, resetTemplate, verificationTemplate } from '~/lib/utils';
+
+import { profile } from '~/server/db/schema/profile-schema';
+import { accessControl, adminRole, moderatorRole, userAc } from '~/server/permissions';
 // import { organization } from "better-auth/plugins/organization";
-const resend = new Resend(RESEND_API_KEY);
-const from = BETTER_AUTH_EMAIL;
+const resend = new Resend(process.env.RESEND_API_KEY);
+const from = process.env.BETTER_AUTH_EMAIL;
 
 export const auth = betterAuth({
 	appName: 'Foreum',
@@ -78,7 +70,7 @@ export const auth = betterAuth({
 		// }
 		oneTap(),
 		// emailOTP(),
-		sveltekitCookies(getRequestEvent)
+		tanstackStartCookies()
 	],
 	databaseHooks: {
 		user: {
@@ -105,12 +97,14 @@ export const auth = betterAuth({
 				.replace('{{username}}', user.name || user.email)
 				.replace(/{{url}}/g, url);
 
-			const res = await resend.emails.send({
-				from,
-				to: user.email,
-				subject: 'Verify your email address',
-				html: emailContent
-			});
+			const res = await resend.emails.send
+			// ({
+			// 	from,
+			// 	to: user.email,
+			// 	subject: 'Verify your email address',
+			// 	html: emailContent
+			// });
+			// 
 			console.log(res, user.email);
 		},
 		sendOnSignUp: true,
@@ -124,23 +118,25 @@ export const auth = betterAuth({
 				.replace('{{username}}', user.name || user.email)
 				.replace(/{{url}}/g, url);
 
-			const res = await resend.emails.send({
-				from,
-				to: user.email,
-				subject: 'Reset your password',
-				html: emailContent
-			});
+			const res = await resend.emails.send
+			// ({
+			// 	from,
+			// 	to: user.email,
+			// 	subject: 'Reset your password',
+			// 	html: emailContent
+			// });
 			console.log(res, `Password reset link sent to ${user.email}.`);
 		},
 		async onPasswordReset({ user }, request) {
 			const emailContent = resetConfirmTemplate.replace('{{username}}', user.name || user.email);
 
-			const res = await resend.emails.send({
-				from,
-				to: user.email,
-				subject: 'Password Reset Confirmation',
-				html: emailContent
-			});
+			const res = await resend.emails.send
+			// ({
+			// 	from,
+			// 	to: user.email,
+			// 	subject: 'Password Reset Confirmation',
+			// 	html: emailContent
+			// });
 			console.log(res, `Password reset confirmation sent to ${user.email}.`);
 		},
 		requireEmailVerification: true
@@ -152,12 +148,12 @@ export const auth = betterAuth({
 	},
 	socialProviders: {
 		google: {
-			clientId: PUBLIC_GOOGLE_CLIENT_ID || '',
-			clientSecret: GOOGLE_CLIENT_SECRET || ''
+			clientId: process.env.GOOGLE_CLIENT_ID!,
+			clientSecret: process.env.GOOGLE_CLIENT_SECRET
 		},
 		discord: {
-			clientId: PUBLIC_DISCORD_CLIENT_ID || '',
-			clientSecret: DISCORD_CLIENT_SECRET || ''
+			clientId: process.env.DISCORD_CLIENT_ID!,
+			clientSecret: process.env.DISCORD_CLIENT_SECRET
 		}
 	}
 });

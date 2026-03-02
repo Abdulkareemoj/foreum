@@ -1,15 +1,17 @@
-import type { RequestEvent } from '@sveltejs/kit';
+import type { FetchCreateContextFnOptions } from '@trpc/server/adapters/fetch'
+import { auth } from '~/server/auth'
 
-import { auth } from '$server/auth';
-import { db } from '$server/db';
+export async function createContext(opts: FetchCreateContextFnOptions) {
+  const session = await auth.api.getSession({
+    headers: opts.req.headers
+  })
 
-export async function createContext(event: RequestEvent) {
-	const session = await auth.api.getSession({ headers: event.request.headers });
-	return {
-		event,
-		db,
-		user: session?.user || null,
-		session: session?.session ?? null
-	};
+  return {
+    req: opts.req,
+    resHeaders: opts.resHeaders,
+    user: session?.user || null,
+    session: session?.session || null
+  }
 }
-export type Context = Awaited<ReturnType<typeof createContext>>;
+
+export type Context = Awaited<ReturnType<typeof createContext>>

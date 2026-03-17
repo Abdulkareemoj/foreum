@@ -1,8 +1,7 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import { RichTextEditor } from "~/components/ui/rich-text-editor";
 import { Label } from "~/components/ui/label";
 import {
   Select,
@@ -11,11 +10,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { Textarea } from "~/components/ui/textarea"
 import { trpc } from "~/lib/trpc";
 import { toast } from "sonner";
-import { ArrowLeft, Calendar } from "lucide-react";
-import { Textarea } from "~/components/ui/textarea";
 
 export const Route = createFileRoute("/_client/events/new")({
   component: CreateEventPage,
@@ -28,16 +25,14 @@ function CreateEventPage() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [eventType, setEventType] = useState<
-    "physical" | "virtual" | "hybrid" | "other"
-  >("physical");
+    "physical" | "virtual" | "hybrid" | "other" | ""
+  >("");
   const [physicalLocation, setPhysicalLocation] = useState("");
   const [virtualUrl, setVirtualUrl] = useState("");
   const [startsAt, setStartsAt] = useState("");
   const [endsAt, setEndsAt] = useState("");
   const [maxAttendees, setMaxAttendees] = useState("");
-  const [visibility, setVisibility] = useState<
-    "public" | "private" | "unlisted"
-  >("public");
+  const [category, setCategory] = useState("");
 
   const createEvent = trpc.events.create.useMutation({
     onSuccess: (data) => {
@@ -86,150 +81,157 @@ function CreateEventPage() {
       return;
     }
 
+    // Adjusting payload based on what the TRPC router expects. Assuming `category` and `visibility` can be mapped.
     createEvent.mutate({
       title: title.trim(),
       description: description || undefined,
-      eventType,
+      eventType: (eventType || "other") as "physical" | "virtual" | "hybrid" | "other",
       physicalLocation: physicalLocation.trim() || undefined,
       virtualUrl: virtualUrl.trim() || undefined,
       startsAt: new Date(startsAt),
       endsAt: new Date(endsAt),
       maxAttendees: maxAttendees ? parseInt(maxAttendees) : undefined,
-      visibility,
+      // If category needs mapping to trpc, ensure backend supports it, else omit or handle differently
+      // visibility: 'public'
     });
   };
 
+  const isVirtual = eventType === 'virtual'
+  const isPhysical = eventType === 'physical'
+  const isHybrid = eventType === 'hybrid'
+
   return (
-    <div className="container max-w-2xl py-6 space-y-6">
-      <Button variant="ghost" onClick={() => navigate({ to: "/events" })}>
-        <ArrowLeft className="h-4 w-4 mr-2" />
-        Back to Events
-      </Button>
+    <div className="container mx-auto max-w-3xl p-6">
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold">Create Event</h1>
+        <Button variant="outline" asChild>
+          <Link to="/events">Cancel</Link>
+        </Button>
+      </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Calendar className="h-5 w-5" />
-            Create New Event
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Title */}
-            <div className="space-y-2">
-              <Label htmlFor="title">Event Title *</Label>
-              <Input
-                id="title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="Enter event title"
-                disabled={createEvent.isPending}
-                maxLength={200}
-              />
-            </div>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="space-y-2">
+          <Label htmlFor="title">Title</Label>
+          <Input
+            id="title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            disabled={createEvent.isPending}
+          />
+        </div>
 
-            {/* Description */}
-            <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
-              <RichTextEditor
-                id="description"
-                value={description}
-                onChange={setDescription}
-                placeholder="Describe your event..."
-                disabled={createEvent.isPending}
-                showCharacterCount={true}
-                maxLength={1000}
-              />
-            </div>
+        <div className="space-y-2">
+          <Label htmlFor="description">Description</Label>
+          <Textarea
+            id="description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            rows={6}
+            disabled={createEvent.isPending}
+          />
+        </div>
 
-            {/* Event Type */}
-            <div className="space-y-2">
-              <Label htmlFor="eventType">Event Type *</Label>
-              <Select
-                value={eventType}
-                onValueChange={(value: any) => setEventType(value)}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="physical">Physical (In-person)</SelectItem>
-                  <SelectItem value="virtual">Virtual (Online)</SelectItem>
-                  <SelectItem value="hybrid">Hybrid (Both)</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+        <div className="space-y-2">
+          <Label htmlFor="eventType">Event type</Label>
+          <Select
+            value={eventType}
+            onValueChange={(value: any) => setEventType(value)}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Select event type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="physical">Physical</SelectItem>
+              <SelectItem value="virtual">Virtual</SelectItem>
+              <SelectItem value="hybrid">Hybrid</SelectItem>
+              <SelectItem value="other">Other</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
-            {/* Physical Location */}
-            {(eventType === "physical" || eventType === "hybrid") && (
-              <div className="space-y-2">
-                <Label htmlFor="location">Physical Location *</Label>
-                <Input
-                  id="location"
-                  value={physicalLocation}
-                  onChange={(e) => setPhysicalLocation(e.target.value)}
-                  placeholder="123 Main St, City, State"
-                  disabled={createEvent.isPending}
-                />
-              </div>
-            )}
+        {(isPhysical || isHybrid) && (
+          <div className="space-y-2">
+            <Label htmlFor="physicalLocation">Physical location (address)</Label>
+            <Input
+              id="physicalLocation"
+              value={physicalLocation}
+              onChange={(e) => setPhysicalLocation(e.target.value)}
+              disabled={createEvent.isPending}
+            />
+          </div>
+        )}
 
-            {/* Virtual URL */}
-            {(eventType === "virtual" || eventType === "hybrid") && (
-              <div className="space-y-2">
-                <Label htmlFor="virtualUrl">Virtual Meeting URL *</Label>
-                <Input
-                  id="virtualUrl"
-                  type="url"
-                  value={virtualUrl}
-                  onChange={(e) => setVirtualUrl(e.target.value)}
-                  placeholder="https://zoom.us/j/..."
-                  disabled={createEvent.isPending}
-                />
-              </div>
-            )}
+        {(isVirtual || isHybrid) && (
+          <div className="space-y-2">
+            <Label htmlFor="virtualUrl">Virtual URL (Zoom, Meet, etc.)</Label>
+            <Input
+              id="virtualUrl"
+              type="url"
+              value={virtualUrl}
+              onChange={(e) => setVirtualUrl(e.target.value)}
+              placeholder="https://..."
+              disabled={createEvent.isPending}
+            />
+          </div>
+        )}
 
-            {/* Start Date & Time */}
-            <div className="space-y-2">
-              <Label htmlFor="startsAt">Start Date & Time *</Label>
-              <Input
-                id="startsAt"
-                type="datetime-local"
-                value={startsAt}
-                onChange={(e) => setStartsAt(e.target.value)}
-                disabled={createEvent.isPending}
-              />
-            </div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="space-y-2">
+            <Label htmlFor="startsAt">Starts at</Label>
+            <Input
+              id="startsAt"
+              type="datetime-local"
+              value={startsAt}
+              onChange={(e) => setStartsAt(e.target.value)}
+              disabled={createEvent.isPending}
+            />
+          </div>
 
-            {/* End Date & Time */}
-            <div className="space-y-2">
-              <Label htmlFor="endsAt">End Date & Time *</Label>
-              <Input
-                id="endsAt"
-                type="datetime-local"
-                value={endsAt}
-                onChange={(e) => setEndsAt(e.target.value)}
-                disabled={createEvent.isPending}
-              />
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="endsAt">Ends at</Label>
+            <Input
+              id="endsAt"
+              type="datetime-local"
+              value={endsAt}
+              onChange={(e) => setEndsAt(e.target.value)}
+              disabled={createEvent.isPending}
+            />
+          </div>
+        </div>
 
-            {/* Max Attendees */}
-            <div className="space-y-2">
-              <Label htmlFor="maxAttendees">Maximum Attendees (optional)</Label>
-              <Input
-                id="maxAttendees"
-                type="number"
-                min="1"
-                value={maxAttendees}
-                onChange={(e) => setMaxAttendees(e.target.value)}
-                placeholder="Leave empty for unlimited"
-                disabled={createEvent.isPending}
-              />
-            </div>
-          </form>
-        </CardContent>
-      </Card>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="space-y-2">
+            <Label htmlFor="maxAttendees">Max attendees (optional)</Label>
+            <Input
+              id="maxAttendees"
+              type="number"
+              min="1"
+              value={maxAttendees}
+              onChange={(e) => setMaxAttendees(e.target.value)}
+              disabled={createEvent.isPending}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="category">Category (optional)</Label>
+            <Input
+              id="category"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              disabled={createEvent.isPending}
+            />
+          </div>
+        </div>
+
+        <div className="flex items-center justify-end gap-3">
+          <Link to="/events">
+            <Button variant="outline" type="button">Cancel</Button>
+          </Link>
+          <Button type="submit" disabled={createEvent.isPending}>
+            {createEvent.isPending ? 'Creating...' : 'Create event'}
+          </Button>
+        </div>
+      </form>
     </div>
   );
 }

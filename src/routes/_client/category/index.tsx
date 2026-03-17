@@ -1,67 +1,88 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '~/components/ui/card'
+import { Card, CardContent, CardHeader } from '~/components/ui/card'
 import { Badge } from '~/components/ui/badge'
-import { Skeleton } from '~/components/ui/skeleton'
 import { trpc } from '~/lib/trpc'
-import { MessageSquare, FolderOpen } from 'lucide-react'
+import { Eye, MessageSquare } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { Skeleton } from '~/components/ui/skeleton'
 
 export const Route = createFileRoute('/_client/category/')({
   component: CategoriesPage,
 })
 
 function CategoriesPage() {
-  const { data: categories, isLoading } = trpc.category.list.useQuery()
+  const { data: initialCategories, isLoading, refetch } = trpc.category.list.useQuery()
+  const [categories, setCategories] = useState<any[]>([])
+
+  useEffect(() => {
+    if (initialCategories) {
+      setCategories(initialCategories)
+    }
+  }, [initialCategories])
+
+  // "Realtime" refresh every 10 seconds matching Svelte
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refetch().then((res) => {
+        if (res.data) setCategories(res.data)
+      })
+    }, 10000)
+    return () => clearInterval(interval)
+  }, [refetch])
 
   return (
-    <div className="container max-w-4xl py-6 space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">Categories</h1>
-        <p className="text-muted-foreground">Browse discussions by category</p>
-      </div>
+    <div className="container mx-auto space-y-6 px-4 py-8">
+      <h1 className="text-3xl font-bold">Categories</h1>
 
-      {isLoading ? (
-        <div className="grid gap-4 md:grid-cols-2">
+      {isLoading && categories.length === 0 ? (
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
-            <Skeleton key={i} className="h-32" />
+             <Card key={i} className="flex h-full flex-col justify-between">
+              <CardHeader>
+                <Skeleton className="h-6 w-1/2 mb-2" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-3/4" />
+              </CardHeader>
+              <CardContent>
+                <div className="flex justify-end gap-4 mt-4">
+                  <Skeleton className="h-4 w-8" />
+                  <Skeleton className="h-4 w-8" />
+                </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
-      ) : categories && categories.length > 0 ? (
-        <div className="grid gap-4 md:grid-cols-2">
+      ) : categories.length === 0 ? (
+        <p className="text-muted-foreground">No categories yet.</p>
+      ) : (
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {categories.map((cat: any) => (
-            <Link
-              key={cat.id}
-              to="/category/$slug"
-              params={{ slug: cat.slug }}
-              className="transition-transform hover:scale-[1.02]"
-            >
-              <Card className="h-full hover:shadow-md transition-shadow cursor-pointer">
+            <Link key={cat.id} to={`/category/${cat.slug}`}>
+              <Card className="flex h-full flex-col justify-between transition-shadow hover:shadow-lg">
                 <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-2">
-                      <FolderOpen className="h-5 w-5 text-primary" />
-                      <CardTitle>{cat.name}</CardTitle>
-                    </div>
-                    <Badge variant="secondary">
-                      <MessageSquare className="h-3 w-3 mr-1" />
-                      {cat.threadCount || 0}
-                    </Badge>
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-semibold">{cat.name}</h2>
+                    <Badge variant="secondary">{cat.threadCount || 0} threads</Badge>
                   </div>
-                  {cat.description && (
-                    <CardDescription className="line-clamp-2">
-                      {cat.description}
-                    </CardDescription>
-                  )}
+                  <p className="mt-2 line-clamp-3 text-muted-foreground">{cat.description}</p>
                 </CardHeader>
+                <CardContent>
+                  <div className="flex items-center justify-end gap-4 text-muted-foreground">
+                    {/* These would come from your thread stats in a later query */}
+                    <div className="flex items-center gap-1">
+                      <MessageSquare className="size-4" />
+                      <span>{cat.replyCount ?? 0}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Eye className="size-4" />
+                      <span>{cat.viewCount ?? 0}</span>
+                    </div>
+                  </div>
+                </CardContent>
               </Card>
             </Link>
           ))}
         </div>
-      ) : (
-        <Card>
-          <CardContent className="py-12 text-center">
-            <p className="text-muted-foreground">No categories yet</p>
-          </CardContent>
-        </Card>
       )}
     </div>
   )

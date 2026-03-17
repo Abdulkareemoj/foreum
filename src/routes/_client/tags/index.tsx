@@ -1,77 +1,34 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { Card, CardHeader } from '~/components/ui/card'
 import { Badge } from '~/components/ui/badge'
-import { Input } from '~/components/ui/input'
-import { Skeleton } from '~/components/ui/skeleton'
-import { Hash, Search } from 'lucide-react'
+import { Card, CardHeader } from '~/components/ui/card'
 import { trpc } from '~/lib/trpc'
-import { useState } from 'react'
 
 export const Route = createFileRoute('/_client/tags/')({
   component: TagsPage,
 })
 
 function TagsPage() {
-  const [search, setSearch] = useState('')
   const { data: tags, isLoading } = trpc.tag.list.useQuery()
 
-  const filtered = tags?.filter(
-    (t: any) => !search || t.name.toLowerCase().includes(search.toLowerCase())
-  )
-
   return (
-    <div className="container max-w-4xl py-8 space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold flex items-center gap-2">
-          <Hash className="h-8 w-8" />
-          Tags
-        </h1>
-        <p className="mt-2 text-muted-foreground">
-          Browse threads by topic
-        </p>
-      </div>
+    <div className="container mx-auto space-y-6 px-4 py-8 max-w-6xl">
+      <h1 className="text-3xl font-bold">Tags</h1>
 
-      {/* Search */}
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search tags..."
-          className="pl-9"
-        />
-      </div>
-
-      {/* Tags Grid */}
       {isLoading ? (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 9 }).map((_, i) => (
-            <Skeleton key={i} className="h-20" />
-          ))}
-        </div>
-      ) : !filtered || filtered.length === 0 ? (
-        <div className="text-center py-12">
-          <Hash className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-          <p className="text-muted-foreground">
-            {search ? 'No tags found matching your search' : 'No tags yet'}
-          </p>
-        </div>
+        <p>Loading tags…</p>
+      ) : !tags || tags.length === 0 ? (
+        <p className="text-muted-foreground">No tags yet.</p>
       ) : (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((t: any) => (
-            <Link key={t.id} to="/tags/$slug" params={{ slug: t.slug }}>
-              <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
-                <CardHeader className="pb-3">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {tags.map((tag: any) => (
+            <Link key={tag.id} to={`/tags/${tag.slug}` as any} className="block group">
+              <Card className="flex h-full flex-col justify-between transition-shadow hover:shadow-lg group-hover:border-primary/50">
+                <CardHeader>
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1.5">
-                      <Hash className="h-4 w-4 text-muted-foreground" />
-                      <h2 className="text-lg font-semibold">{t.name}</h2>
-                    </div>
-                    <Badge variant="secondary">
-                      {t.threadCount || 0}{' '}
-                      {t.threadCount === 1 ? 'thread' : 'threads'}
-                    </Badge>
+                    <h2 className="text-xl font-semibold text-primary/80 group-hover:text-primary">
+                      #{tag.name}
+                    </h2>
+                    <Badge variant="secondary">{tag.threadCount ?? 0} threads</Badge>
                   </div>
                 </CardHeader>
               </Card>

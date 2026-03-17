@@ -1,150 +1,101 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
+import { useState, useEffect } from 'react'
 import { Button } from '~/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '~/components/ui/card'
-import { Badge } from '~/components/ui/badge'
-import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
-import { Skeleton } from '~/components/ui/skeleton'
+import { Card, CardContent } from '~/components/ui/card'
 import { Input } from '~/components/ui/input'
-import { Users, Plus, Search } from 'lucide-react'
 import { trpc } from '~/lib/trpc'
-import { useState } from 'react'
 
 export const Route = createFileRoute('/_client/groups/')({
   component: GroupsPage,
 })
 
 function GroupsPage() {
-  const [search, setSearch] = useState('')
+  const [q, setQ] = useState('')
+  const [debouncedQ, setDebouncedQ] = useState('')
+  
+  // Debounce search
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQ(q)
+    }, 220)
+    return () => clearTimeout(timer)
+  }, [q])
 
-  const {
-    data,
-    isLoading,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-  } = trpc.groups.list.useInfiniteQuery(
-    { limit: 12, query: search },
-    { getNextPageParam: (lastPage) => lastPage.nextCursor }
-  )
-
-  const groups = data?.pages.flatMap((page) => page.items) ?? []
+  const { data: groups, isLoading } = trpc.groups.list.useQuery({ 
+    search: debouncedQ || undefined, 
+    limit: 40 
+  })
 
   return (
-    <div className="container max-w-6xl py-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">Groups</h1>
-          <p className="text-muted-foreground">
-            Join groups to connect with like-minded people
-          </p>
+    <div className="space-y-6 p-6">
+      <div className="flex items-center justify-between gap-4">
+        <h1 className="text-2xl font-semibold">Groups</h1>
+
+        <div className="flex items-center gap-3">
+          <Input 
+            placeholder="Search groups..." 
+            value={q} 
+            onChange={(e) => setQ(e.target.value)} 
+            className="min-w-[220px]" 
+          />
+          <Link to="/groups/new">
+            <Button>Create Group</Button>
+          </Link>
         </div>
-        <Link to="/groups/new">
-          <Button>
-            <Plus className="h-4 w-4 mr-2" />
-            Create Group
-          </Button>
-        </Link>
       </div>
 
-      {/* Search */}
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search groups..."
-          className="pl-9"
-        />
-      </div>
-
-      {/* Groups Grid */}
       {isLoading ? (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
-            <Skeleton key={i} className="h-64" />
+            <Card key={i} className="animate-pulse">
+              <CardContent className="h-32" />
+            </Card>
           ))}
         </div>
-      ) : groups.length === 0 ? (
+      ) : groups?.length === 0 ? (
         <Card>
-          <CardContent className="py-12 text-center">
-            <Users className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-            <p className="text-muted-foreground">
-              {search ? 'No groups found matching your search' : 'No groups yet'}
-            </p>
+          <CardContent className="py-8 text-center text-muted-foreground">
+            No groups found.
           </CardContent>
         </Card>
       ) : (
-        <>
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {groups.map((group: any) => (
-              <GroupCard key={group.id} group={group} />
-            ))}
-          </div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {groups?.map((group: any) => (
+            <Link key={group.id} to={`/groups/${group.id}`} className="block">
+              <Card className="h-full transition hover:shadow-md">
+                <div className="h-32 overflow-hidden rounded-t border-b bg-muted/10 flex items-center justify-center">
+                  {group.bannerUrl ? (
+                    <img src={group.bannerUrl} className="h-32 w-full object-cover" alt={group.name} />
+                  ) : (
+                    <div className="flex h-32 w-full items-center justify-center text-muted-foreground">
+                      <span className="text-sm">{group.name}</span>
+                    </div>
+                  )}
+                </div>
+                <CardContent>
+                  <div className="flex items-start justify-between gap-3 mt-4">
+                    <div className="min-w-0">
+                      <h3 className="truncate font-semibold">{group.name}</h3>
+                      <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
+                        {group.shortDescription}
+                      </p>
+                    </div>
+                  </div>
 
-          {hasNextPage && (
-            <div className="text-center">
-              <Button
-                onClick={() => fetchNextPage()}
-                disabled={isFetchingNextPage}
-                variant="outline"
-              >
-                {isFetchingNextPage ? 'Loading...' : 'Load More'}
-              </Button>
-            </div>
-          )}
-        </>
+                  <div className="mt-4 flex items-center justify-between text-sm text-muted-foreground">
+                    <div>{group.memberCount ?? 0} members</div>
+                    <div>
+                      <span className="inline-flex items-center rounded bg-muted/50 px-2 py-0.5 text-xs">
+                        {group.privacy === 'private' ? 'Private' : 'Public'}
+                      </span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+          ))}
+        </div>
       )}
     </div>
-  )
-}
-
-function GroupCard({ group }: { group: any }) {
-  return (
-    <Link to="/groups/$slug" params={{ slug: group.slug }}>
-      <Card className="h-full hover:shadow-md transition-shadow cursor-pointer">
-        {/* Banner/Cover Image */}
-        {group.bannerImage ? (
-          <div className="h-32 bg-muted rounded-t-lg overflow-hidden">
-            <img
-              src={group.bannerImage}
-              alt={group.name}
-              className="w-full h-full object-cover"
-            />
-          </div>
-        ) : (
-          <div className="h-32 bg-gradient-to-br from-primary/20 to-primary/5 rounded-t-lg" />
-        )}
-
-        <CardHeader className="relative pb-3">
-          {/* Group Avatar */}
-          <Avatar className="h-16 w-16 border-4 border-background -mt-12 mb-2">
-            <AvatarImage src={group.avatarImage} />
-            <AvatarFallback className="bg-primary text-primary-foreground text-xl">
-              {group.name?.[0]}
-            </AvatarFallback>
-          </Avatar>
-
-          <CardTitle className="text-xl">{group.name}</CardTitle>
-          {group.description && (
-            <CardDescription className="line-clamp-2">{group.description}</CardDescription>
-          )}
-        </CardHeader>
-
-        <CardContent>
-          <div className="flex items-center justify-between text-sm text-muted-foreground">
-            <div className="flex items-center gap-1">
-              <Users className="h-4 w-4" />
-              <span>
-                {group.memberCount || 0} {group.memberCount === 1 ? 'member' : 'members'}
-              </span>
-            </div>
-            {group.creator && (
-              <span className="text-xs">by {group.creator.name}</span>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-    </Link>
   )
 }

@@ -1,282 +1,215 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useState, useEffect, useRef } from 'react'
-import { Card, CardContent, CardHeader } from '~/components/ui/card'
 import { Button } from '~/components/ui/button'
 import { Input } from '~/components/ui/input'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
-import { Skeleton } from '~/components/ui/skeleton'
-import { ArrowLeft, Send, Paperclip, Image as ImageIcon } from 'lucide-react'
+import { Popover, PopoverContent, PopoverTrigger } from '~/components/ui/popover'
+import {
+  EmojiPicker,
+  EmojiPickerSearch,
+  EmojiPickerContent,
+  EmojiPickerFooter,
+} from '~/components/ui/emoji-picker'
+import { Phone, Info, Video, SmilePlus, Send, ArrowLeft } from 'lucide-react'
 import { trpc } from '~/lib/trpc'
-import { toast } from 'sonner'
-import { format } from 'date-fns'
 import { cn } from '~/lib/utils'
 
 export const Route = createFileRoute('/_client/messages/$id')({
   component: ConversationPage,
 })
 
+function initials(name: string) {
+  if (!name) return 'U'
+  return name.split(' ').map((n) => n[0]).join('')
+}
+
+function formatShortTime(date: Date) {
+  return new Date(date).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
+}
+
 function ConversationPage() {
-  const { id } = Route.useParams()
+  const { id: conversationId } = Route.useParams()
   const navigate = useNavigate()
   const utils = trpc.useUtils()
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const [messageText, setMessageText] = useState('')
+  const [openEmoji, setOpenEmoji] = useState(false)
+  const [messages, setMessages] = useState<any[]>([])
 
-  const { data, isLoading } = trpc.messages.getConversation.useQuery(
-    { conversationId: id },
-    {
-      refetchInterval: 3000, // Poll every 3 seconds for new messages
-      onSuccess: () => {
-        // Mark as read when conversation loads
-        markAsRead.mutate({ conversationId: id })
-      },
-    }
+  const { data: conversationData, isLoading } = trpc.messaging.getConversation.useQuery(
+    { conversationId },
   )
 
-  const sendMessage = trpc.messages.sendMessage.useMutation({
-    onSuccess: () => {
-      setMessageText('')
-      utils.messages.getConversation.invalidate({ conversationId: id })
-      utils.messages.conversations.invalidate()
+  useEffect(() => {
+    if (conversationData) {
+      setMessages(conversationData.messages || [])
       scrollToBottom()
-    },
-    onError: (error) => {
-      toast.error(error.message || 'Failed to send message')
-    },
-  })
+    }
+  }, [conversationData])
 
-  const markAsRead = trpc.messages.markAsRead.useMutation()
+  const { mutateAsync: sendMessageMutation } = trpc.messaging.sendMessage.useMutation()
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
 
-  useEffect(() => {
-    scrollToBottom()
-  }, [data?.messages])
-
-  const handleSendMessage = (e: React.FormEvent) => {
+  const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!messageText.trim()) {
+    if (!messageText.trim() || !conversationId || !conversationData) {
       return
     }
 
-    sendMessage.mutate({
-      conversationId: id,
-      content: messageText.trim(),
-    })
+    const content = messageText
+    setMessageText('')
+
+    // optimistic update
+    const optimisticMsg = {
+      id: crypto.randomUUID(),
+      senderId: conversationData.currentUserId,
+      content: content,
+      createdAt: new Date(),
+    }
+    setMessages((prev) => [...prev, optimisticMsg])
+    setTimeout(scrollToBottom, 50) // wait for DOM to render the new msg
+
+    // actual send
+    try {
+      await sendMessageMutation({
+        conversationId,
+        content,
+      })
+      // invalidate to get real IDs etc if needed later
+      utils.messaging.getConversation.invalidate({ conversationId })
+      utils.messaging.conversations.invalidate()
+    } catch (error) {
+      console.error('Failed to send message', error)
+      // On error, we'd typically rollback the optimistic update here
+    }
   }
 
-  if (isLoading) {
+  if (isLoading || !conversationData) {
     return (
-      <div className="container max-w-6xl py-6">
-        <Skeleton className="h-[calc(100vh-8rem)]" />
-      </div>
+      <p className="p-10 text-center text-muted-foreground">
+        {isLoading ? 'Loading conversation...' : 'Conversation not found'}
+      </p>
     )
   }
 
-  if (!data) {
-    return (
-      <div className="container max-w-6xl py-6">
-        <div className="text-center py-12">
-          <h2 className="text-2xl font-bold mb-2">Conversation not found</h2>
-          <Button onClick={() => navigate({ to: '/messages' })}>
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Messages
+  return (
+    <div className="w-full border border-border flex flex-col h-[calc(100vh-180px)]">
+      {/* TOP BAR */}
+      <div className="flex place-items-center justify-between border-b bg-background p-2">
+        <div className="flex place-items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => navigate({ to: '/messages' })}
+            className="md:hidden mr-2"
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
+
+          <Avatar>
+            <AvatarImage src={conversationData.otherUser.img} />
+            <AvatarFallback>
+              {initials(conversationData.otherUser.name)}
+            </AvatarFallback>
+          </Avatar>
+
+          <div className="flex flex-col">
+            <span className="text-sm font-medium">
+              {conversationData.otherUser.name}
+            </span>
+            <span className="text-xs text-muted-foreground">
+              Active {conversationData.otherUser.lastActive || 0}s ago
+            </span>
+          </div>
+        </div>
+
+        <div className="flex place-items-center">
+          <Button variant="ghost" size="icon" className="rounded-full">
+            <Phone className="h-5 w-5" />
+          </Button>
+          <Button variant="ghost" size="icon" className="rounded-full">
+            <Video className="h-5 w-5" />
+          </Button>
+          <Button variant="ghost" size="icon" className="rounded-full">
+            <Info className="h-5 w-5" />
           </Button>
         </div>
       </div>
-    )
-  }
 
-  return (
-    <div className="container max-w-4xl py-6">
-      <Card className="flex flex-col h-[calc(100vh-8rem)]">
-        {/* Header */}
-        <CardHeader className="border-b py-4">
-          <div className="flex items-center gap-3">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigate({ to: '/messages' })}
-              className="md:hidden"
-            >
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
+      {/* MESSAGE LIST */}
+      <div className="flex-1 overflow-y-auto p-3 space-y-3">
+        {messages.map((msg) => {
+          const mine = msg.senderId === conversationData.currentUserId
+          const sender = mine ? conversationData.currentUser : conversationData.otherUser
 
-            <Avatar className="h-10 w-10">
-              <AvatarImage src={data.otherUser.image} />
-              <AvatarFallback>{data.otherUser.name?.[0]}</AvatarFallback>
-            </Avatar>
+          return (
+            <div key={msg.id} className={cn("flex gap-2 max-w-[80%]", mine ? "ml-auto flex-row-reverse" : "")}>
+              <Avatar className="h-8 w-8 shrink-0">
+                <AvatarImage src={sender?.img} />
+                <AvatarFallback>{initials(sender?.name || '')}</AvatarFallback>
+              </Avatar>
 
-            <div className="flex-1">
-              <p className="font-semibold">{data.otherUser.name}</p>
-              <p className="text-xs text-muted-foreground">Active</p>
-            </div>
-          </div>
-        </CardHeader>
-
-        {/* Messages */}
-        <CardContent className="flex-1 overflow-y-auto p-4 space-y-4">
-          {data.messages.length === 0 ? (
-            <div className="text-center py-12 text-muted-foreground">
-              <p>No messages yet. Start the conversation!</p>
-            </div>
-          ) : (
-            data.messages.map((message: any, index: number) => {
-              const isCurrentUser = message.senderId === data.currentUser.id
-              const showDateDivider =
-                index === 0 ||
-                format(new Date(message.createdAt), 'PP') !==
-                  format(new Date(data.messages[index - 1].createdAt), 'PP')
-
-              return (
-                <div key={message.id}>
-                  {showDateDivider && (
-                    <div className="flex items-center gap-2 my-4">
-                      <div className="h-px bg-border flex-1" />
-                      <span className="text-xs text-muted-foreground">
-                        {format(new Date(message.createdAt), 'PP')}
-                      </span>
-                      <div className="h-px bg-border flex-1" />
-                    </div>
+              <div className={cn("flex flex-col gap-1", mine ? "items-end" : "items-start")}>
+                <div className={cn(
+                  "rounded-lg px-3 py-2 text-sm", 
+                  mine ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"
+                )}>
+                  {msg.content && <p className="whitespace-pre-wrap">{msg.content}</p>}
+                  
+                  {/* msg.attachments placeholder - integrate MessageAttachments if present */}
+                  {msg.attachments?.length > 0 && (
+                     <div className="mt-2 text-xs italic opacity-70">[Attachments...]</div>
                   )}
-
-                  <MessageBubble
-                    message={message}
-                    isCurrentUser={isCurrentUser}
-                    user={isCurrentUser ? data.currentUser : data.otherUser}
-                  />
                 </div>
-              )
-            })
-          )}
-          <div ref={messagesEndRef} />
-        </CardContent>
-
-        {/* Input */}
-        <div className="border-t p-4">
-          <form onSubmit={handleSendMessage} className="flex items-end gap-2">
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              className="flex-shrink-0"
-              disabled
-            >
-              <Paperclip className="h-5 w-5" />
-            </Button>
-
-            <div className="flex-1">
-              <Input
-                value={messageText}
-                onChange={(e) => setMessageText(e.target.value)}
-                placeholder="Type a message..."
-                disabled={sendMessage.isPending}
-                className="resize-none"
-              />
+                <div className="text-xs text-muted-foreground">
+                  {formatShortTime(new Date(msg.createdAt))}
+                </div>
+              </div>
             </div>
-
-            <Button
-              type="submit"
-              size="icon"
-              disabled={!messageText.trim() || sendMessage.isPending}
-              className="flex-shrink-0"
-            >
-              <Send className="h-5 w-5" />
-            </Button>
-          </form>
-        </div>
-      </Card>
-    </div>
-  )
-}
-
-function MessageBubble({
-  message,
-  isCurrentUser,
-  user,
-}: {
-  message: any
-  isCurrentUser: boolean
-  user: any
-}) {
-  return (
-    <div className={cn('flex gap-2', isCurrentUser && 'flex-row-reverse')}>
-      <Avatar className="h-8 w-8 flex-shrink-0">
-        <AvatarImage src={user.image} />
-        <AvatarFallback>{user.name?.[0]}</AvatarFallback>
-      </Avatar>
-
-      <div className={cn('flex flex-col', isCurrentUser && 'items-end')}>
-        <div
-          className={cn(
-            'rounded-lg px-4 py-2 max-w-md break-words',
-            isCurrentUser
-              ? 'bg-primary text-primary-foreground'
-              : 'bg-muted text-foreground'
-          )}
-        >
-          <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-
-          {/* Attachments */}
-          {message.attachments && message.attachments.length > 0 && (
-            <div className="mt-2 space-y-2">
-              {message.attachments.map((attachment: any) => (
-                <AttachmentPreview key={attachment.id} attachment={attachment} />
-              ))}
-            </div>
-          )}
-        </div>
-
-        <span className="text-xs text-muted-foreground mt-1">
-          {format(new Date(message.createdAt), 'p')}
-          {message.readAt && isCurrentUser && (
-            <span className="ml-1">· Read</span>
-          )}
-        </span>
+          )
+        })}
+        <div ref={messagesEndRef} />
       </div>
+
+      {/* Input */}
+      <form onSubmit={handleSendMessage} className="flex items-center gap-2 p-3 border-t">
+        <Popover open={openEmoji} onOpenChange={setOpenEmoji}>
+          <PopoverTrigger asChild>
+            <Button variant="outline" size="icon" className="rounded-full flex-shrink-0">
+              <SmilePlus className="h-5 w-5" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="p-0 border-none shadow-none w-auto bg-transparent h-fit">
+            <EmojiPicker
+              className="h-[350px] w-[300px] shadow-xl border bg-popover"
+              onSelect={(e: any) => {
+                setMessageText(prev => prev + e.emoji)
+                setOpenEmoji(false)
+              }}
+            >
+              <EmojiPickerSearch />
+              <EmojiPickerContent />
+              <EmojiPickerFooter />
+            </EmojiPicker>
+          </PopoverContent>
+        </Popover>
+
+        <Input 
+          value={messageText} 
+          onChange={(e) => setMessageText(e.target.value)}
+          className="flex-1 rounded-full" 
+          placeholder="Type a message..." 
+        />
+
+        <Button type="submit" size="icon" className="rounded-full flex-shrink-0" disabled={!messageText.trim()}>
+          <Send className="h-5 w-5" />
+        </Button>
+      </form>
     </div>
   )
-}
-
-function AttachmentPreview({ attachment }: { attachment: any }) {
-  if (attachment.type === 'image') {
-    return (
-      <a href={attachment.url} target="_blank" rel="noopener noreferrer">
-        <img
-          src={attachment.url}
-          alt={attachment.fileName || 'Image'}
-          className="rounded max-w-xs max-h-64 object-cover"
-        />
-      </a>
-    )
-  }
-
-  if (attachment.type === 'file') {
-    return (
-      <Link
-        to={attachment.url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="flex items-center gap-2 p-2 rounded bg-background border hover:bg-muted transition-colors"
-      >
-        <Paperclip className="h-4 w-4" />
-        <div className="flex-1 min-w-0">
-          <p className="text-xs font-medium truncate">
-            {attachment.fileName || 'File'}
-          </p>
-          {attachment.fileSize && (
-            <p className="text-xs text-muted-foreground">
-              {(attachment.fileSize / 1024).toFixed(1)} KB
-            </p>
-          )}
-        </div>
-      </Link>
-    )
-  }
-
-  return null
 }

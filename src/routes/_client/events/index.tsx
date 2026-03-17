@@ -1,176 +1,210 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Button } from '~/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '~/components/ui/card'
+import { Card, CardContent } from '~/components/ui/card'
 import { Badge } from '~/components/ui/badge'
-import { Skeleton } from '~/components/ui/skeleton'
-import { Calendar, MapPin, Users, Video, Plus } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import { trpc } from '~/lib/trpc'
-import { format } from 'date-fns'
+import { format, isPast } from 'date-fns'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
+import { toast } from 'sonner'
+import { useEffect, useState } from 'react'
 
 export const Route = createFileRoute('/_client/events/')({
   component: EventsPage,
 })
 
 function EventsPage() {
-  const {
-    data: upcomingData,
-    isLoading: upcomingLoading,
-    fetchNextPage: fetchNextUpcoming,
-    hasNextPage: hasNextUpcoming,
-  } = trpc.events.list.useInfiniteQuery(
-    { upcoming: true, limit: 10 },
-    { getNextPageParam: (lastPage) => lastPage.nextCursor }
+  const [allEvents, setAllEvents] = useState<any[]>([])
+  const [upcomingEvents, setUpcomingEvents] = useState<any[]>([])
+  const [pastEvents, setPastEvents] = useState<any[]>([])
+  
+  const { data, isLoading, error, refetch, isRefetching } = trpc.events.list.useQuery(
+    {},
+    {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    }
   )
 
-  const {
-    data: pastData,
-    isLoading: pastLoading,
-    fetchNextPage: fetchNextPast,
-    hasNextPage: hasNextPast,
-  } = trpc.events.list.useInfiniteQuery(
-    { past: true, limit: 10 },
-    { getNextPageParam: (lastPage) => lastPage.nextCursor }
-  )
+  useEffect(() => {
+    if (data) {
+      setAllEvents(data)
+      setUpcomingEvents(data.filter((e: any) => !isPast(new Date(e.endsAt))))
+      setPastEvents(data.filter((e: any) => isPast(new Date(e.endsAt))))
+    }
+  }, [data])
 
-  const upcomingEvents = upcomingData?.pages.flatMap((page) => page.items) ?? []
-  const pastEvents = pastData?.pages.flatMap((page) => page.items) ?? []
+  useEffect(() => {
+    if (error) {
+      toast.error('Failed to load events')
+    }
+  }, [error])
+
+  const getEventTypeColor = (type: string) => {
+    const colors: Record<string, string> = {
+      virtual: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
+      physical: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
+      hybrid: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
+    }
+    return colors[type] || 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300'
+  }
 
   return (
-    <div className="container max-w-4xl py-6 space-y-6">
-      {/* Header */}
+    <div className="container mx-auto max-w-6xl space-y-6 p-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Events</h1>
-          <p className="text-muted-foreground">Discover and join community events</p>
+          <p className="mt-1 text-muted-foreground">Discover and join community events</p>
         </div>
         <Link to="/events/new">
-          <Button>
-            <Plus className="h-4 w-4 mr-2" />
-            Create Event
-          </Button>
+          <Button>Create Event</Button>
         </Link>
       </div>
 
-      {/* Tabs */}
-      <Tabs defaultValue="upcoming">
-        <TabsList>
-          <TabsTrigger value="upcoming">
-            Upcoming ({upcomingEvents.length})
-          </TabsTrigger>
-          <TabsTrigger value="past">Past ({pastEvents.length})</TabsTrigger>
-        </TabsList>
+      {error && (
+        <Card className="border-destructive bg-destructive/10">
+          <CardContent className="flex items-center justify-between pt-6">
+            <p className="text-sm text-destructive">{error.message}</p>
+            <Button variant="outline" onClick={() => refetch()} disabled={isLoading || isRefetching}>
+              {(isLoading || isRefetching) && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Retry
+            </Button>
+          </CardContent>
+        </Card>
+      )}
 
-        <TabsContent value="upcoming" className="space-y-4 mt-6">
-          {upcomingLoading ? (
-            Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-48" />)
-          ) : upcomingEvents.length === 0 ? (
-            <Card>
-              <CardContent className="py-12 text-center">
-                <Calendar className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                <p className="text-muted-foreground">No upcoming events</p>
+      {isLoading ? (
+        <div className="space-y-4">
+          {[1, 2, 3].map((i) => (
+            <Card key={i}>
+              <CardContent className="py-8">
+                <div className="h-24 animate-pulse rounded bg-muted"></div>
               </CardContent>
             </Card>
-          ) : (
-            <>
-              {upcomingEvents.map((event: any) => (
-                <EventCard key={event.id} event={event} />
-              ))}
-              {hasNextUpcoming && (
-                <Button
-                  onClick={() => fetchNextUpcoming()}
-                  variant="outline"
-                  className="w-full"
-                >
-                  Load More
-                </Button>
-              )}
-            </>
-          )}
-        </TabsContent>
+          ))}
+        </div>
+      ) : (
+        <Tabs defaultValue="upcoming" className="w-full">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="upcoming">
+              Upcoming <Badge variant="secondary" className="ml-2">{upcomingEvents.length}</Badge>
+            </TabsTrigger>
+            <TabsTrigger value="past">
+              Past <Badge variant="secondary" className="ml-2">{pastEvents.length}</Badge>
+            </TabsTrigger>
+            <TabsTrigger value="all">
+              All <Badge variant="secondary" className="ml-2">{allEvents.length}</Badge>
+            </TabsTrigger>
+          </TabsList>
 
-        <TabsContent value="past" className="space-y-4 mt-6">
-          {pastLoading ? (
-            Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-48" />)
-          ) : pastEvents.length === 0 ? (
-            <Card>
-              <CardContent className="py-12 text-center">
-                <Calendar className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                <p className="text-muted-foreground">No past events</p>
-              </CardContent>
-            </Card>
-          ) : (
-            <>
-              {pastEvents.map((event: any) => (
-                <EventCard key={event.id} event={event} isPast />
-              ))}
-              {hasNextPast && (
-                <Button onClick={() => fetchNextPast()} variant="outline" className="w-full">
-                  Load More
-                </Button>
-              )}
-            </>
-          )}
-        </TabsContent>
-      </Tabs>
+          {/* Upcoming Tab */}
+          <TabsContent value="upcoming" className="mt-6">
+            {upcomingEvents.length === 0 ? (
+              <Card>
+                <CardContent className="py-8 text-center text-muted-foreground">
+                  No upcoming events. Check back soon!
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {upcomingEvents.map((event) => (
+                  <Link key={event.id} to={`/events/${event.id}`} className="block transition hover:opacity-75">
+                    <EventCardContent event={event} getEventTypeColor={getEventTypeColor} />
+                  </Link>
+                ))}
+              </div>
+            )}
+          </TabsContent>
+
+          {/* Past Tab */}
+          <TabsContent value="past" className="mt-6">
+            {pastEvents.length === 0 ? (
+              <Card>
+                <CardContent className="py-8 text-center text-muted-foreground">
+                  No past events yet.
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {pastEvents.map((event) => (
+                  <Link key={event.id} to={`/events/${event.id}`} className="block opacity-75 transition hover:opacity-100">
+                    <EventCardContent event={event} getEventTypeColor={getEventTypeColor} isPastEvent />
+                  </Link>
+                ))}
+              </div>
+            )}
+          </TabsContent>
+
+          {/* All Tab */}
+          <TabsContent value="all" className="mt-6">
+            {allEvents.length === 0 ? (
+              <Card>
+                <CardContent className="py-8 text-center text-muted-foreground">
+                  No events found. Create the first one!
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {allEvents.map((event) => (
+                  <Link key={event.id} to={`/events/${event.id}`} className="block transition hover:opacity-75">
+                    <EventCardContent event={event} getEventTypeColor={getEventTypeColor} />
+                  </Link>
+                ))}
+              </div>
+            )}
+          </TabsContent>
+        </Tabs>
+      )}
     </div>
   )
 }
 
-function EventCard({ event, isPast = false }: { event: any; isPast?: boolean }) {
-  const eventTypeIcons = {
-    physical: MapPin,
-    virtual: Video,
-    hybrid: Users,
-    other: Calendar,
-  }
-
-  const Icon = eventTypeIcons[event.eventType as keyof typeof eventTypeIcons] || Calendar
-
+function EventCardContent({ event, getEventTypeColor, isPastEvent = false }: { event: any, getEventTypeColor: (t: string) => string, isPastEvent?: boolean }) {
+  const isEventPast = isPastEvent || isPast(new Date(event.endsAt))
+  
   return (
-    <Link to="/events/$id" params={{ id: event.id }}>
-      <Card className="hover:shadow-md transition-shadow cursor-pointer">
-        <CardHeader>
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-2">
-                <Icon className="h-4 w-4 text-primary" />
-                <Badge variant="secondary">{event.eventType}</Badge>
-                {isPast && <Badge variant="outline">Past</Badge>}
-              </div>
-              <CardTitle className="text-xl">{event.title}</CardTitle>
-              {event.description && (
-                <CardDescription className="line-clamp-2 mt-2">
-                  {event.description}
-                </CardDescription>
-              )}
-            </div>
+    <Card className="h-full overflow-hidden">
+      {event.coverImage ? (
+         <div className="h-40 overflow-hidden">
+           <img
+             src={event.coverImage || '/placeholder.svg'}
+             alt={event.title}
+             className={`h-full w-full object-cover ${isPastEvent ? 'grayscale' : ''}`}
+           />
+         </div>
+      ) : (
+        <div className={`h-40 ${isPastEvent ? 'bg-gradient-to-br from-muted to-muted/50' : 'bg-gradient-to-br from-primary/20 to-primary/10'}`}></div>
+      )}
+      <CardContent className="pt-4">
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex-1">
+            <h3 className="line-clamp-2 font-semibold">{event.title}</h3>
+            <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
+              {event.description}
+            </p>
           </div>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col gap-2 text-sm text-muted-foreground">
-            <div className="flex items-center gap-2">
-              <Calendar className="h-4 w-4" />
-              <span>
-                {format(new Date(event.startsAt), 'PPP')} at{' '}
-                {format(new Date(event.startsAt), 'p')}
-              </span>
-            </div>
-            {event.physicalLocation && (
-              <div className="flex items-center gap-2">
-                <MapPin className="h-4 w-4" />
-                <span className="truncate">{event.physicalLocation}</span>
-              </div>
+        </div>
+        <div className="mt-3 flex flex-col gap-2">
+          <div className="text-xs text-muted-foreground">
+            {isPastEvent ? format(new Date(event.endsAt), 'PPP') : format(new Date(event.startsAt), isPast(new Date(event.endsAt)) ? 'PPP' : 'PPP p')}
+          </div>
+          <div className="flex gap-2">
+            {!isPastEvent && (
+              <Badge className={getEventTypeColor(event.eventType)} variant="outline">
+                {event.eventType}
+              </Badge>
             )}
-            {event.virtualUrl && (
-              <div className="flex items-center gap-2">
-                <Video className="h-4 w-4" />
-                <span className="truncate">Virtual event</span>
-              </div>
+            
+            {event.capacity && !isPastEvent && (
+              <Badge variant="outline">Capacity: {event.capacity}</Badge>
+            )}
+
+            {isEventPast && (
+              <Badge variant="secondary">Past{isPastEvent ? ' Event' : ''}</Badge>
             )}
           </div>
-        </CardContent>
-      </Card>
-    </Link>
+        </div>
+      </CardContent>
+    </Card>
   )
 }

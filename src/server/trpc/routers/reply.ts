@@ -22,7 +22,7 @@ export const replyRouter = router({
 			try {
 				const orderBy = input.sortBy === 'newest' ? desc(reply.createdAt) : asc(reply.createdAt);
 
-				return ctx.db
+				return db
 					.select({
 						id: reply.id,
 						content: reply.content,
@@ -56,7 +56,7 @@ export const replyRouter = router({
 		)
 		.mutation(async ({ ctx, input }) => {
 			try {
-				const threadExists = await ctx.db
+				const threadExists = await db
 					.select({ locked: thread.locked })
 					.from(thread)
 					.where(eq(thread.id, input.threadId))
@@ -70,7 +70,7 @@ export const replyRouter = router({
 					throw new TRPCError({ code: 'FORBIDDEN', message: 'This thread is locked' });
 				}
 
-				const [newReply] = await ctx.db
+				const [newReply] = await db
 					.insert(reply)
 					.values({
 						id: crypto.randomUUID(),
@@ -81,7 +81,7 @@ export const replyRouter = router({
 					.returning();
 
 				// Increment replyCount
-				await ctx.db
+				await db
 					.update(thread)
 					.set({ replyCount: sql`${thread.replyCount} + 1` })
 					.where(eq(thread.id, input.threadId));
@@ -103,7 +103,7 @@ export const replyRouter = router({
 		)
 		.mutation(async ({ ctx, input }) => {
 			try {
-				const existingReply = await ctx.db
+				const existingReply = await db
 					.select({ authorId: reply.authorId })
 					.from(reply)
 					.where(eq(reply.id, input.id))
@@ -117,7 +117,7 @@ export const replyRouter = router({
 					throw new TRPCError({ code: 'FORBIDDEN', message: 'You can only edit your own replies' });
 				}
 
-				await ctx.db.update(reply).set({ content: input.content }).where(eq(reply.id, input.id));
+				await db.update(reply).set({ content: input.content }).where(eq(reply.id, input.id));
 
 				return { success: true };
 			} catch (error) {
@@ -130,7 +130,7 @@ export const replyRouter = router({
 	delete: protectedProcedure
 		.input(z.object({ id: z.string() }))
 		.mutation(async ({ ctx, input }) => {
-			const existingReply = await ctx.db
+			const existingReply = await db
 				.select({ authorId: reply.authorId, threadId: reply.threadId })
 				.from(reply)
 				.where(eq(reply.id, input.id))
@@ -144,10 +144,10 @@ export const replyRouter = router({
 				throw new TRPCError({ code: 'FORBIDDEN', message: 'Not authorized to delete this reply' });
 			}
 
-			await ctx.db.delete(reply).where(eq(reply.id, input.id));
+			await db.delete(reply).where(eq(reply.id, input.id));
 
 			// Decrement replyCount (avoid negative numbers)
-			await ctx.db
+			await db
 				.update(thread)
 				.set({ replyCount: sql`GREATEST(${thread.replyCount} - 1, 0)` })
 				.where(eq(thread.id, existingReply.threadId));

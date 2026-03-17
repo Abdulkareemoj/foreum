@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server'
-import { eq, ilike } from 'drizzle-orm'
+import { count, desc, eq, ilike, or } from 'drizzle-orm'
 import { z } from 'zod'
 import { db } from '~/server/db'
 import { user } from '~/server/db/schema/auth-schema'
@@ -25,7 +25,12 @@ export const userRouter = router({
           })
           .from(user)
           .leftJoin(profile, eq(profile.id, user.id))
-          .where(eq(user.username, input.username.toLowerCase()))
+          .where(
+            or(
+              eq(user.username, input.username.toLowerCase()),
+              eq(user.id, input.username)
+            )
+          )
 
         return result ?? null
       } catch (error) {
@@ -138,6 +143,37 @@ export const userRouter = router({
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Failed to fetch user threads',
+        })
+      }
+    }),
+
+  topContributors: publicProcedure
+    .input(z.object({ limit: z.number().default(5) }))
+    .query(async ({ input }) => {
+      try {
+        // Aggregate thread counts per user as a proxy for "top contributor"
+        // In a real app we might sum up reputation points or total posts
+        const threadCount = count(thread.id)
+        
+        return db
+          .select({
+            id: user.id,
+            name: user.name,
+            username: user.username,
+            image: user.image,
+            displayUsername: user.username, // mapping for UI consistency
+            threadCount: threadCount,
+          })
+          .from(user)
+          .leftJoin(thread, eq(user.id, thread.authorId))
+          .groupBy(user.id)
+          .orderBy(desc(threadCount))
+          .limit(input.limit)
+      } catch (error) {
+        console.error('[user.topContributors]', error)
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to fetch top contributors',
         })
       }
     }),

@@ -21,6 +21,9 @@ export const auth = betterAuth({
 		provider: 'pg',
 		schema
 	}),
+	trustedOrigins: [
+		"http://localhost:3000"
+	],
 	plugins: [
 		admin({
 			defaultRole: 'user',

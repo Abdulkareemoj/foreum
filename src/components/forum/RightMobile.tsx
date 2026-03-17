@@ -14,9 +14,9 @@ interface RightMobileProps {
 export default function RightMobile({ user }: RightMobileProps) {
   const [open, setOpen] = useState(false)
   
-  const { data: trendingThreads, isLoading } = trpc.thread.trending.useQuery(
+  const { data: trendingThreads, isLoading: trendingLoading } = trpc.thread.trending.useQuery(
     { limit: 5 },
-    { enabled: open } // Only fetch when drawer is open
+    { enabled: open }
   )
 
   const { data: stats } = trpc.user.stats.useQuery(undefined, {
@@ -38,30 +38,43 @@ export default function RightMobile({ user }: RightMobileProps) {
       <SheetContent side="right" className="w-80 p-0">
         <div className="flex h-full flex-col overflow-y-auto">
           {/* Header */}
-          <div className="sticky top-0 border-b bg-background p-4">
+          <div className="sticky top-0 border-b bg-background p-4 z-10">
             <h2 className="text-lg font-semibold">Trending & Stats</h2>
           </div>
 
           <div className="space-y-4 p-4">
+            {/* Announcements */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-sm">Announcements</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-xs text-muted-foreground italic">No new announcements</p>
+              </CardContent>
+            </Card>
+
             {/* Trending Threads */}
             <Card>
               <CardHeader>
                 <CardTitle className="text-sm">Trending Discussions</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                {isLoading ? (
-                  Array.from({ length: 5 }).map((_, i) => (
-                    <Skeleton key={i} className="h-12" />
+                {trendingLoading ? (
+                  Array.from({ length: 3 }).map((_, i) => (
+                    <Skeleton key={i} className="h-10 w-full" />
                   ))
+                ) : !trendingThreads || trendingThreads.length === 0 ? (
+                  <p className="text-xs text-muted-foreground italic">No trending discussions</p>
                 ) : (
-                  trendingThreads?.map((thread: any) => (
+                  trendingThreads.map((thread: any) => (
                     <Link
                       key={thread.id}
                       to="/thread/$id"
                       params={{ id: thread.id }}
                       onClick={() => setOpen(false)}
+                      className="block"
                     >
-                      <div className="space-y-1 cursor-pointer hover:opacity-80 transition-opacity">
+                      <div className="space-y-1 cursor-pointer hover:bg-accent p-1 rounded-md transition-colors">
                         <p className="text-sm font-medium line-clamp-2">
                           {thread.title}
                         </p>
@@ -74,6 +87,9 @@ export default function RightMobile({ user }: RightMobileProps) {
                 )}
               </CardContent>
             </Card>
+
+            {/* Recent Posts */}
+            <MobileRecentPosts onClose={() => setOpen(false)} open={open} />
 
             {/* Community Stats */}
             <Card>
@@ -101,38 +117,50 @@ export default function RightMobile({ user }: RightMobileProps) {
                 </div>
               </CardContent>
             </Card>
-
-            {/* Active Now (if you want to add it) */}
-            {user && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-sm">Your Activity</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Your Threads</span>
-                    <span className="font-medium">
-                      {user.threadCount || 0}
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Your Replies</span>
-                    <span className="font-medium">
-                      {user.replyCount || 0}
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Reputation</span>
-                    <span className="font-medium">
-                      {user.reputation || 0}
-                    </span>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
           </div>
         </div>
       </SheetContent>
     </Sheet>
+  )
+}
+
+function MobileRecentPosts({ onClose, open }: { onClose: () => void, open: boolean }) {
+  const { data: recentPosts, isLoading } = trpc.thread.recent.useQuery(
+    { limit: 5 },
+    { enabled: open }
+  )
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-sm">Recent Posts</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        {isLoading ? (
+          Array.from({ length: 3 }).map((_, i) => (
+            <Skeleton key={i} className="h-10 w-full" />
+          ))
+        ) : !recentPosts || recentPosts.length === 0 ? (
+          <p className="text-xs text-muted-foreground italic">No recent posts</p>
+        ) : (
+          recentPosts.map((post: any) => (
+            <Link
+              key={post.id}
+              to="/thread/$id"
+              params={{ id: post.id }}
+              onClick={onClose}
+              className="block"
+            >
+              <div className="space-y-1 cursor-pointer hover:bg-accent p-1 rounded-md transition-colors">
+                <p className="text-sm font-medium line-clamp-2">{post.title}</p>
+                <p className="text-xs text-muted-foreground">
+                  {new Date(post.createdAt).toLocaleDateString()}
+                </p>
+              </div>
+            </Link>
+          ))
+        )}
+      </CardContent>
+    </Card>
   )
 }

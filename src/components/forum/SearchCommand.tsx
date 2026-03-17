@@ -69,19 +69,25 @@ export function SearchCommand({ open, onOpenChange }: SearchCommandProps) {
   const handleSignOut = async () => {
     await signOut()
     toast.success('Signed out successfully')
-    navigate({ to: '/login' })
+    navigate({ to: '/sign-in' })
   }
 
   const quickActions = [
     { icon: Home, label: 'Home', action: () => navigate({ to: '/' }) },
-    { icon: MessageSquare, label: 'Threads', action: () => navigate({ to: '/thread' }) },
+    { icon: MessageSquare, label: 'Threads', action: () => navigate({ to: '/threads' }) },
     { icon: FolderOpen, label: 'Categories', action: () => navigate({ to: '/categories' }) },
     { icon: Hash, label: 'Tags', action: () => navigate({ to: '/tags' }) },
     { icon: Users, label: 'Groups', action: () => navigate({ to: '/groups' }) },
     { icon: Calendar, label: 'Events', action: () => navigate({ to: '/events' }) },
     { icon: TrendingUp, label: 'Trending', action: () => navigate({ to: '/trending' }) },
     { icon: Bookmark, label: 'Bookmarks', action: () => navigate({ to: '/bookmarks' }) },
-    { icon: Star, label: 'Reputation', action: () => navigate({ to: '/reputation' }) },
+    { icon: Star, label: 'Reputation', action: () => {
+      // Need a way to get current username here if we want to link to own reputation
+      // For now maybe just list all contributors or similar?
+      // Svelte linked to /reputation but React doesn't have a global /reputation route yet
+      // We'll skip or link to home for now if unsure
+      navigate({ to: '/' })
+    } },
     { icon: Mail, label: 'Messages', action: () => navigate({ to: '/messages' }) },
     { icon: Bell, label: 'Notifications', action: () => navigate({ to: '/notifications' }) },
     { icon: Settings, label: 'Settings', action: () => navigate({ to: '/settings' }) },
@@ -118,7 +124,7 @@ export function SearchCommand({ open, onOpenChange }: SearchCommandProps) {
   const getLink = (item: any) => {
     switch (item.type) {
       case 'thread':
-        return { to: '/thread/$id' as const, params: { id: item.id } }
+        return { to: '/threads/thread/$id' as const, params: { id: item.id } }
       case 'user':
         return { to: '/profile/$username' as const, params: { username: item.subtitle || '' } }
       case 'group':

@@ -52,7 +52,7 @@ export default function ThreadCard({ thread }: ThreadCardProps) {
           <div className="flex-1 min-w-0">
 
 <Link
-  to="/thread/$id"
+  to="/threads/thread/$id"
   params={{ id: thread.id }}
   className="hover:underline"
 >
@@ -63,8 +63,8 @@ export default function ThreadCard({ thread }: ThreadCardProps) {
             
             <div className="flex items-center gap-2 mt-2 text-sm text-muted-foreground">
               <Link
-                to="/profile/$id"
-                params={{ id: thread.author.id }}
+                to="/profile/$username"
+                params={{ username: thread.author.id }}
                 className="hover:underline"
               >
                 {thread.author.name}

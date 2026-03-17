@@ -75,7 +75,7 @@ export default function ReplyItem({ reply, threadId, depth = 0 }: ReplyItemProps
         <CardContent className="pt-6">
           <div className="flex gap-4">
             {/* Avatar */}
-            <Link to="/profile/$id" params={{ id: reply.author.id }}>
+            <Link to="/profile/$username" params={{ username: reply.author.id }}>
               <Avatar className="h-8 w-8">
                 <AvatarImage src={reply.author.image} />
                 <AvatarFallback>{reply.author.name?.[0]}</AvatarFallback>
@@ -87,8 +87,8 @@ export default function ReplyItem({ reply, threadId, depth = 0 }: ReplyItemProps
               <div className="flex items-center justify-between gap-2 mb-2">
                 <div className="flex items-center gap-2 text-sm">
                   <Link
-                    to="/profile/$id"
-                    params={{ id: reply.author.id }}
+                    to="/profile/$username"
+                    params={{ username: reply.author.id }}
                     className="font-medium hover:underline"
                   >
                     {reply.author.name}

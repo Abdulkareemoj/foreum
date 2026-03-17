@@ -7,9 +7,10 @@ interface ThreadCardListProps {
   categoryId?: string
   tagId?: string  
   sortBy?: 'recent' | 'popular' | 'oldest'
+  searchQuery?: string
 }
 
-export default function ThreadCardList({ categoryId, tagId, sortBy = 'recent' }: ThreadCardListProps) {
+export default function ThreadCardList({ categoryId, tagId, sortBy = 'recent', searchQuery }: ThreadCardListProps) {
   const {
     data,
     isLoading,
@@ -20,8 +21,9 @@ export default function ThreadCardList({ categoryId, tagId, sortBy = 'recent' }:
     {
       limit: 10,
       category: categoryId,
-       tagId, 
+      tagId, 
       sortBy,
+      search: searchQuery || undefined,
     },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,

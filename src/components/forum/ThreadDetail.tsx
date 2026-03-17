@@ -98,7 +98,7 @@ export default function ThreadDetail({ thread }: ThreadDetailProps) {
       <CardHeader>
         <div className="flex items-start gap-4">
           {/* Author Avatar */}
-          <Link to="/profile/$id" params={{ id: thread.author.id }}>
+          <Link to="/profile/$username" params={{ username: thread.author.id }}>
             <Avatar className="h-12 w-12">
               <AvatarImage src={thread.author.image} />
               <AvatarFallback>{thread.author.name?.[0]}</AvatarFallback>
@@ -119,8 +119,8 @@ export default function ThreadDetail({ thread }: ThreadDetailProps) {
             {/* Author Info */}
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Link
-                to="/profile/$id"
-                params={{ id: thread.author.id }}
+                to="/profile/$username"
+                params={{ username: thread.author.id }}
                 className="hover:underline font-medium"
               >
                 {thread.author.name}

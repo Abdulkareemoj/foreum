@@ -12,9 +12,7 @@ import {
 } from '~/components/ui/select'
 import { trpc } from '~/lib/trpc'
 import { useState, useEffect } from 'react'
-import { useUIStore } from '~/stores/ui-store'
 import ThreadCardList from '~/components/forum/ThreadCardList'
-import ThreadModal from '~/components/forum/ThreadModal'
 import { Skeleton } from '~/components/ui/skeleton'
 import { Link } from '@tanstack/react-router'
 
@@ -24,7 +22,6 @@ export const Route = createFileRoute('/_client/category/$slug')({
 
 function CategorySlugPage() {
   const { slug } = Route.useParams()
-  const { openThreadModal } = useUIStore()
 
   const [searchQuery, setSearchQuery] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
@@ -59,7 +56,7 @@ function CategorySlugPage() {
           <p className="text-muted-foreground mb-4">
             This category doesn't exist or has been removed.
           </p>
-          <Link to="/categories">
+          <Link to="/category">
             <Button>
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Categories
@@ -78,10 +75,12 @@ function CategorySlugPage() {
             <h1 className="text-3xl font-bold">{category ? category.name : 'Loading…'}</h1>
             <p className="text-muted-foreground">{category?.description}</p>
           </div>
-          <Button onClick={() => openThreadModal()} className="flex items-center gap-2">
-            <Plus className="size-5" />
-            New Thread
-          </Button>
+          <Link to="/threads/new">
+            <Button className="flex items-center gap-2">
+              <Plus className="size-5" />
+              New Thread
+            </Button>
+          </Link>
         </div>
 
         {/* Filters & Search */}
@@ -125,8 +124,6 @@ function CategorySlugPage() {
           searchQuery={debouncedSearch} 
         />
       </div>
-
-      <ThreadModal />
     </>
   )
 }

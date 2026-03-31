@@ -7,7 +7,7 @@ import { Sheet, SheetContent, SheetTrigger } from '~/components/ui/sheet'
 import { Skeleton } from '~/components/ui/skeleton'
 import { trpc } from '~/lib/trpc'
 import { cn } from '~/lib/utils'
-import { useUIStore } from '~/stores/ui-store'
+import { useNavigate } from '@tanstack/react-router'
 
 interface LeftMobileProps {
   user: any
@@ -15,7 +15,7 @@ interface LeftMobileProps {
 
 export default function LeftMobile({ user }: LeftMobileProps) {
   const [open, setOpen] = useState(false)
-  const { openThreadModal } = useUIStore()
+  const navigate = useNavigate()
 
   const navigation = [
     { name: 'Home', href: '/threads', icon: Home },
@@ -28,7 +28,7 @@ export default function LeftMobile({ user }: LeftMobileProps) {
 
   const handleCreateThread = () => {
     setOpen(false)
-    openThreadModal()
+    navigate({ to: '/threads/new' })
   }
 
   return (
@@ -135,7 +135,7 @@ function MobileCategories({ onClose }: { onClose: () => void }) {
       {categories.map((cat: any) => (
         <Link
           key={cat.id}
-          to={`/categories/${cat.slug}`}
+          to={`/category${cat.slug}`}
           onClick={onClose}
           className="block rounded-md px-3 py-2 text-sm hover:bg-accent transition-colors"
         >

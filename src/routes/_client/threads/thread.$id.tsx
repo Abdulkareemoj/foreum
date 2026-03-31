@@ -17,7 +17,7 @@ function ThreadPage() {
   const navigate = useNavigate()
 
   const { data: thread, isLoading: threadLoading } = trpc.thread.getById.useQuery({ id })
-  const { data: replies, isLoading: repliesLoading } = trpc.reply.getByThreadId.useQuery({
+  const { data: replies, isLoading: repliesLoading } = trpc.reply.byThread.useQuery({
     threadId: id,
   })
 
@@ -39,7 +39,7 @@ function ThreadPage() {
           <p className="text-muted-foreground mb-4">
             This thread may have been deleted or doesn't exist.
           </p>
-          <Button onClick={() => navigate({ to: '/' })}>
+          <Button onClick={() => navigate({ to: '/threads' })}>
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Home
           </Button>
@@ -53,7 +53,7 @@ function ThreadPage() {
       {/* Back Button */}
   <Button
   variant="ghost"
-  onClick={() => navigate({ to: '/thread' })}
+  onClick={() => navigate({ to: '/threads' })}
 >
   <ArrowLeft className="h-4 w-4 mr-2" />
   Back to Threads

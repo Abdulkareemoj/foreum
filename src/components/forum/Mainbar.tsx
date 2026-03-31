@@ -19,8 +19,8 @@ import { Tabs, TabsList, TabsTrigger } from '~/components/ui/tabs'
 import { Skeleton } from '~/components/ui/skeleton'
 import ThreadCard from './ThreadCard'
 import { trpc } from '~/lib/trpc'
-import { useUIStore } from '~/stores/ui-store'
 import { useEffect, useRef } from 'react'
+import { Link } from '@tanstack/react-router'
 
 interface MainbarProps {
   searchQuery: string
@@ -39,9 +39,7 @@ export default function Mainbar({
   sortBy,
   setSortBy,
 }: MainbarProps) {
-  const { openThreadModal } = useUIStore()
   
-  // Use category query
   const { data: categories } = trpc.category.list.useQuery()
 
   // In the React port we can just use useInfiniteQuery for the thread list
@@ -175,10 +173,12 @@ export default function Mainbar({
                   <>
                     <p className="mb-2 text-lg font-medium">No threads yet</p>
                     <p>Be the first to start a conversation!</p>
-                    <Button onClick={() => openThreadModal()} className="mt-4">
-                      <PlusIcon className="mr-2 h-4 w-4" />
-                      Create First Thread
-                    </Button>
+                    <Link to="/threads/new">
+                      <Button className="mt-4">
+                        <PlusIcon className="mr-2 h-4 w-4" />
+                        Create First Thread
+                      </Button>
+                    </Link>
                   </>
                 )}
               </div>

@@ -16,18 +16,17 @@ function HomePage() {
           Join discussions, share knowledge, and connect with your community
         </p>
         <div className="flex gap-4 justify-center">
-          <Link to="/thread">
+          <Link to="/threads">
             <Button size="lg">
               Browse Threads
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </Link>
-          <Button size="lg" variant="outline" onClick={() => {
-            const { openThreadModal } = require('~/stores/ui-store').useUIStore.getState()
-            openThreadModal()
-          }}>
-            Create Thread
-          </Button>
+          <Link to="/threads/new">
+            <Button size="lg" variant="outline">
+              Create Thread
+            </Button>
+          </Link>
         </div>
       </div>
 

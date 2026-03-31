@@ -18,7 +18,7 @@ export default function LeftMobile({ user }: LeftMobileProps) {
   const { openThreadModal } = useUIStore()
 
   const navigation = [
-    { name: 'Home', href: '/', icon: Home },
+    { name: 'Home', href: '/threads', icon: Home },
     { name: 'Threads', href: '/thread', icon: MessageSquare },
     { name: 'Trending', href: '/trending', icon: TrendingUp },
     { name: 'Bookmarks', href: '/bookmarks', icon: Bookmark },

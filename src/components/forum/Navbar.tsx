@@ -45,7 +45,7 @@ export default function Navbar({ user }: NavbarProps) {
   }, [isDarkMode])
 
   const navigationItems = [
-    { href: '/', label: 'Home', icon: Home },
+    { href: '/threads', label: 'Home', icon: Home },
     { href: '/communities', label: 'Communities', icon: Users },
     { href: '/trending', label: 'Trending', icon: TrendingUp },
     { href: '/messages', label: 'Messages', icon: MessageSquare }

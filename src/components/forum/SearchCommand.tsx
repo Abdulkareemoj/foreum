@@ -73,8 +73,8 @@ export function SearchCommand({ open, onOpenChange }: SearchCommandProps) {
   }
 
   const quickActions = [
-    { icon: Home, label: 'Home', action: () => navigate({ to: '/' }) },
-    { icon: MessageSquare, label: 'Threads', action: () => navigate({ to: '/threads' }) },
+    { icon: Home, label: 'Home', action: () => navigate({ to: '/threads' }) },
+    { icon: MessageSquare, label: 'Messages', action: () => navigate({ to: '/messages' }) },
     { icon: FolderOpen, label: 'Categories', action: () => navigate({ to: '/categories' }) },
     { icon: Hash, label: 'Tags', action: () => navigate({ to: '/tags' }) },
     { icon: Users, label: 'Groups', action: () => navigate({ to: '/groups' }) },
@@ -88,7 +88,6 @@ export function SearchCommand({ open, onOpenChange }: SearchCommandProps) {
       // We'll skip or link to home for now if unsure
       navigate({ to: '/' })
     } },
-    { icon: Mail, label: 'Messages', action: () => navigate({ to: '/messages' }) },
     { icon: Bell, label: 'Notifications', action: () => navigate({ to: '/notifications' }) },
     { icon: Settings, label: 'Settings', action: () => navigate({ to: '/settings' }) },
     { icon: LogOut, label: 'Sign Out', action: handleSignOut },

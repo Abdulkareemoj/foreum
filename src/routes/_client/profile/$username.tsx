@@ -42,15 +42,12 @@ function ProfilePage() {
     { enabled: !!user?.id }
   )
 
-  const { data: userReputation } = trpc.reputation.getReputation.useQuery(
+  const { data: userReputation } = trpc.reputation.getByUserId.useQuery(
     { userId: user?.id || '' },
     { enabled: !!user?.id }
   )
 
-  const { data: userBadges } = trpc.reputation.listBadges.useQuery(
-    { userId: user?.id || '' },
-    { enabled: !!user?.id }
-  )
+  const userBadges = userReputation?.badges || []
 
   const handleLogout = async () => {
     try {
@@ -96,7 +93,7 @@ function ProfilePage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex flex-col bg-background h-full">
       <main className="container mx-auto max-w-6xl flex-1 px-4 py-12">
         <div className="grid gap-8 md:grid-cols-[250px_1fr]">
           {/* Sidebar */}
@@ -108,7 +105,7 @@ function ProfilePage() {
               </Avatar>
 
               <h1 className="mt-4 text-2xl font-semibold tracking-tight">
-                {user.displayUsername || user.username}
+                {user.username}
               </h1>
               <p className="text-muted-foreground">{user.name}</p>
 

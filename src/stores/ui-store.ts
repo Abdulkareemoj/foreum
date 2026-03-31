@@ -7,7 +7,6 @@ interface UIState {
   rightSidebarOpen: boolean
   
   // Modal state
-  threadModalOpen: boolean
   replyModalOpen: boolean
   
   // Thread being edited/replied to
@@ -17,8 +16,6 @@ interface UIState {
   // Actions
   toggleLeftSidebar: () => void
   toggleRightSidebar: () => void
-  openThreadModal: (threadId?: string) => void
-  closeThreadModal: () => void
   openReplyModal: (threadId: string, replyId?: string) => void
   closeReplyModal: () => void
   reset: () => void
@@ -30,7 +27,6 @@ export const useUIStore = create<UIState>()(
       // Initial state
       leftSidebarOpen: false,
       rightSidebarOpen: false,
-      threadModalOpen: false,
       replyModalOpen: false,
       activeThreadId: null,
       activeReplyId: null,
@@ -41,12 +37,6 @@ export const useUIStore = create<UIState>()(
       
       toggleRightSidebar: () =>
         set((state) => ({ rightSidebarOpen: !state.rightSidebarOpen })),
-      
-      openThreadModal: (threadId) =>
-        set({ threadModalOpen: true, activeThreadId: threadId ?? null }),
-      
-      closeThreadModal: () =>
-        set({ threadModalOpen: false, activeThreadId: null }),
       
       openReplyModal: (threadId, replyId) =>
         set({ 
@@ -66,7 +56,6 @@ export const useUIStore = create<UIState>()(
         set({
           leftSidebarOpen: false,
           rightSidebarOpen: false,
-          threadModalOpen: false,
           replyModalOpen: false,
           activeThreadId: null,
           activeReplyId: null,

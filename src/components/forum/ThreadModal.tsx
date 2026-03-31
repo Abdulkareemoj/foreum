@@ -40,7 +40,7 @@ export default function ThreadModal() {
       utils.thread.list.invalidate();
       closeThreadModal();
       resetForm();
-      navigate({ to: "/thread/$id", params: { id: data.id } });
+      navigate({ to: "/threads/$id", params: { id: data.id } });
     },
     onError: (error) => {
       toast.error(error.message || "Failed to create thread");

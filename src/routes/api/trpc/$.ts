@@ -3,12 +3,16 @@ import { fetchRequestHandler } from '@trpc/server/adapters/fetch'
 import { appRouter } from '~/server/trpc/routers'
 import { createContext } from '~/server/trpc/context'
 
-export const APIRoute = createFileRoute('/api/trpc/$')({
-  GET: async ({ request }) => {
-    return handleTRPC(request)
-  },
-  POST: async ({ request }) => {
-    return handleTRPC(request)
+export const Route = createFileRoute('/api/trpc/$')({
+  server: {
+    handlers: {
+      GET: async ({ request }) => {
+        return handleTRPC(request)
+      },
+      POST: async ({ request }) => {
+        return handleTRPC(request)
+      },
+    },
   },
 })
 

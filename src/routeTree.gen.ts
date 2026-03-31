@@ -45,6 +45,7 @@ import { Route as ClientGroupsIndexRouteImport } from './routes/_client/groups/i
 import { Route as ClientEventsIndexRouteImport } from './routes/_client/events/index'
 import { Route as ClientCategoryIndexRouteImport } from './routes/_client/category/index'
 import { Route as AdminAppearanceIndexRouteImport } from './routes/_admin/appearance/index'
+import { Route as ApiTrpcSplatRouteImport } from './routes/api/trpc/$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as LandingSolutionStartupsRouteImport } from './routes/_landing/solution/startups'
 import { Route as LandingSolutionOrganizationsRouteImport } from './routes/_landing/solution/organizations'
@@ -252,6 +253,11 @@ const AdminAppearanceIndexRoute = AdminAppearanceIndexRouteImport.update({
   path: '/appearance/',
   getParentRoute: () => AdminRouteRoute,
 } as any)
+const ApiTrpcSplatRoute = ApiTrpcSplatRouteImport.update({
+  id: '/api/trpc/$',
+  path: '/api/trpc/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -456,6 +462,7 @@ export interface FileRoutesByFullPath {
   '/solution/organizations': typeof LandingSolutionOrganizationsRoute
   '/solution/startups': typeof LandingSolutionStartupsRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/appearance/': typeof AdminAppearanceIndexRoute
   '/category/': typeof ClientCategoryIndexRoute
   '/events/': typeof ClientEventsIndexRoute
@@ -520,6 +527,7 @@ export interface FileRoutesByTo {
   '/solution/organizations': typeof LandingSolutionOrganizationsRoute
   '/solution/startups': typeof LandingSolutionStartupsRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/appearance': typeof AdminAppearanceIndexRoute
   '/category': typeof ClientCategoryIndexRoute
   '/events': typeof ClientEventsIndexRoute
@@ -588,6 +596,7 @@ export interface FileRoutesById {
   '/_landing/solution/organizations': typeof LandingSolutionOrganizationsRoute
   '/_landing/solution/startups': typeof LandingSolutionStartupsRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/_admin/appearance/': typeof AdminAppearanceIndexRoute
   '/_client/category/': typeof ClientCategoryIndexRoute
   '/_client/events/': typeof ClientEventsIndexRoute
@@ -654,6 +663,7 @@ export interface FileRouteTypes {
     | '/solution/organizations'
     | '/solution/startups'
     | '/api/auth/$'
+    | '/api/trpc/$'
     | '/appearance/'
     | '/category/'
     | '/events/'
@@ -718,6 +728,7 @@ export interface FileRouteTypes {
     | '/solution/organizations'
     | '/solution/startups'
     | '/api/auth/$'
+    | '/api/trpc/$'
     | '/appearance'
     | '/category'
     | '/events'
@@ -785,6 +796,7 @@ export interface FileRouteTypes {
     | '/_landing/solution/organizations'
     | '/_landing/solution/startups'
     | '/api/auth/$'
+    | '/api/trpc/$'
     | '/_admin/appearance/'
     | '/_client/category/'
     | '/_client/events/'
@@ -816,6 +828,7 @@ export interface RootRouteChildren {
   ClientRouteRoute: typeof ClientRouteRouteWithChildren
   LandingRouteRoute: typeof LandingRouteRouteWithChildren
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  ApiTrpcSplatRoute: typeof ApiTrpcSplatRoute
   ApiApiAuthSplatRoute: typeof ApiApiAuthSplatRoute
 }
 
@@ -1072,6 +1085,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/appearance/'
       preLoaderRoute: typeof AdminAppearanceIndexRouteImport
       parentRoute: typeof AdminRouteRoute
+    }
+    '/api/trpc/$': {
+      id: '/api/trpc/$'
+      path: '/api/trpc/$'
+      fullPath: '/api/trpc/$'
+      preLoaderRoute: typeof ApiTrpcSplatRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/auth/$': {
       id: '/api/auth/$'
@@ -1476,6 +1496,7 @@ const rootRouteChildren: RootRouteChildren = {
   ClientRouteRoute: ClientRouteRouteWithChildren,
   LandingRouteRoute: LandingRouteRouteWithChildren,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  ApiTrpcSplatRoute: ApiTrpcSplatRoute,
   ApiApiAuthSplatRoute: ApiApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport

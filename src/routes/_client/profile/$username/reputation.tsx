@@ -12,7 +12,7 @@ export const Route = createFileRoute('/_client/profile/$username/reputation')({
 function ReputationPage() {
   const { username } = Route.useParams()
   const { data: user } = trpc.user.byUsername.useQuery({ username })
-  const { data: reputationData, isLoading, error } = trpc.reputation.getReputation.useQuery(
+  const { data: reputationData, isLoading, error } = trpc.reputation.getByUserId.useQuery(
     { userId: user?.id || '' },
     { enabled: !!user?.id }
   )

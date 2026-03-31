@@ -20,7 +20,7 @@ function ProfileBadgesPage() {
 
   const { data: profileUser, isLoading: userLoading } = trpc.user.byUsername.useQuery({ username })
 
-  const { data: reputation, isLoading: repLoading } = trpc.reputation.getReputation.useQuery(
+  const { data: reputation, isLoading: repLoading } = trpc.reputation.getByUserId.useQuery(
     { userId: profileUser?.id || '' },
     { enabled: !!profileUser?.id }
   )

@@ -1,7 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 import Mainbar from '~/components/forum/Mainbar'
-import ThreadModal from '~/components/forum/ThreadModal'
 import { trpc } from '~/lib/trpc'
 
 export const Route = createFileRoute('/_client/threads/')({
@@ -30,8 +29,6 @@ function ThreadPage() {
         />
       </div>
 
-      {/* Thread Creation Modal remains the same */}
-      <ThreadModal />
     </>
   )
 }

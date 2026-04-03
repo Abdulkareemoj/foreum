@@ -81,7 +81,7 @@ function NewThreadPage() {
           e.stopPropagation()
           form.handleSubmit()
         }}
-        className="space-y-6 bg-card border rounded-lg p-6 shadow-sm"
+        className="space-y-6 bg-card  p-6 shadow-sm"
       >
         <form.Field
           name="title"

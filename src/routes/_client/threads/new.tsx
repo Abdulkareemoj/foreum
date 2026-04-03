@@ -44,7 +44,7 @@ function NewThreadPage() {
     onSuccess: (data) => {
       toast.success('Thread created successfully')
       utils.thread.list.invalidate()
-      navigate({ to: '/threads/thread/$id', params: { id: data.id } })
+      navigate({ to: '/thread/$id', params: { id: data.id } })
     },
     onError: (error) => {
       toast.error(error.message || 'Failed to create thread')

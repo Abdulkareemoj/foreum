@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Card, CardContent, CardHeader } from '~/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
-import ReplyForm from '~/components/thread/ReplyForm' // Adjust imports accordingly
+import ReplyForm from '~/components/forum/ReplyForm'  
 import { trpc } from '~/lib/trpc'
 
 export const Route = createFileRoute('/_client/groups/$slug/forum/$threadId')({

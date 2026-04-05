@@ -17,7 +17,7 @@ const renderTipTap = (content: string | null) => {
 function GroupThreadPage() {
   const { threadId } = Route.useParams()
 
-  const { data: thread, isLoading: threadLoading } = trpc.thread.byId.useQuery({ id: threadId })
+  const { data: thread, isLoading: threadLoading } = trpc.thread.getById.useQuery({ id: threadId })
   const { data: replies, isLoading: repliesLoading, refetch: refetchReplies } = trpc.reply.list.useQuery({ 
     threadId, 
     limit: 200 

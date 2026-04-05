@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 	import { Button } from '~/components/ui/button';
 	import { Badge } from '~/components/ui/badge';
 	import { BarChart3, Globe, MessageSquare, Shield, Users, Zap } from 'lucide-react';
@@ -41,7 +41,7 @@ function LandingPage() {
                 Start Free Trial
               </Button>
               <Button size="lg" variant="outline" className="border-border bg-transparent hover:bg-muted">
-                View Demo
+                <Link to="/threads">View Demo</Link>
               </Button>
             </div>
             <div className="flex items-center space-x-6 text-sm text-muted-foreground">

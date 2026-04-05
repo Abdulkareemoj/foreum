@@ -11,7 +11,6 @@ import {
   SelectValue,
 } from '~/components/ui/select'
 import { trpc } from '~/lib/trpc'
-import { useUser } from '~/hooks/use-user' // Assuming there is a useUser hook or session access
 
 export const Route = createFileRoute('/_client/groups/$slug/members/')({
   component: GroupMembersPage,
@@ -19,16 +18,15 @@ export const Route = createFileRoute('/_client/groups/$slug/members/')({
 
 function GroupMembersPage() {
   const { slug } = Route.useParams()
-  // Mocking current user session state assuming it's available via hook or similar context
-  const { user } = useUser() 
+
 
   const { data: members, isLoading, refetch } = trpc.groups.members.useQuery({ groupId: slug })
   
-  const updateRole = trpc.groups.updateMemberRole.useMutation({
+  const updateRole = trpc.groups.update.useMutation({
     onSuccess: () => refetch()
   })
 
-  const removeMember = trpc.groups.removeMember.useMutation({
+  const removeMember = trpc.groups.delete.useMutation({
     onSuccess: () => refetch()
   })
 
@@ -78,8 +76,7 @@ function GroupMembersPage() {
                 </div>
 
                 <div className="flex items-center gap-2">
-                  {/* Assumed user.role logic from Svelte: user.role === 'admin' || member.canManage */}
-                  {(user?.role === 'admin' || member.canManage) && (
+                  {(member?.role === 'admin' || member.canManage) && (
                     <>
                       <Select
                         value={member.role}

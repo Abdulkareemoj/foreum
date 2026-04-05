@@ -67,7 +67,7 @@ function ConversationPage() {
     // optimistic update
     const optimisticMsg = {
       id: crypto.randomUUID(),
-      senderId: conversationData.currentUserId,
+      senderId: conversationData.currentUser,
       content: content,
       createdAt: new Date(),
     }
@@ -112,7 +112,7 @@ function ConversationPage() {
           </Button>
 
           <Avatar>
-            <AvatarImage src={conversationData.otherUser.img} />
+            <AvatarImage src={conversationData.otherUser.image} />
             <AvatarFallback>
               {initials(conversationData.otherUser.name)}
             </AvatarFallback>
@@ -144,13 +144,13 @@ function ConversationPage() {
       {/* MESSAGE LIST */}
       <div className="flex-1 overflow-y-auto p-3 space-y-3">
         {messages.map((msg) => {
-          const mine = msg.senderId === conversationData.currentUserId
+          const mine = msg.senderId === conversationData.currentUser
           const sender = mine ? conversationData.currentUser : conversationData.otherUser
 
           return (
             <div key={msg.id} className={cn("flex gap-2 max-w-[80%]", mine ? "ml-auto flex-row-reverse" : "")}>
               <Avatar className="h-8 w-8 shrink-0">
-                <AvatarImage src={sender?.img} />
+                <AvatarImage src={sender?.image} />
                 <AvatarFallback>{initials(sender?.name || '')}</AvatarFallback>
               </Avatar>
 

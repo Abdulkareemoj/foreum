@@ -13,7 +13,7 @@ import {
   BreadcrumbPage,
 } from '~/components/ui/breadcrumb'
 import UserDropdown from '~/components/shared/UserDropdown'
-import { adminMiddleware } from '~/utils/middleware'
+import { adminMiddleware } from '~/server/auth-actions'
 
 export const Route = createFileRoute('/_admin')({
   component: AdminLayout,

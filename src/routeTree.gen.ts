@@ -55,6 +55,7 @@ import { Route as LandingSolutionEducationRouteImport } from './routes/_landing/
 import { Route as LandingSolutionDesignRouteImport } from './routes/_landing/solution/design'
 import { Route as LandingSolutionCollaborationRouteImport } from './routes/_landing/solution/collaboration'
 import { Route as ClientThreadsNewRouteImport } from './routes/_client/threads/new'
+import { Route as ClientThreadsIdRouteImport } from './routes/_client/threads/$id'
 import { Route as ClientTagsSlugRouteImport } from './routes/_client/tags/$slug'
 import { Route as ClientProfileUsernameRouteImport } from './routes/_client/profile/$username'
 import { Route as ClientMessagesIdRouteImport } from './routes/_client/messages/$id'
@@ -64,7 +65,6 @@ import { Route as ClientEventsIdRouteImport } from './routes/_client/events/$id'
 import { Route as ClientCategorySlugRouteImport } from './routes/_client/category/$slug'
 import { Route as ClientGroupsSlugIndexRouteImport } from './routes/_client/groups/$slug/index'
 import { Route as ApiApiAuthSplatRouteImport } from './routes/api/api.auth.$'
-import { Route as ClientThreadsThreadIdRouteImport } from './routes/_client/threads/thread.$id'
 import { Route as ClientThreadsIdEditRouteImport } from './routes/_client/threads/$id.edit'
 import { Route as ClientProfileUsernameReputationRouteImport } from './routes/_client/profile/$username/reputation'
 import { Route as ClientProfileUsernameEditRouteImport } from './routes/_client/profile/$username/edit'
@@ -308,6 +308,11 @@ const ClientThreadsNewRoute = ClientThreadsNewRouteImport.update({
   path: '/threads/new',
   getParentRoute: () => ClientRouteRoute,
 } as any)
+const ClientThreadsIdRoute = ClientThreadsIdRouteImport.update({
+  id: '/threads/$id',
+  path: '/threads/$id',
+  getParentRoute: () => ClientRouteRoute,
+} as any)
 const ClientTagsSlugRoute = ClientTagsSlugRouteImport.update({
   id: '/tags/$slug',
   path: '/tags/$slug',
@@ -353,15 +358,10 @@ const ApiApiAuthSplatRoute = ApiApiAuthSplatRouteImport.update({
   path: '/api/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ClientThreadsThreadIdRoute = ClientThreadsThreadIdRouteImport.update({
-  id: '/threads/thread/$id',
-  path: '/threads/thread/$id',
-  getParentRoute: () => ClientRouteRoute,
-} as any)
 const ClientThreadsIdEditRoute = ClientThreadsIdEditRouteImport.update({
-  id: '/threads/$id/edit',
-  path: '/threads/$id/edit',
-  getParentRoute: () => ClientRouteRoute,
+  id: '/edit',
+  path: '/edit',
+  getParentRoute: () => ClientThreadsIdRoute,
 } as any)
 const ClientProfileUsernameReputationRoute =
   ClientProfileUsernameReputationRouteImport.update({
@@ -453,6 +453,7 @@ export interface FileRoutesByFullPath {
   '/messages/$id': typeof ClientMessagesIdRoute
   '/profile/$username': typeof ClientProfileUsernameRouteWithChildren
   '/tags/$slug': typeof ClientTagsSlugRoute
+  '/threads/$id': typeof ClientThreadsIdRouteWithChildren
   '/threads/new': typeof ClientThreadsNewRoute
   '/solution/collaboration': typeof LandingSolutionCollaborationRoute
   '/solution/design': typeof LandingSolutionDesignRoute
@@ -479,7 +480,6 @@ export interface FileRoutesByFullPath {
   '/profile/$username/edit': typeof ClientProfileUsernameEditRoute
   '/profile/$username/reputation': typeof ClientProfileUsernameReputationRoute
   '/threads/$id/edit': typeof ClientThreadsIdEditRoute
-  '/threads/thread/$id': typeof ClientThreadsThreadIdRoute
   '/api/api/auth/$': typeof ApiApiAuthSplatRoute
   '/groups/$slug/': typeof ClientGroupsSlugIndexRoute
   '/groups/$slug/forum/$threadId': typeof ClientGroupsSlugForumThreadIdRoute
@@ -518,6 +518,7 @@ export interface FileRoutesByTo {
   '/messages/$id': typeof ClientMessagesIdRoute
   '/profile/$username': typeof ClientProfileUsernameRouteWithChildren
   '/tags/$slug': typeof ClientTagsSlugRoute
+  '/threads/$id': typeof ClientThreadsIdRouteWithChildren
   '/threads/new': typeof ClientThreadsNewRoute
   '/solution/collaboration': typeof LandingSolutionCollaborationRoute
   '/solution/design': typeof LandingSolutionDesignRoute
@@ -543,7 +544,6 @@ export interface FileRoutesByTo {
   '/profile/$username/edit': typeof ClientProfileUsernameEditRoute
   '/profile/$username/reputation': typeof ClientProfileUsernameReputationRoute
   '/threads/$id/edit': typeof ClientThreadsIdEditRoute
-  '/threads/thread/$id': typeof ClientThreadsThreadIdRoute
   '/api/api/auth/$': typeof ApiApiAuthSplatRoute
   '/groups/$slug': typeof ClientGroupsSlugIndexRoute
   '/groups/$slug/forum/$threadId': typeof ClientGroupsSlugForumThreadIdRoute
@@ -587,6 +587,7 @@ export interface FileRoutesById {
   '/_client/messages/$id': typeof ClientMessagesIdRoute
   '/_client/profile/$username': typeof ClientProfileUsernameRouteWithChildren
   '/_client/tags/$slug': typeof ClientTagsSlugRoute
+  '/_client/threads/$id': typeof ClientThreadsIdRouteWithChildren
   '/_client/threads/new': typeof ClientThreadsNewRoute
   '/_landing/solution/collaboration': typeof LandingSolutionCollaborationRoute
   '/_landing/solution/design': typeof LandingSolutionDesignRoute
@@ -613,7 +614,6 @@ export interface FileRoutesById {
   '/_client/profile/$username/edit': typeof ClientProfileUsernameEditRoute
   '/_client/profile/$username/reputation': typeof ClientProfileUsernameReputationRoute
   '/_client/threads/$id/edit': typeof ClientThreadsIdEditRoute
-  '/_client/threads/thread/$id': typeof ClientThreadsThreadIdRoute
   '/api/api/auth/$': typeof ApiApiAuthSplatRoute
   '/_client/groups/$slug/': typeof ClientGroupsSlugIndexRoute
   '/_client/groups/$slug/forum/$threadId': typeof ClientGroupsSlugForumThreadIdRoute
@@ -654,6 +654,7 @@ export interface FileRouteTypes {
     | '/messages/$id'
     | '/profile/$username'
     | '/tags/$slug'
+    | '/threads/$id'
     | '/threads/new'
     | '/solution/collaboration'
     | '/solution/design'
@@ -680,7 +681,6 @@ export interface FileRouteTypes {
     | '/profile/$username/edit'
     | '/profile/$username/reputation'
     | '/threads/$id/edit'
-    | '/threads/thread/$id'
     | '/api/api/auth/$'
     | '/groups/$slug/'
     | '/groups/$slug/forum/$threadId'
@@ -719,6 +719,7 @@ export interface FileRouteTypes {
     | '/messages/$id'
     | '/profile/$username'
     | '/tags/$slug'
+    | '/threads/$id'
     | '/threads/new'
     | '/solution/collaboration'
     | '/solution/design'
@@ -744,7 +745,6 @@ export interface FileRouteTypes {
     | '/profile/$username/edit'
     | '/profile/$username/reputation'
     | '/threads/$id/edit'
-    | '/threads/thread/$id'
     | '/api/api/auth/$'
     | '/groups/$slug'
     | '/groups/$slug/forum/$threadId'
@@ -787,6 +787,7 @@ export interface FileRouteTypes {
     | '/_client/messages/$id'
     | '/_client/profile/$username'
     | '/_client/tags/$slug'
+    | '/_client/threads/$id'
     | '/_client/threads/new'
     | '/_landing/solution/collaboration'
     | '/_landing/solution/design'
@@ -813,7 +814,6 @@ export interface FileRouteTypes {
     | '/_client/profile/$username/edit'
     | '/_client/profile/$username/reputation'
     | '/_client/threads/$id/edit'
-    | '/_client/threads/thread/$id'
     | '/api/api/auth/$'
     | '/_client/groups/$slug/'
     | '/_client/groups/$slug/forum/$threadId'
@@ -1156,6 +1156,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClientThreadsNewRouteImport
       parentRoute: typeof ClientRouteRoute
     }
+    '/_client/threads/$id': {
+      id: '/_client/threads/$id'
+      path: '/threads/$id'
+      fullPath: '/threads/$id'
+      preLoaderRoute: typeof ClientThreadsIdRouteImport
+      parentRoute: typeof ClientRouteRoute
+    }
     '/_client/tags/$slug': {
       id: '/_client/tags/$slug'
       path: '/tags/$slug'
@@ -1219,19 +1226,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_client/threads/thread/$id': {
-      id: '/_client/threads/thread/$id'
-      path: '/threads/thread/$id'
-      fullPath: '/threads/thread/$id'
-      preLoaderRoute: typeof ClientThreadsThreadIdRouteImport
-      parentRoute: typeof ClientRouteRoute
-    }
     '/_client/threads/$id/edit': {
       id: '/_client/threads/$id/edit'
-      path: '/threads/$id/edit'
+      path: '/edit'
       fullPath: '/threads/$id/edit'
       preLoaderRoute: typeof ClientThreadsIdEditRouteImport
-      parentRoute: typeof ClientRouteRoute
+      parentRoute: typeof ClientThreadsIdRoute
     }
     '/_client/profile/$username/reputation': {
       id: '/_client/profile/$username/reputation'
@@ -1367,6 +1367,18 @@ const ClientProfileUsernameRouteWithChildren =
     ClientProfileUsernameRouteChildren,
   )
 
+interface ClientThreadsIdRouteChildren {
+  ClientThreadsIdEditRoute: typeof ClientThreadsIdEditRoute
+}
+
+const ClientThreadsIdRouteChildren: ClientThreadsIdRouteChildren = {
+  ClientThreadsIdEditRoute: ClientThreadsIdEditRoute,
+}
+
+const ClientThreadsIdRouteWithChildren = ClientThreadsIdRoute._addFileChildren(
+  ClientThreadsIdRouteChildren,
+)
+
 interface ClientGroupsSlugMembersRouteChildren {
   ClientGroupsSlugMembersIndexRoute: typeof ClientGroupsSlugMembersIndexRoute
 }
@@ -1395,6 +1407,7 @@ interface ClientRouteRouteChildren {
   ClientMessagesIdRoute: typeof ClientMessagesIdRoute
   ClientProfileUsernameRoute: typeof ClientProfileUsernameRouteWithChildren
   ClientTagsSlugRoute: typeof ClientTagsSlugRoute
+  ClientThreadsIdRoute: typeof ClientThreadsIdRouteWithChildren
   ClientThreadsNewRoute: typeof ClientThreadsNewRoute
   ClientCategoryIndexRoute: typeof ClientCategoryIndexRoute
   ClientEventsIndexRoute: typeof ClientEventsIndexRoute
@@ -1406,8 +1419,6 @@ interface ClientRouteRouteChildren {
   ClientGroupsSlugEventsRoute: typeof ClientGroupsSlugEventsRoute
   ClientGroupsSlugMembersRoute: typeof ClientGroupsSlugMembersRouteWithChildren
   ClientGroupsSlugSettingsRoute: typeof ClientGroupsSlugSettingsRoute
-  ClientThreadsIdEditRoute: typeof ClientThreadsIdEditRoute
-  ClientThreadsThreadIdRoute: typeof ClientThreadsThreadIdRoute
   ClientGroupsSlugIndexRoute: typeof ClientGroupsSlugIndexRoute
   ClientGroupsSlugForumThreadIdRoute: typeof ClientGroupsSlugForumThreadIdRoute
   ClientGroupsSlugForumIndexRoute: typeof ClientGroupsSlugForumIndexRoute
@@ -1428,6 +1439,7 @@ const ClientRouteRouteChildren: ClientRouteRouteChildren = {
   ClientMessagesIdRoute: ClientMessagesIdRoute,
   ClientProfileUsernameRoute: ClientProfileUsernameRouteWithChildren,
   ClientTagsSlugRoute: ClientTagsSlugRoute,
+  ClientThreadsIdRoute: ClientThreadsIdRouteWithChildren,
   ClientThreadsNewRoute: ClientThreadsNewRoute,
   ClientCategoryIndexRoute: ClientCategoryIndexRoute,
   ClientEventsIndexRoute: ClientEventsIndexRoute,
@@ -1439,8 +1451,6 @@ const ClientRouteRouteChildren: ClientRouteRouteChildren = {
   ClientGroupsSlugEventsRoute: ClientGroupsSlugEventsRoute,
   ClientGroupsSlugMembersRoute: ClientGroupsSlugMembersRouteWithChildren,
   ClientGroupsSlugSettingsRoute: ClientGroupsSlugSettingsRoute,
-  ClientThreadsIdEditRoute: ClientThreadsIdEditRoute,
-  ClientThreadsThreadIdRoute: ClientThreadsThreadIdRoute,
   ClientGroupsSlugIndexRoute: ClientGroupsSlugIndexRoute,
   ClientGroupsSlugForumThreadIdRoute: ClientGroupsSlugForumThreadIdRoute,
   ClientGroupsSlugForumIndexRoute: ClientGroupsSlugForumIndexRoute,

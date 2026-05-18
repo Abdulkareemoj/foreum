@@ -7,7 +7,7 @@ import { MessageSquare, Users, TrendingUp, AlertCircle } from 'lucide-react'
 import { trpc } from '~/lib/trpc'
 import type { LucideIcon } from 'lucide-react'
 
-import { adminMiddleware } from '~/utils/middleware'
+import { adminMiddleware } from '~/server/auth-actions'
 
 export const Route = createFileRoute('/_admin/dashboard')({
   component: AdminDashboard,
@@ -71,7 +71,7 @@ function AdminDashboard() {
     <div className="flex flex-1 flex-col gap-4 py-4 lg:gap-6 lg:py-6">
       {/* Page intro */}
       <div className="flex items-center justify-between gap-4">
-        <div className="space-y-1">
+        <div className="flex flex-col gap-1">
           <h1 className="text-2xl font-semibold">Welcome back, Admin!</h1>
           <p className="text-sm text-muted-foreground">
             Manage your community, users, and reports all in one place.
@@ -92,10 +92,12 @@ function AdminDashboard() {
           {stats.map((stat) => {
             const Icon = stat.icon
             return (
-              <Card key={stat.title}>
+              <Card key={stat.title} className="hover:shadow-md transition-shadow">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
-                  <Icon className="h-4 w-4 text-muted-foreground" />
+                  <div className="flex size-8 items-center justify-center rounded-md bg-muted">
+                    <Icon className="size-4 text-muted-foreground" />
+                  </div>
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">{stat.value}</div>
@@ -117,7 +119,7 @@ function AdminDashboard() {
       )}
 
       {/* Main Content Tabs */}
-      <Tabs defaultValue="activity" className="space-y-4">
+      <Tabs defaultValue="activity" className="flex flex-col gap-4">
         <TabsList>
           <TabsTrigger value="activity">Recent Activity</TabsTrigger>
           <TabsTrigger value="reports">Pending Reports</TabsTrigger>
@@ -131,7 +133,7 @@ function AdminDashboard() {
             </CardHeader>
             <CardContent>
               {isLoading ? (
-                <div className="space-y-2">
+                <div className="flex flex-col gap-2">
                   {Array.from({ length: 3 }).map((_, i) => (
                     <Skeleton key={i} className="h-12" />
                   ))}
@@ -151,7 +153,7 @@ function AdminDashboard() {
             </CardHeader>
             <CardContent>
               {isLoading ? (
-                <div className="space-y-2">
+                <div className="flex flex-col gap-2">
                   {Array.from({ length: 3 }).map((_, i) => (
                     <Skeleton key={i} className="h-12" />
                   ))}
@@ -159,13 +161,13 @@ function AdminDashboard() {
               ) : recentReports.length === 0 ? (
                 <p className="text-sm text-muted-foreground">No pending reports</p>
               ) : (
-                <div className="space-y-3">
+                <div className="flex flex-col gap-3">
                   {recentReports.map((report: any) => (
                     <div
                       key={report.id}
                       className="flex items-center justify-between rounded-lg border p-3"
                     >
-                      <div className="space-y-1">
+                      <div className="flex flex-col gap-1">
                         <p className="text-sm font-medium">{report.reason}</p>
                         <p className="text-xs text-muted-foreground">
                           Reported by {report.reportedBy} •{' '}

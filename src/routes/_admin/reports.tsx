@@ -4,9 +4,12 @@ import { Button } from '~/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
 import { Skeleton } from '~/components/ui/skeleton'
+import { Badge } from '~/components/ui/badge'
 import { ListChecks, AlertCircle, Loader2 } from 'lucide-react'
 import { trpc } from '~/lib/trpc'
 import { toast } from 'sonner'
+import { DataTable } from '~/components/ui/data-table'
+import { ColumnDef } from '@tanstack/react-table'
 
 export const Route = createFileRoute('/_admin/reports')({
   component: AdminReports,
@@ -19,6 +22,68 @@ interface Report {
   reportedBy: string | null
   createdAt: Date | null
 }
+
+const getColumns = (
+  onResolve: (id: string) => void, 
+  resolvingId: string | null, 
+  isPending: boolean
+): ColumnDef<Report>[] => {
+  const cols: ColumnDef<Report>[] = [
+    {
+      accessorKey: "type",
+      header: "Type",
+      cell: ({ row }) => {
+        const type = row.getValue("type") as string;
+        return <Badge variant="secondary" className="capitalize">{type}</Badge>;
+      },
+    },
+    {
+      accessorKey: "reason",
+      header: "Reason",
+    },
+    {
+      accessorKey: "reportedBy",
+      header: "Reported By",
+      cell: ({ row }) => {
+        const reportedBy = row.getValue("reportedBy") as string;
+        return <span>{reportedBy || "Anonymous"}</span>;
+      },
+    },
+    {
+      accessorKey: "createdAt",
+      header: "Date",
+      cell: ({ row }) => {
+        const date = row.getValue("createdAt") as Date;
+        return <span className="text-muted-foreground">{date ? new Date(date).toLocaleDateString() : "No date"}</span>;
+      },
+    },
+  ];
+
+  if (isPending) {
+    cols.push({
+      id: "actions",
+      header: "Actions",
+      cell: ({ row }) => {
+        const report = row.original;
+        return (
+          <Button
+            size="sm"
+            disabled={resolvingId !== null}
+            onClick={() => onResolve(report.id)}
+          >
+            {resolvingId === report.id ? (
+              <Loader2 className="size-3 animate-spin" />
+            ) : (
+              'Resolve'
+            )}
+          </Button>
+        );
+      },
+    });
+  }
+
+  return cols;
+};
 
 function AdminReports() {
   const [activeTab, setActiveTab] = useState('pending')
@@ -40,7 +105,6 @@ function AdminReports() {
   const resolveReportMutation = trpc.moderation.resolveReport.useMutation({
     onSuccess: () => {
       toast.success('Report resolved successfully')
-      // Invalidate both queries to refresh data
       utils.moderation.recentReports.invalidate()
       setResolvingId(null)
     },
@@ -59,7 +123,7 @@ function AdminReports() {
   const isLoading = pendingLoading || resolvedLoading
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="flex flex-col gap-6 p-6">
       <div>
         <h1 className="text-2xl font-semibold">Content Reports</h1>
         <p className="text-sm text-muted-foreground">
@@ -67,11 +131,10 @@ function AdminReports() {
         </p>
       </div>
 
-      {/* Error Display */}
       {pendingError && !isLoading && (
         <Card className="border-destructive bg-destructive/5">
           <CardContent className="flex items-center gap-3 py-6">
-            <AlertCircle className="h-5 w-5 text-destructive" />
+            <AlertCircle className="size-5 text-destructive" />
             <div>
               <p className="font-medium text-destructive">Failed to load reports</p>
               <p className="text-sm text-muted-foreground">{pendingError.message}</p>
@@ -98,51 +161,21 @@ function AdminReports() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <ListChecks className="h-5 w-5" /> Pending Review
+                <ListChecks className="size-5" /> Pending Review
               </CardTitle>
             </CardHeader>
-            <CardContent className="divide-y">
+            <CardContent>
               {isLoading ? (
-                <div className="space-y-3 py-4">
+                <div className="space-y-3">
                   {Array.from({ length: 3 }).map((_, i) => (
-                    <div key={i} className="space-y-2">
-                      <Skeleton className="h-4 w-1/3" />
-                      <Skeleton className="h-3 w-1/4" />
-                      <Skeleton className="h-3 w-1/4" />
-                    </div>
+                    <Skeleton key={i} className="h-12 w-full" />
                   ))}
                 </div>
-              ) : pendingReports.length === 0 ? (
-                <div className="py-4 text-sm text-muted-foreground">No pending reports.</div>
               ) : (
-                pendingReports.map((report: Report) => (
-                  <div key={report.id} className="flex items-center justify-between py-3">
-                    <div className="space-y-1">
-                      <p className="font-medium">
-                        {report.type} Report: {report.reason}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        Reported by: {report.reportedBy}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {report.createdAt
-                          ? new Date(report.createdAt).toLocaleDateString()
-                          : 'No date'}
-                      </p>
-                    </div>
-                    <Button
-                      size="sm"
-                      disabled={resolvingId !== null}
-                      onClick={() => handleResolveReport(report.id)}
-                    >
-                      {resolvingId === report.id ? (
-                        <Loader2 className="h-3 w-3 animate-spin" />
-                      ) : (
-                        'Resolve'
-                      )}
-                    </Button>
-                  </div>
-                ))
+                <DataTable 
+                  columns={getColumns(handleResolveReport, resolvingId, true)} 
+                  data={pendingReports} 
+                />
               )}
             </CardContent>
           </Card>
@@ -152,41 +185,21 @@ function AdminReports() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <ListChecks className="h-5 w-5" /> Resolved
+                <ListChecks className="size-5" /> Resolved
               </CardTitle>
             </CardHeader>
-            <CardContent className="divide-y">
+            <CardContent>
               {isLoading ? (
-                <div className="space-y-3 py-4">
+                <div className="space-y-3">
                   {Array.from({ length: 3 }).map((_, i) => (
-                    <div key={i} className="space-y-2">
-                      <Skeleton className="h-4 w-1/3" />
-                      <Skeleton className="h-3 w-1/4" />
-                      <Skeleton className="h-3 w-1/4" />
-                    </div>
+                    <Skeleton key={i} className="h-12 w-full" />
                   ))}
                 </div>
-              ) : resolvedReports.length === 0 ? (
-                <div className="py-4 text-sm text-muted-foreground">No resolved reports.</div>
               ) : (
-                resolvedReports.map((report: Report) => (
-                  <div
-                    key={report.id}
-                    className="flex items-center justify-between py-3 text-muted-foreground"
-                  >
-                    <div className="space-y-1">
-                      <p className="font-medium text-foreground">
-                        {report.type} Report: {report.reason}
-                      </p>
-                      <p className="text-xs">Reported by: {report.reportedBy}</p>
-                      <p className="text-xs">
-                        {report.createdAt
-                          ? new Date(report.createdAt).toLocaleDateString()
-                          : 'No date'}
-                      </p>
-                    </div>
-                  </div>
-                ))
+                <DataTable 
+                  columns={getColumns(handleResolveReport, resolvingId, false)} 
+                  data={resolvedReports} 
+                />
               )}
             </CardContent>
           </Card>

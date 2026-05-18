@@ -56,15 +56,15 @@ export function VerifyEmailContent() {
       <FieldGroup>
         <div className="flex flex-col gap-2">
           {verifying && (
-            <Spinner className="animate-spin h-8 w-8 text-primary" />
+            <Spinner className="animate-spin size-8 text-primary" />
           )}
           {status === "success" && (
-            <CheckCircle2 className="h-8 w-8 text-green-600" />
+            <CheckCircle2 className="size-8 text-green-600" />
           )}
           {status === "error" && (
-            <AlertCircle className="h-8 w-8 text-destructive" />
+            <AlertCircle className="size-8 text-destructive" />
           )}
-          {status === "idle" && <Mail className="h-8 w-8 text-primary" />}
+          {status === "idle" && <Mail className="size-8 text-primary" />}
 
           <h1 className="text-2xl font-bold">
             {verifying && "Verifying your email..."}

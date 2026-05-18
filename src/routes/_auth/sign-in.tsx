@@ -183,7 +183,7 @@ function SignIn() {
 
           <Field>
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading && <Spinner className="mr-2 h-4 w-4" />}
+              {isLoading && <Spinner data-icon="inline-start" />}
               Login
             </Button>
           </Field>

@@ -83,7 +83,7 @@ function ForgotPassword() {
     <div className="flex flex-col gap-6">
       <FieldGroup>
         <div className="flex flex-col gap-2">
-          <Mail className="h-8 w-8 text-primary" />
+          <Mail className="size-8 text-primary" />
           <h1 className="text-2xl font-bold">Reset your password</h1>
           <p className="text-muted-foreground text-sm">
             Enter your email below and we'll send you a link to reset your
@@ -140,7 +140,7 @@ function ForgotPassword() {
 
             <Field>
               <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading && <Spinner className="mr-2 h-4 w-4" />}
+                {isLoading && <Spinner data-icon="inline-start" />}
                 Send Reset Email
               </Button>
             </Field>
@@ -152,7 +152,7 @@ function ForgotPassword() {
             to="/sign-in"
             className="inline-flex items-center gap-2 text-sm underline underline-offset-4 hover:text-primary"
           >
-            <ArrowLeft className="h-3 w-3" />
+            <ArrowLeft className="size-3" />
             Back to sign in
           </Link>
         </FieldDescription>

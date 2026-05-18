@@ -250,7 +250,7 @@ function SignUp() {
                   <FieldLabel htmlFor={field.name}>Profile Image (optional)</FieldLabel>
                   <div className="flex items-end gap-4">
                     {field.state.value && (
-                      <div className="relative w-16 h-16 rounded-sm overflow-hidden border">
+                      <div className="relative size-16 rounded-sm overflow-hidden border">
                         <img
                           src={field.state.value}
                           alt="Profile preview"
@@ -283,8 +283,8 @@ function SignUp() {
           />
           <Field>
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading && <Spinner className="mr-2 h-4 w-4" />}
-              <UserPlus className="mr-2 h-4 w-4" />
+              {isLoading && <Spinner data-icon="inline-start" />}
+              <UserPlus data-icon="inline-start" />
               Create Account
             </Button>
           </Field>

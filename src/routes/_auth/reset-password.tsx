@@ -73,7 +73,7 @@ function ResetPasswordContent() {
     <div className="flex flex-col gap-6">
       <FieldGroup>
         <div className="flex flex-col gap-2">
-          <KeyRound className="h-8 w-8 text-primary" />
+          <KeyRound className="size-8 text-primary" />
           <h1 className="text-2xl font-bold">Set new password</h1>
           <p className="text-muted-foreground text-sm">
             Enter your new password below
@@ -153,7 +153,7 @@ function ResetPasswordContent() {
 
           <Field>
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading && <Spinner className="mr-2 h-4 w-4" />}
+              {isLoading && <Spinner data-icon="inline-start" />}
               Reset Password
             </Button>
           </Field>

@@ -103,7 +103,7 @@ function PricingPage() {
               aria-label="Toggle Billing Cycle"
             >
               <div
-                className={`absolute top-1 left-1 h-5 w-5 rounded-full bg-background transition-transform ${
+                className={`absolute top-1 left-1 size-5 rounded-full bg-background transition-transform ${
                   billingCycle === 'yearly' ? 'translate-x-7' : ''
                 }`}
               />
@@ -169,11 +169,11 @@ function PricingPage() {
                     {plan.cta}
                   </button>
 
-                  <ul className="space-y-3">
+                  <ul className="flex flex-col gap-3">
                     {plan.features.map((feature) => (
                       <li key={feature} className="flex items-start gap-3">
                         <svg
-                          className="mt-0.5 h-5 w-5 flex-shrink-0 text-primary"
+                          className="mt-0.5 size-5 flex-shrink-0 text-primary"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -203,7 +203,7 @@ function PricingPage() {
             Frequently Asked Questions
           </h2>
 
-          <div className="space-y-6">
+          <div className="flex flex-col gap-6">
             <div className="rounded-xl border border-border bg-card p-6">
               <h3 className="mb-2 text-lg font-semibold text-card-foreground">
                 Can I change plans later?

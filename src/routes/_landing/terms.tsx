@@ -13,7 +13,7 @@ function TermsPage() {
 	<p className="mb-8 text-muted-foreground">Last updated: January 1, 2024</p>
 
 	<div className="prose prose-lg max-w-none">
-		<div className="space-y-8 leading-relaxed text-muted-foreground">
+		<div className="flex flex-col gap-8 leading-relaxed text-muted-foreground">
 			<section>
 				<h2 className="font-heading mb-4 text-2xl font-semibold text-foreground">
 					1. Acceptance of Terms
@@ -42,7 +42,7 @@ function TermsPage() {
 					To use certain features of the Service, you must register for an account. When you
 					register, you agree to:
 				</p>
-				<ul className="list-disc space-y-2 pl-6">
+				<ul className="flex flex-col gap-2 list-disc pl-6">
 					<li>Provide accurate, current, and complete information</li>
 					<li>Maintain and promptly update your account information</li>
 					<li>Maintain the security of your password and account</li>
@@ -54,7 +54,7 @@ function TermsPage() {
 			<section>
 				<h2 className="font-heading mb-4 text-2xl font-semibold text-foreground">4. Acceptable Use</h2>
 				<p className="mb-4">You agree not to use the Service to:</p>
-				<ul className="list-disc space-y-2 pl-6">
+				<ul className="flex flex-col gap-2 list-disc pl-6">
 					<li>Violate any laws or regulations</li>
 					<li>Post harmful, threatening, abusive, or harassing content</li>
 					<li>Impersonate any person or entity</li>
@@ -84,7 +84,7 @@ function TermsPage() {
 					Paid subscriptions are billed in advance on a monthly or annual basis. You agree to pay
 					all fees associated with your subscription plan.
 				</p>
-				<ul className="list-disc space-y-2 pl-6">
+				<ul className="flex flex-col gap-2 list-disc pl-6">
 					<li>Fees are non-refundable except as required by law</li>
 					<li>We may change pricing with 30 days notice</li>
 					<li>You can cancel your subscription at any time</li>

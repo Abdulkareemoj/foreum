@@ -13,7 +13,7 @@ function PrivacyPage() {
 	<p className="mb-8 text-muted-foreground">Last updated: January 1, 2025</p>
 
 	<div className="prose prose-lg max-w-none">
-		<div className="space-y-8 leading-relaxed text-muted-foreground">
+		<div className="flex flex-col gap-8 leading-relaxed text-muted-foreground">
 			<section>
 				<h2 className="font-heading mb-4 text-2xl font-semibold text-foreground">1. Introduction</h2>
 				<p>
@@ -31,7 +31,7 @@ function PrivacyPage() {
 				<h3 className="font-heading mt-6 mb-3 text-xl font-semibold text-foreground">
 					Information You Provide
 				</h3>
-				<ul className="list-disc space-y-2 pl-6">
+				<ul className="flex flex-col gap-2 list-disc pl-6">
 					<li>Account information (name, email, username, password)</li>
 					<li>Profile information (avatar, bio, preferences)</li>
 					<li>Content you post (threads, replies, comments)</li>
@@ -42,7 +42,7 @@ function PrivacyPage() {
 				<h3 className="font-heading mt-6 mb-3 text-xl font-semibold text-foreground">
 					Automatically Collected Information
 				</h3>
-				<ul className="list-disc space-y-2 pl-6">
+				<ul className="flex flex-col gap-2 list-disc pl-6">
 					<li>Device information (IP address, browser type, operating system)</li>
 					<li>Usage data (pages visited, features used, time spent)</li>
 					<li>Cookies and similar tracking technologies</li>
@@ -55,7 +55,7 @@ function PrivacyPage() {
 					3. How We Use Your Information
 				</h2>
 				<p className="mb-4">We use your information to:</p>
-				<ul className="list-disc space-y-2 pl-6">
+				<ul className="flex flex-col gap-2 list-disc pl-6">
 					<li>Provide, maintain, and improve our Service</li>
 					<li>Process transactions and send related information</li>
 					<li>Send administrative information and updates</li>
@@ -72,7 +72,7 @@ function PrivacyPage() {
 					4. Information Sharing
 				</h2>
 				<p className="mb-4">We may share your information with:</p>
-				<ul className="list-disc space-y-2 pl-6">
+				<ul className="flex flex-col gap-2 list-disc pl-6">
 					<li>
 						<strong>Service Providers:</strong> Third parties who perform services on our behalf
 					</li>
@@ -110,7 +110,7 @@ function PrivacyPage() {
 			<section>
 				<h2 className="font-heading mb-4 text-2xl font-semibold text-foreground">7. Your Rights</h2>
 				<p className="mb-4">Depending on your location, you may have the following rights:</p>
-				<ul className="list-disc space-y-2 pl-6">
+				<ul className="flex flex-col gap-2 list-disc pl-6">
 					<li><strong>Access:</strong> Request access to your personal information</li>
 					<li><strong>Correction:</strong> Request correction of inaccurate information</li>
 					<li><strong>Deletion:</strong> Request deletion of your information</li>
@@ -167,7 +167,7 @@ function PrivacyPage() {
 			<section>
 				<h2 className="font-heading mb-4 text-2xl font-semibold text-foreground">12. Contact Us</h2>
 				<p>If you have questions about this Privacy Policy, please contact us at:</p>
-				<ul className="mt-4 list-none space-y-2 pl-0">
+				<ul className="flex flex-col gap-2 mt-4 list-none pl-0">
 					<li>Email: privacy@foreum.com</li>
 					<li>Address: [Your Company Address]</li>
 				</ul>

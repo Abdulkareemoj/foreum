@@ -11,7 +11,7 @@ export const Route = createFileRoute('/_landing/cookies')({
 				<p className="mb-8 text-muted-foreground">Last updated: January 1, 2024</p>
 
 				<div className="prose prose-lg max-w-none">
-					<div className="space-y-8 leading-relaxed text-muted-foreground">
+					<div className="flex flex-col gap-8 leading-relaxed text-muted-foreground">
 			<section>
 				<h2 className="font-heading mb-4 text-2xl font-semibold text-foreground">
 					1. What Are Cookies
@@ -28,7 +28,7 @@ export const Route = createFileRoute('/_landing/cookies')({
 					2. How We Use Cookies
 				</h2>
 				<p className="mb-4">We use cookies for several purposes:</p>
-				<ul className="list-disc space-y-2 pl-6">
+				<ul className="flex flex-col gap-2 list-disc pl-6">
 					<li><strong>Essential Cookies:</strong> Required for the Service to function properly</li>
 					<li><strong>Functional Cookies:</strong> Remember your preferences and settings</li>
 					<li><strong>Analytics Cookies:</strong> Help us understand how you use the Service</li>
@@ -47,7 +47,7 @@ export const Route = createFileRoute('/_landing/cookies')({
 				<p className="mb-4">
 					These cookies are necessary for the Service to function and cannot be disabled:
 				</p>
-				<ul className="list-disc space-y-2 pl-6">
+				<ul className="flex flex-col gap-2 list-disc pl-6">
 					<li>Authentication cookies (keep you logged in)</li>
 					<li>Security cookies (protect against fraud)</li>
 					<li>Session cookies (maintain your session state)</li>
@@ -57,7 +57,7 @@ export const Route = createFileRoute('/_landing/cookies')({
 					Functional Cookies
 				</h3>
 				<p className="mb-4">These cookies enhance functionality and personalization:</p>
-				<ul className="list-disc space-y-2 pl-6">
+				<ul className="flex flex-col gap-2 list-disc pl-6">
 					<li>Language preferences</li>
 					<li>Theme preferences (light/dark mode)</li>
 					<li>Layout preferences</li>
@@ -68,7 +68,7 @@ export const Route = createFileRoute('/_landing/cookies')({
 					Analytics Cookies
 				</h3>
 				<p className="mb-4">These cookies help us understand how visitors use our Service:</p>
-				<ul className="list-disc space-y-2 pl-6">
+				<ul className="flex flex-col gap-2 list-disc pl-6">
 					<li>Google Analytics (page views, session duration)</li>
 					<li>Usage patterns and feature adoption</li>
 					<li>Error tracking and performance monitoring</li>
@@ -78,7 +78,7 @@ export const Route = createFileRoute('/_landing/cookies')({
 					Marketing Cookies
 				</h3>
 				<p className="mb-4">These cookies are used to deliver relevant advertisements:</p>
-				<ul className="list-disc space-y-2 pl-6">
+				<ul className="flex flex-col gap-2 list-disc pl-6">
 					<li>Track advertising campaign effectiveness</li>
 					<li>Deliver personalized advertisements</li>
 					<li>Retargeting cookies</li>
@@ -90,7 +90,7 @@ export const Route = createFileRoute('/_landing/cookies')({
 					4. Third-Party Cookies
 				</h2>
 				<p className="mb-4">We use services from third parties that may set cookies on your device:</p>
-				<ul className="list-disc space-y-2 pl-6">
+				<ul className="flex flex-col gap-2 list-disc pl-6">
 					<li><strong>Google Analytics:</strong> Website analytics and reporting</li>
 					<li><strong>Stripe:</strong> Payment processing</li>
 					<li><strong>Intercom:</strong> Customer support and messaging</li>
@@ -111,7 +111,7 @@ export const Route = createFileRoute('/_landing/cookies')({
 					Browser Settings
 				</h3>
 				<p className="mb-4">Most browsers allow you to:</p>
-				<ul className="list-disc space-y-2 pl-6">
+				<ul className="flex flex-col gap-2 list-disc pl-6">
 					<li>View and delete cookies</li>
 					<li>Block third-party cookies</li>
 					<li>Block all cookies</li>
@@ -128,7 +128,7 @@ export const Route = createFileRoute('/_landing/cookies')({
 				</p>
 
 				<h3 className="font-heading mt-6 mb-3 text-xl font-semibold text-foreground">Opt-Out Links</h3>
-				<ul className="list-disc space-y-2 pl-6">
+				<ul className="flex flex-col gap-2 list-disc pl-6">
 					<li>
 						<a
 							href="https://tools.google.com/dlpage/gaoptout"
@@ -156,7 +156,7 @@ export const Route = createFileRoute('/_landing/cookies')({
 			<section>
 				<h2 className="font-heading mb-4 text-2xl font-semibold text-foreground">6. Cookie Duration</h2>
 				<p className="mb-4">Cookies may be either:</p>
-				<ul className="list-disc space-y-2 pl-6">
+				<ul className="flex flex-col gap-2 list-disc pl-6">
 					<li>
 						<strong>Session Cookies:</strong> Temporary cookies that expire when you close your browser
 					</li>
@@ -181,7 +181,7 @@ export const Route = createFileRoute('/_landing/cookies')({
 			<section>
 				<h2 className="font-heading mb-4 text-2xl font-semibold text-foreground">8. Contact Us</h2>
 				<p>If you have questions about our use of cookies, please contact us at:</p>
-				<ul className="mt-4 list-none space-y-2 pl-0">
+				<ul className="flex flex-col gap-2 mt-4 list-none pl-0">
 					<li>Email: privacy@foreum.com</li>
 					<li>Address: [Your Company Address]</li>
 				</ul>

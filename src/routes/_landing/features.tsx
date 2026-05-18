@@ -31,8 +31,8 @@ function FeaturesPage() {
 		<div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
 			<div className="flex gap-6">
 				<div className="flex-shrink-0">
-					<div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-						<svg className="h-6 w-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<div className="flex size-12 items-center justify-center rounded-lg bg-primary/10">
+						<svg className="size-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path
 								stroke-linecap='round'
 								stroke-linejoin='round'
@@ -48,10 +48,10 @@ function FeaturesPage() {
 						Powerful WYSIWYG editor with markdown support, code syntax highlighting, image uploads,
 						and emoji picker. Make your posts beautiful and engaging.
 					</p>
-					<ul className="space-y-2 text-muted-foreground">
+					<ul className="flex flex-col gap-2 text-muted-foreground">
 						<li className="flex items-center gap-2">
 							<svg
-								className="h-4 w-4 text-primary"
+								className="size-4 text-primary"
 								fill='none'
 								stroke='currentColor'
 								viewBox='0 0 24 24'
@@ -67,7 +67,7 @@ function FeaturesPage() {
 						</li>
 						<li className="flex items-center gap-2">
 							<svg
-								className="h-4 w-4 text-primary"
+								className="size-4 text-primary"
 								fill='none'
 								stroke='currentColor'
 								viewBox='0 0 24 24'
@@ -83,7 +83,7 @@ function FeaturesPage() {
 						</li>
 						<li className="flex items-center gap-2">
 							<svg
-								className="h-4 w-4 text-primary"
+								className="size-4 text-primary"
 								fill='none'
 								stroke='currentColor'
 								viewBox='0 0 24 24'
@@ -103,8 +103,8 @@ function FeaturesPage() {
 
 			<div className="flex gap-6">
 				<div className="flex-shrink-0">
-					<div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-						<svg className="h-6 w-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<div className="flex size-12 items-center justify-center rounded-lg bg-primary/10">
+						<svg className="size-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path
 								stroke-linecap='round'
 								stroke-linejoin='round'
@@ -120,10 +120,10 @@ function FeaturesPage() {
 						Lightning-fast full-text search with filters, sorting, and relevance ranking. Help users
 						find exactly what they're looking for.
 					</p>
-					<ul className="space-y-2 text-muted-foreground">
+					<ul className="flex flex-col gap-2 text-muted-foreground">
 						<li className="flex items-center gap-2">
 							<svg
-								className="h-4 w-4 text-primary"
+								className="size-4 text-primary"
 								fill='none'
 								stroke='currentColor'
 								viewBox='0 0 24 24'
@@ -139,7 +139,7 @@ function FeaturesPage() {
 						</li>
 						<li className="flex items-center gap-2">
 							<svg
-								className="h-4 w-4 text-primary"
+								className="size-4 text-primary"
 								fill='none'
 								stroke='currentColor'
 								viewBox='0 0 24 24'
@@ -155,7 +155,7 @@ function FeaturesPage() {
 						</li>
 						<li className="flex items-center gap-2">
 							<svg
-								className="h-4 w-4 text-primary"
+								className="size-4 text-primary"
 								fill='none'
 								stroke='currentColor'
 								viewBox='0 0 24 24'
@@ -175,8 +175,8 @@ function FeaturesPage() {
 
 			<div className="flex gap-6">
 				<div className="flex-shrink-0">
-					<div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-						<svg className="h-6 w-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<div className="flex size-12 items-center justify-center rounded-lg bg-primary/10">
+						<svg className="size-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path
 								stroke-linecap='round'
 								stroke-linejoin='round'
@@ -194,10 +194,10 @@ function FeaturesPage() {
 						Customizable user profiles with avatars, badges, and reputation systems. Reward active
 						contributors and build trust.
 					</p>
-					<ul className="space-y-2 text-muted-foreground">
+					<ul className="flex flex-col gap-2 text-muted-foreground">
 						<li className="flex items-center gap-2">
 							<svg
-								className="h-4 w-4 text-primary"
+								className="size-4 text-primary"
 								fill='none'
 								stroke='currentColor'
 								viewBox='0 0 24 24'
@@ -213,7 +213,7 @@ function FeaturesPage() {
 						</li>
 						<li className="flex items-center gap-2">
 							<svg
-								className="h-4 w-4 text-primary"
+								className="size-4 text-primary"
 								fill='none'
 								stroke='currentColor'
 								viewBox='0 0 24 24'
@@ -229,7 +229,7 @@ function FeaturesPage() {
 						</li>
 						<li className="flex items-center gap-2">
 							<svg
-								className="h-4 w-4 text-primary"
+								className="size-4 text-primary"
 								fill='none'
 								stroke='currentColor'
 								viewBox='0 0 24 24'
@@ -249,8 +249,8 @@ function FeaturesPage() {
 
 			<div className="flex gap-6">
 				<div className="flex-shrink-0">
-					<div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-						<svg className="h-6 w-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<div className="flex size-12 items-center justify-center rounded-lg bg-primary/10">
+						<svg className="size-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path
 								stroke-linecap='round'
 								stroke-linejoin='round'
@@ -268,10 +268,10 @@ function FeaturesPage() {
 						Keep users engaged with real-time notifications for mentions, replies, and updates.
 						Email and in-app notifications included.
 					</p>
-					<ul className="space-y-2 text-muted-foreground">
+					<ul className="flex flex-col gap-2 text-muted-foreground">
 						<li className="flex items-center gap-2">
 							<svg
-								className="h-4 w-4 text-primary"
+								className="size-4 text-primary"
 								fill='none'
 								stroke='currentColor'
 								viewBox='0 0 24 24'
@@ -287,7 +287,7 @@ function FeaturesPage() {
 						</li>
 						<li className="flex items-center gap-2">
 							<svg
-								className="h-4 w-4 text-primary"
+								className="size-4 text-primary"
 								fill='none'
 								stroke='currentColor'
 								viewBox='0 0 24 24'
@@ -303,7 +303,7 @@ function FeaturesPage() {
 						</li>
 						<li className="flex items-center gap-2">
 							<svg
-								className="h-4 w-4 text-primary"
+								className="size-4 text-primary"
 								fill='none'
 								stroke='currentColor'
 								viewBox='0 0 24 24'
@@ -333,7 +333,7 @@ function FeaturesPage() {
 
 		<div className="grid grid-cols-1 gap-8 md:grid-cols-3">
 			<div className="rounded-xl border border-border bg-card p-8">
-				<div className="mb-6 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+				<div className="mb-6 flex size-12 items-center justify-center rounded-lg bg-primary/10">
 					<svg className="h-6 w-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path
 							stroke-linecap="round"
@@ -353,7 +353,7 @@ function FeaturesPage() {
 			</div>
 
 			<div className="rounded-xl border border-border bg-card p-8">
-				<div className="mb-6 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+				<div className="mb-6 flex size-12 items-center justify-center rounded-lg bg-primary/10">
 					<svg className="h-6 w-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path
 							stroke-linecap="round"
@@ -371,7 +371,7 @@ function FeaturesPage() {
 			</div>
 
 			<div className="rounded-xl border border-border bg-card p-8">
-				<div className="mb-6 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+				<div className="mb-6 flex size-12 items-center justify-center rounded-lg bg-primary/10">
 					<svg className="h-6 w-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path
 							stroke-linecap="round"
@@ -423,10 +423,10 @@ function FeaturesPage() {
 					control.
 				</p>
 				<div className="flex gap-2">
-					<div className="h-12 w-12 rounded-lg bg-primary"></div>
-					<div className="h-12 w-12 rounded-lg bg-secondary"></div>
-					<div className="h-12 w-12 rounded-lg bg-accent"></div>
-					<div className="h-12 w-12 rounded-lg bg-muted"></div>
+					<div className="size-12 rounded-lg bg-primary"></div>
+					<div className="size-12 rounded-lg bg-secondary"></div>
+					<div className="size-12 rounded-lg bg-accent"></div>
+					<div className="size-12 rounded-lg bg-muted"></div>
 				</div>
 			</div>
 

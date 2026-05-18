@@ -1,5 +1,6 @@
 // server/trpc/routers/index.ts
 import { router } from '../init';
+import { announcementRouter } from './announcement';
 import { bookmarksRouter } from './bookmark';
 import { categoryRouter } from './category';
 import { eventsRouter } from './events';
@@ -18,6 +19,7 @@ import { threadRouter } from './thread';
 import { userRouter } from './user';
 
 export const appRouter = router({
+	announcement: announcementRouter,
 	thread: threadRouter,
 	reply: replyRouter,
 	user: userRouter,

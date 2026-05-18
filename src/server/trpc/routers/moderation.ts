@@ -4,7 +4,7 @@ import { and, count, desc, eq } from 'drizzle-orm';
 import { z } from 'zod';
 
 import { user } from '~/server/db/schema/auth-schema';
-import { report } from '~/server/db/schema/moderation-schema';
+import { report, auditLog } from '~/server/db/schema/moderation-schema';
 import { protectedProcedure, router } from '~/server/trpc/init';
 
 export const moderationRouter = router({
@@ -175,6 +175,43 @@ export const moderationRouter = router({
 				if (error instanceof TRPCError) throw error;
 				console.error('[moderation.recentReports]', error);
 				throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Failed to fetch reports' });
+			}
+		}),
+
+	listAuditLogs: protectedProcedure
+		.input(
+			z.object({
+				limit: z.number().min(1).max(100).default(20),
+				offset: z.number().min(0).default(0)
+			})
+		)
+		.query(async ({ ctx, input }) => {
+			try {
+				if (ctx.user!.role !== 'admin') {
+					throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Not authorized' });
+				}
+
+				return ctx.db
+					.select({
+						id: auditLog.id,
+						action: auditLog.action,
+						reason: auditLog.reason,
+						createdAt: auditLog.createdAt,
+						performedBy: {
+							id: user.id,
+							name: user.name,
+							image: user.image
+						}
+					})
+					.from(auditLog)
+					.leftJoin(user, eq(auditLog.performedById, user.id))
+					.orderBy(desc(auditLog.createdAt))
+					.limit(input.limit)
+					.offset(input.offset);
+			} catch (error) {
+				if (error instanceof TRPCError) throw error;
+				console.error('[moderation.listAuditLogs]', error);
+				throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Failed to fetch audit logs' });
 			}
 		})
 });

@@ -7,21 +7,21 @@ export const clientAuthMiddleware = createMiddleware().server(
   async ({ next, request }) => {
     const url = new URL(request.url)
     const isProfilePage = url.pathname.match(/^\/profile\/[^/]+$/)
-    
+
     if (isProfilePage) {
       return await next()
     }
 
     const headers = getRequestHeaders()
     const session = await auth.api.getSession({ headers })
-    
+
     if (!session) {
       throw redirect({
         to: '/sign-in',
         search: { redirectTo: url.pathname },
       })
     }
-    
+
     return await next()
   }
 )
@@ -33,16 +33,16 @@ export const getSessionFn = createServerFn({ method: 'GET' })
     return session
   })
 
-  
+
 export const authMiddleware = createMiddleware().server(
   async ({ next }) => {
     const headers = getRequestHeaders()
     const session = await auth.api.getSession({ headers })
-    
+
     if (!session) {
       throw redirect({ to: "/sign-in" })
     }
-    
+
     return await next()
   }
 )
@@ -51,15 +51,33 @@ export const adminMiddleware = createMiddleware().server(
   async ({ next }) => {
     const headers = getRequestHeaders()
     const session = await auth.api.getSession({ headers })
-    
+
     if (!session) {
       throw redirect({ to: "/sign-in" })
     }
-    
+
     if (session.user.role !== 'admin') {
       throw redirect({ to: "/" })
     }
-    
+
     return await next()
   }
 )
+
+export const moderatorMiddleware = createMiddleware().server(
+  async ({ next }) => {
+    const headers = getRequestHeaders()
+    const session = await auth.api.getSession({ headers })
+
+    if (!session) {
+      throw redirect({ to: "/sign-in" })
+    }
+
+    if (session.user.role !== 'moderator' && session.user.role !== 'admin') {
+      throw redirect({ to: "/" })
+    }
+
+    return await next()
+  }
+)
+

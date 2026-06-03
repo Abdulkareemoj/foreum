@@ -1,160 +1,60 @@
-import { TRPCError } from '@trpc/server';
-import { eq } from 'drizzle-orm';
-import { z } from 'zod';
+import { TRPCError } from '@trpc/server'
+import { eq } from 'drizzle-orm'
 
-import { db } from '~/server/db';
-import { globalSetting } from '~/server/db/schema/settings-schema';
-import { adminProcedure, publicProcedure, router } from '~/server/trpc/init';
+import { db } from '~/server/db'
+import { globalSetting } from '~/server/db/schema/settings-schema'
+import { adminProcedure, publicProcedure, router } from '~/server/trpc/init'
+import { getDefaultShadcnTheme, parseShadcnThemeFromJson, zShadcnTheme } from '~/lib/shadcnTheme'
 
-export const themeConfigSchema = z.object({
-	// Light mode colors
-	light: z.object({
-		primary: z.string(),
-		primaryForeground: z.string(),
-		secondary: z.string(),
-		secondaryForeground: z.string(),
-		accent: z.string(),
-		accentForeground: z.string(),
-		destructive: z.string(),
-		background: z.string(),
-		foreground: z.string(),
-		card: z.string(),
-		cardForeground: z.string(),
-		border: z.string(),
-		muted: z.string(),
-		mutedForeground: z.string(),
-		ring: z.string()
-	}),
-	// Dark mode colors
-	dark: z.object({
-		primary: z.string(),
-		primaryForeground: z.string(),
-		secondary: z.string(),
-		secondaryForeground: z.string(),
-		accent: z.string(),
-		accentForeground: z.string(),
-		destructive: z.string(),
-		background: z.string(),
-		foreground: z.string(),
-		card: z.string(),
-		cardForeground: z.string(),
-		border: z.string(),
-		muted: z.string(),
-		mutedForeground: z.string(),
-		ring: z.string()
-	}),
-	// Radius
-	radius: z.string()
-});
-
-export type ThemeConfig = z.infer<typeof themeConfigSchema>;
-
-const defaultTheme: ThemeConfig = {
-	light: {
-		primary: 'oklch(0.498 0.155 162.48)',
-		primaryForeground: 'oklch(0.985 0 0)',
-		secondary: 'oklch(0.97 0 0)',
-		secondaryForeground: 'oklch(0.205 0 0)',
-		accent: 'oklch(0.95 0.05 162.48)',
-		accentForeground: 'oklch(0.205 0 0)',
-		destructive: 'oklch(0.577 0.245 27.325)',
-		background: 'oklch(1 0 0)',
-		foreground: 'oklch(0.145 0 0)',
-		card: 'oklch(1 0 0)',
-		cardForeground: 'oklch(0.145 0 0)',
-		border: 'oklch(0.922 0 0)',
-		muted: 'oklch(0.97 0 0)',
-		mutedForeground: 'oklch(0.556 0 0)',
-		ring: 'oklch(0.498 0.155 162.48)'
-	},
-	dark: {
-		primary: 'oklch(0.696 0.17 162.48)',
-		primaryForeground: 'oklch(0.145 0 0)',
-		secondary: 'oklch(0.269 0 0)',
-		secondaryForeground: 'oklch(0.985 0 0)',
-		accent: 'oklch(0.35 0.1 162.48)',
-		accentForeground: 'oklch(0.985 0 0)',
-		destructive: 'oklch(0.704 0.191 22.216)',
-		background: 'oklch(0.145 0 0)',
-		foreground: 'oklch(0.985 0 0)',
-		card: 'oklch(0.205 0 0)',
-		cardForeground: 'oklch(0.985 0 0)',
-		border: 'oklch(1 0 0 / 10%)',
-		muted: 'oklch(0.269 0 0)',
-		mutedForeground: 'oklch(0.708 0 0)',
-		ring: 'oklch(0.696 0.17 162.48)'
-	},
-	radius: '0.625rem'
-};
+const THEME_KEY = 'theme_config_v2'
 
 export const themeRouter = router({
-	// Get global theme (public)
+	// Get global theme (public – needed to apply theme to all visitors)
 	getGlobal: publicProcedure.query(async () => {
 		try {
 			const [setting] = await db
 				.select()
 				.from(globalSetting)
-				.where(eq(globalSetting.key, 'theme_config'));
+				.where(eq(globalSetting.key, THEME_KEY))
 
-			if (!setting) {
-				return defaultTheme;
-			}
+			if (!setting) return getDefaultShadcnTheme()
 
-			return JSON.parse(setting.value) as ThemeConfig;
+			return parseShadcnThemeFromJson(JSON.parse(setting.value))
 		} catch (error) {
-			console.error('[v0] Failed to get theme:', error);
-			return defaultTheme;
+			console.error('[theme.getGlobal] Failed:', error)
+			return getDefaultShadcnTheme()
 		}
 	}),
 
 	// Save global theme (admin only)
-	saveGlobal: adminProcedure.input(themeConfigSchema).mutation(async ({ input }) => {
-		if (!input) {
-			throw new TRPCError({
-				code: 'BAD_REQUEST',
-				message: 'Theme configuration is required'
-			});
-		}
-
+	saveGlobal: adminProcedure.input(zShadcnTheme).mutation(async ({ input }) => {
 		try {
-			const themeJson = JSON.stringify(input);
-
+			const value = JSON.stringify(input)
 			await db
 				.insert(globalSetting)
-				.values({ key: 'theme_config', value: themeJson })
-				.onConflictDoUpdate({
-					target: globalSetting.key,
-					set: { value: themeJson }
-				});
+				.values({ key: THEME_KEY, value })
+				.onConflictDoUpdate({ target: globalSetting.key, set: { value } })
 
-			return { success: true, theme: input };
+			return { success: true }
 		} catch (error) {
-			console.error('[v0] Failed to save theme:', error);
-			throw new TRPCError({
-				code: 'INTERNAL_SERVER_ERROR',
-				message: 'Failed to save theme configuration'
-			});
+			console.error('[theme.saveGlobal] Failed:', error)
+			throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Failed to save theme' })
 		}
 	}),
 
-	// Reset to default theme (admin only)
+	// Reset to default (admin only)
 	resetGlobal: adminProcedure.mutation(async () => {
 		try {
+			const value = JSON.stringify(getDefaultShadcnTheme())
 			await db
 				.insert(globalSetting)
-				.values({ key: 'theme_config', value: JSON.stringify(defaultTheme) })
-				.onConflictDoUpdate({
-					target: globalSetting.key,
-					set: { value: JSON.stringify(defaultTheme) }
-				});
+				.values({ key: THEME_KEY, value })
+				.onConflictDoUpdate({ target: globalSetting.key, set: { value } })
 
-			return { success: true, theme: defaultTheme };
+			return { success: true }
 		} catch (error) {
-			console.error('[v0] Failed to reset theme:', error);
-			throw new TRPCError({
-				code: 'INTERNAL_SERVER_ERROR',
-				message: 'Failed to reset theme configuration'
-			});
+			console.error('[theme.resetGlobal] Failed:', error)
+			throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Failed to reset theme' })
 		}
 	})
-});
+})

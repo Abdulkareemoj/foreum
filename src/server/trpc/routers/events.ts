@@ -227,9 +227,12 @@ export const eventsRouter = router({
           throw new TRPCError({ code: 'FORBIDDEN', message: 'Not authorized to update this event' })
         }
 
+        const startsAt = typeof updateData.startsAt === 'string' ? new Date(updateData.startsAt) : updateData.startsAt
+        const endsAt = typeof updateData.endsAt === 'string' ? new Date(updateData.endsAt) : updateData.endsAt
+
         const [updated] = await db
           .update(events)
-          .set({ ...updateData, updatedAt: new Date() })
+          .set({ ...updateData, startsAt, endsAt, updatedAt: new Date() })
           .where(eq(events.id, id))
           .returning()
 

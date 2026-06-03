@@ -3,6 +3,7 @@ import crypto from 'crypto';
 import { and, count, desc, eq } from 'drizzle-orm';
 import { z } from 'zod';
 
+import { db } from '~/server/db';
 import { user } from '~/server/db/schema/auth-schema';
 import { report, auditLog } from '~/server/db/schema/moderation-schema';
 import { protectedProcedure, router } from '~/server/trpc/init';
@@ -32,7 +33,7 @@ export const moderationRouter = router({
 					});
 				}
 
-				const [created] = await ctx.db
+				const [created] = await db
 					.insert(report)
 					.values({
 						id: crypto.randomUUID(),
@@ -77,7 +78,7 @@ export const moderationRouter = router({
 					conditions.push(eq(report.type, input.type));
 				}
 
-				return ctx.db
+				return db
 					.select({
 						id: report.id,
 						type: report.type,
@@ -112,7 +113,7 @@ export const moderationRouter = router({
 				throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Not authorized' });
 			}
 
-			const [updated] = await ctx.db
+			const [updated] = await db
 				.update(report)
 				.set({ resolved: true })
 				.where(eq(report.id, input.reportId))
@@ -126,12 +127,12 @@ export const moderationRouter = router({
 			throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Not authorized' });
 		}
 
-		const [{ count: pendingReports } = { count: 0 }] = await ctx.db
+		const [{ count: pendingReports } = { count: 0 }] = await db
 			.select({ count: count() })
 			.from(report)
 			.where(eq(report.resolved, false));
 
-		const [{ count: totalReports } = { count: 0 }] = await ctx.db
+		const [{ count: totalReports } = { count: 0 }] = await db
 			.select({ count: count() })
 			.from(report);
 
@@ -156,7 +157,7 @@ export const moderationRouter = router({
 
 				const conditions = [eq(report.resolved, input.resolved ?? false)];
 
-				const reports = await ctx.db
+				const reports = await db
 					.select({
 						id: report.id,
 						type: report.type,
@@ -191,7 +192,7 @@ export const moderationRouter = router({
 					throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Not authorized' });
 				}
 
-				return ctx.db
+				return db
 					.select({
 						id: auditLog.id,
 						action: auditLog.action,

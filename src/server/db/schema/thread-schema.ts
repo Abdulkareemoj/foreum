@@ -6,10 +6,12 @@ import {
 	pgTable,
 	text,
 	timestamp,
-	unique
+	unique,
+	uuid
 } from 'drizzle-orm/pg-core';
 
 import { user } from './auth-schema';
+import { groups } from './groups-schema';
 
 export const category = pgTable('category', {
 	id: text('id').primaryKey(),
@@ -32,6 +34,7 @@ export const thread = pgTable('thread', {
 		.references(() => user.id, { onDelete: 'cascade' }),
 	pinned: boolean('pinned').default(false),
 	locked: boolean('locked').default(false),
+	groupId: uuid('group_id').references(() => groups.id),
 	createdAt: timestamp('created_at').defaultNow(),
 	updatedAt: timestamp('updated_at').defaultNow()
 });

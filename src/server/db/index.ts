@@ -12,7 +12,6 @@ import * as profileSchema from "./schema/profile-schema";
 import * as reactionSchema from "./schema/reaction-schema";
 import * as reputationSchema from "./schema/reputations-schema";
 import * as resourcesSchema from "./schema/resources-schema";
-import * as organizationSchema from "./schema/organization-schema";
 import * as settingSchema from "./schema/settings-schema";
 import * as tagSchema from "./schema/tag-schema";
 import * as forumSchema from "./schema/thread-schema";
@@ -25,7 +24,6 @@ export const schema = {
   ...reactionSchema,
   ...reputationSchema,
   ...resourcesSchema,
-  ...organizationSchema,
   ...settingSchema,
   ...tagSchema,
   ...notificationSchema,

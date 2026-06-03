@@ -11,6 +11,6 @@ export const notification = pgTable('notification', {
 	title: text('title').notNull(),
 	message: text('message').notNull(),
 	link: text('link').notNull(), // where to go when clicked
-	read: boolean('read').default('false').notNull(),
+	read: boolean('read').default(false).notNull(),
 	createdAt: timestamp('created_at').defaultNow().notNull()
 });

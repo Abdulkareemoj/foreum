@@ -330,7 +330,7 @@ export const groupsRouter = router({
         const items = await db
           .select()
           .from(thread)
-          .where(eq(thread.groupId as any, input.groupId)) // Add groupId to thread schema
+          .where(eq(thread.groupId, input.groupId))
           .limit(input.limit + 1)
 
         let nextCursor: string | undefined = undefined
@@ -343,6 +343,55 @@ export const groupsRouter = router({
       } catch (error) {
         console.error('[groups.threads]', error)
         throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Failed to fetch threads' })
+      }
+    }),
+
+  removeMember: protectedProcedure
+    .input(z.object({ groupId: z.string(), memberId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const [group] = await db.select().from(groups).where(eq(groups.id, input.groupId))
+        if (!group) throw new TRPCError({ code: 'NOT_FOUND', message: 'Group not found' })
+
+        if (group.createdBy !== ctx.user.id && ctx.user.role !== 'admin') {
+          throw new TRPCError({ code: 'FORBIDDEN', message: 'Only owner can remove members' })
+        }
+
+        await db
+          .delete(groupMembers)
+          .where(
+            and(eq(groupMembers.groupId, input.groupId), eq(groupMembers.userId, input.memberId))
+          )
+        return { success: true }
+      } catch (error) {
+        if (error instanceof TRPCError) throw error
+        console.error('[groups.removeMember]', error)
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Failed to remove member' })
+      }
+    }),
+
+  updateMemberRole: protectedProcedure
+    .input(z.object({ groupId: z.string(), userId: z.string(), role: z.enum(['member', 'moderator', 'owner']) }))
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const [group] = await db.select().from(groups).where(eq(groups.id, input.groupId))
+        if (!group) throw new TRPCError({ code: 'NOT_FOUND', message: 'Group not found' })
+
+        if (group.createdBy !== ctx.user.id && ctx.user.role !== 'admin') {
+          throw new TRPCError({ code: 'FORBIDDEN', message: 'Only owner can update roles' })
+        }
+
+        await db
+          .update(groupMembers)
+          .set({ role: input.role })
+          .where(
+            and(eq(groupMembers.groupId, input.groupId), eq(groupMembers.userId, input.userId))
+          )
+        return { success: true }
+      } catch (error) {
+        if (error instanceof TRPCError) throw error
+        console.error('[groups.updateMemberRole]', error)
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Failed to update role' })
       }
     }),
 })

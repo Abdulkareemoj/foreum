@@ -1,6 +1,6 @@
 import { TRPCError } from '@trpc/server'
 import crypto from 'crypto'
-import { and, asc, desc, eq, ne, sql } from 'drizzle-orm'
+import { and, asc, desc, eq, isNull, ne, sql } from 'drizzle-orm'
 import { z } from 'zod'
 import { db } from '~/server/db'
 import { user } from '~/server/db/schema/auth-schema'
@@ -80,7 +80,7 @@ export const messagesRouter = router({
             .where(
               and(
                 eq(messages.conversationId, convo.id),
-                eq(messages.readAt, null),
+                isNull(messages.readAt),
                 ne(messages.senderId, ctx.user.id)
               )
             )
@@ -261,6 +261,7 @@ export const messagesRouter = router({
             id: crypto.randomUUID(),
             conversationId: input.conversationId,
             senderId: ctx.user.id,
+            message: input.content ?? '',
             content: input.content ?? '',
           })
           .returning()
@@ -354,7 +355,7 @@ export const messagesRouter = router({
           .where(
             and(
               eq(messages.conversationId, input.conversationId),
-              eq(messages.readAt, null),
+              isNull(messages.readAt),
               ne(messages.senderId, ctx.user.id)
             )
           )

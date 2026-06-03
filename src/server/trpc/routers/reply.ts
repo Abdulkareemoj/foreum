@@ -161,6 +161,14 @@ export const replyRouter = router({
 			.where(eq(reply.threadId, input.threadId))
 			.orderBy(desc(reply.createdAt));
 	}),
+	getById: publicProcedure.input(z.object({ id: z.string() })).query(async ({ input }) => {
+		const [result] = await db
+			.select()
+			.from(reply)
+			.where(eq(reply.id, input.id))
+			.limit(1);
+		return result;
+	}),
 
 	add: protectedProcedure
 		.input(

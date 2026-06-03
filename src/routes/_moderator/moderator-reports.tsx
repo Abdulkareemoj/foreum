@@ -9,7 +9,7 @@ import { Clock, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
 import { DataTable } from "~/components/ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
 
-export const Route = createFileRoute("/_moderator/reports")({
+export const Route = createFileRoute("/_moderator/moderator-reports")({
   component: ModeratorReports,
 });
 

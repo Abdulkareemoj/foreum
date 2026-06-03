@@ -4,7 +4,7 @@ import { Button } from '~/components/ui/button'
 import { ListChecks, AlertCircle, ArrowRight, ShieldCheck } from 'lucide-react'
 import { trpc } from '~/lib/trpc'
 
-export const Route = createFileRoute('/_moderator/dashboard')({
+export const Route = createFileRoute('/_moderator/moderator-dashboard')({
   component: ModeratorDashboard,
 })
 
@@ -64,13 +64,13 @@ function ModeratorDashboard() {
           </CardHeader>
           <CardContent className="flex flex-col gap-2">
             <Button asChild variant="outline" className="justify-between w-full">
-              <Link to="/_moderator/reports">
+              <Link to="/reports">
                 Review Reports
                 <ArrowRight className="size-4 ml-2" />
               </Link>
             </Button>
             <Button asChild variant="outline" className="justify-between w-full">
-              <Link to="/_moderator/moderation">
+              <Link to="/moderation">
                 View Moderation Logs
                 <ArrowRight className="size-4 ml-2" />
               </Link>
@@ -94,7 +94,7 @@ function ModeratorDashboard() {
                     <p className="text-xs text-muted-foreground">Type: {report.type}</p>
                   </div>
                   <Button size="sm" variant="ghost" asChild>
-                    <Link to="/_moderator/reports">View</Link>
+                    <Link to="/reports">View</Link>
                   </Button>
                 </div>
               ))

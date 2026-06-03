@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
 import { Button } from '~/components/ui/button'
 import { BookOpen, Shield, MessageCircle, ArrowRight } from 'lucide-react'
 
-export const Route = createFileRoute('/_moderator/help')({
+export const Route = createFileRoute('/_moderator/help-docs')({
   component: ModeratorHelp,
 })
 

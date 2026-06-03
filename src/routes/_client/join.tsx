@@ -59,7 +59,7 @@ function HomePage() {
       <div>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-2xl font-bold">Recent Discussions</h2>
-          <Link to="/thread">
+          <Link to="/threads">
             <Button variant="ghost">
               View All
               <ArrowRight className="ml-2 h-4 w-4" />

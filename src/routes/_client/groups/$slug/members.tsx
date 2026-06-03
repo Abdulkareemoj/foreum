@@ -149,8 +149,8 @@ function GroupMembersPage() {
                     </Avatar>
                     <div className="flex-1 min-w-0">
                       <Link
-                        to="/profile/$id"
-                        params={{ id: member.userId }}
+                        to="/profile/$username"
+                        params={{ username: member.userId }}
                         className="font-medium hover:underline block truncate"
                       >
                         {member.user?.name}

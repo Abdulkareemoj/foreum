@@ -8,7 +8,7 @@ import { Button } from '~/components/ui/button'
 import { ArrowLeft } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/_client/threads/thread/$id')({
+export const Route = createFileRoute('/_client/threads/$id')({
   component: ThreadPage,
 })  
 

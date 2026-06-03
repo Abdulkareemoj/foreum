@@ -57,7 +57,7 @@ function CategoriesPage() {
       ) : (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {categories.map((cat: any) => (
-            <Link key={cat.id} to={`/category/${cat.slug}`}>
+            <Link key={cat.id} to="/category/$slug" params={{ slug: cat.slug }}>
               <Card className="flex h-full flex-col justify-between transition-shadow hover:shadow-lg">
                 <CardHeader>
                   <div className="flex items-center justify-between">

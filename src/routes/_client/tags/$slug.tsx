@@ -26,11 +26,11 @@ function TagSlugPage() {
 
       {isLoading ? (
         <p>Loading threads…</p>
-      ) : !threads || threads.length === 0 ? (
+      ) : !threads?.items || threads.items.length === 0 ? (
         <p className="text-muted-foreground">No threads with this tag yet.</p>
       ) : (
         <div className="space-y-4">
-          {threads.map((thread: any) => (
+          {threads.items.map((thread: any) => (
             <ThreadCard key={thread.id} thread={thread} />
           ))}
         </div>

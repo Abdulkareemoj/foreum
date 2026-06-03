@@ -100,7 +100,7 @@ function ProfilePage() {
           <div className="space-y-6">
             <div className="flex flex-col items-center md:items-start">
               <Avatar className="h-20 w-20 border border-border">
-                <AvatarImage src={user.image || '/placeholder.svg'} alt={user.username} />
+                <AvatarImage src={user.image || undefined} alt={user.username || ''} />
                 <AvatarFallback>{user.name?.[0] ?? 'U'}</AvatarFallback>
               </Avatar>
 
@@ -143,13 +143,13 @@ function ProfilePage() {
               <div className="grid grid-cols-2 gap-2">
                 <Card>
                   <CardContent className="flex flex-col items-center justify-center p-4 text-center">
-                    <span className="text-2xl font-semibold">{user.threadCount ?? threads?.length ?? 0}</span>
+                    <span className="text-2xl font-semibold">{threads?.length ?? 0}</span>
                     <span className="text-xs text-muted-foreground">Threads</span>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="flex flex-col items-center justify-center p-4 text-center">
-                    <span className="text-2xl font-semibold">{user.replyCount ?? 0}</span>
+                    <span className="text-2xl font-semibold">0</span>
                     <span className="text-xs text-muted-foreground">Replies</span>
                   </CardContent>
                 </Card>
@@ -196,7 +196,7 @@ function ProfilePage() {
                   {popularThreads.map((thread: any) => (
                     <Link
                       key={thread.id}
-                      to="/threads/thread/$id"
+                      to="/threads/$id"
                       params={{ id: thread.id }}
                       className="block rounded-md p-2 transition-colors hover:bg-accent"
                     >

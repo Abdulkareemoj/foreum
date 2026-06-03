@@ -48,7 +48,7 @@ function EditThreadPage() {
     onSuccess: () => {
       toast.success("Thread updated successfully");
       utils.thread.getById.invalidate({ id });
-      navigate({ to: "/thread/$id", params: { id } });
+      navigate({ to: "/threads/$id", params: { id } });
     },
     onError: (error) => {
       toast.error(error.message || "Failed to update thread");
@@ -92,7 +92,7 @@ function EditThreadPage() {
     <div className="container max-w-2xl py-6 space-y-6">
       <Button
         variant="ghost"
-        onClick={() => navigate({ to: "/thread/$id", params: { id } })}
+        onClick={() => navigate({ to: "/threads/$id", params: { id } })}
       >
         <ArrowLeft className="h-4 w-4 mr-2" />
         Back to Thread
@@ -148,7 +148,7 @@ function EditThreadPage() {
               <Button
                 type="button"
                 variant="ghost"
-                onClick={() => navigate({ to: "/thread/$id", params: { id } })}
+                onClick={() => navigate({ to: "/threads/$id", params: { id } })}
                 disabled={updateThread.isPending}
               >
                 Cancel

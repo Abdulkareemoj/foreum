@@ -37,8 +37,8 @@ function EditReplyPage() {
   const updateReply = trpc.reply.update.useMutation({
     onSuccess: () => {
       toast.success("Reply updated successfully");
-      utils.reply.getByThreadId.invalidate({ threadId });
-      navigate({ to: "/thread/$id", params: { id: threadId } });
+      utils.reply.byThread.invalidate({ threadId });
+      navigate({ to: "/threads/$id", params: { id: threadId } });
     },
     onError: (error) => {
       toast.error(error.message || "Failed to update reply");
@@ -76,7 +76,7 @@ function EditReplyPage() {
       <Button
         variant="ghost"
         onClick={() =>
-          navigate({ to: "/thread/$id", params: { id: threadId } })
+          navigate({ to: "/threads/$id", params: { id: threadId } })
         }
       >
         <ArrowLeft className="h-4 w-4 mr-2" />
@@ -106,7 +106,7 @@ function EditReplyPage() {
                 type="button"
                 variant="ghost"
                 onClick={() =>
-                  navigate({ to: "/thread/$id", params: { id: threadId } })
+                  navigate({ to: "/threads/$id", params: { id: threadId } })
                 }
                 disabled={updateReply.isPending}
               >

@@ -110,7 +110,7 @@ function BookmarksPage() {
              <Card key={b.threadId}>
               <CardContent className="flex items-center justify-between p-4">
                 <div>
-                  <Link to={`/thread/${b.threadId}`} className="font-medium text-primary hover:underline">
+                  <Link to="/threads/$id" params={{ id: b.threadId }} className="font-medium text-primary hover:underline">
                     {b.threadTitle || b.thread?.title || "Unknown Thread"}
                   </Link>
                   <p className="text-sm text-muted-foreground">

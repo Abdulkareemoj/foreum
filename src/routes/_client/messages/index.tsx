@@ -23,7 +23,8 @@ function MessagesPage() {
           {conversations.map((convo: any) => (
             <Link
               key={convo.conversationId}
-              to={`/messages/${convo.conversationId}`}
+              to="/messages/$id"
+              params={{ id: convo.conversationId }}
               className="flex items-center justify-between rounded-lg border p-4 hover:bg-muted"
             >
               <div className="space-y-1">

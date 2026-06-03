@@ -14,6 +14,7 @@ import {
   Hash,
   ArrowLeft,
   Users,
+  Calendar,
 } from 'lucide-react'
 import { trpc } from '~/lib/trpc'
 import { useDebounce } from '~/hooks/use-debounce'
@@ -52,7 +53,7 @@ function SearchPage() {
     <div className="container max-w-4xl py-8 space-y-6">
       {/* Header */}
       <div className="space-y-4">
-        <Button variant="ghost" onClick={() => navigate({ to: '/thread' })}>
+        <Button variant="ghost" onClick={() => navigate({ to: '/threads' })}>
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back
         </Button>
@@ -221,7 +222,7 @@ function ThreadResults({ threads }: { threads: any[] }) {
         Threads
       </h2>
       {threads.map((thread) => (
-        <Link key={thread.id} to="/thread/$id" params={{ id: thread.id }}>
+        <Link key={thread.id} to="/threads/$id" params={{ id: thread.id }}>
           <Card className="hover:shadow-md transition-shadow cursor-pointer">
             <CardContent className="py-4">
               <h3 className="font-medium line-clamp-1">{thread.title}</h3>

@@ -31,7 +31,7 @@ const threadSchema = z.object({
       }
   }, { message: 'Content is required' }),
   categoryId: z.string().min(1, 'Please select a category'),
-  tags: z.array(z.string()).optional(),
+  tags: z.array(z.string()),
 })
 
 function NewThreadPage() {
@@ -44,7 +44,7 @@ function NewThreadPage() {
     onSuccess: (data) => {
       toast.success('Thread created successfully')
       utils.thread.list.invalidate()
-      navigate({ to: '/thread/$id', params: { id: data.id } })
+      navigate({ to: '/threads/$id', params: { id: data.id } })
     },
     onError: (error) => {
       toast.error(error.message || 'Failed to create thread')

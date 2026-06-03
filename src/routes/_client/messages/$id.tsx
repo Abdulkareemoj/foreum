@@ -112,7 +112,7 @@ function ConversationPage() {
           </Button>
 
           <Avatar>
-            <AvatarImage src={conversationData.otherUser.image} />
+            <AvatarImage src={conversationData.otherUser.image || undefined} />
             <AvatarFallback>
               {initials(conversationData.otherUser.name)}
             </AvatarFallback>
@@ -121,9 +121,6 @@ function ConversationPage() {
           <div className="flex flex-col">
             <span className="text-sm font-medium">
               {conversationData.otherUser.name}
-            </span>
-            <span className="text-xs text-muted-foreground">
-              Active {conversationData.otherUser.lastActive || 0}s ago
             </span>
           </div>
         </div>
@@ -150,8 +147,8 @@ function ConversationPage() {
           return (
             <div key={msg.id} className={cn("flex gap-2 max-w-[80%]", mine ? "ml-auto flex-row-reverse" : "")}>
               <Avatar className="h-8 w-8 shrink-0">
-                <AvatarImage src={sender?.image} />
-                <AvatarFallback>{initials(sender?.name || '')}</AvatarFallback>
+                <AvatarImage src={typeof sender === 'string' ? undefined : (sender?.image || undefined)} />
+                <AvatarFallback>{initials(typeof sender === 'string' ? '' : (sender?.name || ''))}</AvatarFallback>
               </Avatar>
 
               <div className={cn("flex flex-col gap-1", mine ? "items-end" : "items-start")}>

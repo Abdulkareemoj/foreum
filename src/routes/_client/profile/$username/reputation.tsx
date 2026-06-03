@@ -56,15 +56,15 @@ function ReputationPage() {
             <p className="mt-2 text-sm text-muted-foreground">Total Reputation Points</p>
             <div className="mt-6 grid grid-cols-3 gap-4">
               <div>
-                <div className="text-2xl font-semibold">{reputationData.upvotes ?? 0}</div>
+                <div className="text-2xl font-semibold">0</div>
                 <p className="text-xs text-muted-foreground">Upvotes Received</p>
               </div>
               <div>
-                <div className="text-2xl font-semibold">{reputationData.acceptedAnswers ?? 0}</div>
+                <div className="text-2xl font-semibold">0</div>
                 <p className="text-xs text-muted-foreground">Accepted Answers</p>
               </div>
               <div>
-                <div className="text-2xl font-semibold">{reputationData.helpfulMarks ?? 0}</div>
+                <div className="text-2xl font-semibold">0</div>
                 <p className="text-xs text-muted-foreground">Helpful Marks</p>
               </div>
             </div>

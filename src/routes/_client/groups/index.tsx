@@ -22,7 +22,7 @@ function GroupsPage() {
   }, [q])
 
   const { data: groups, isLoading } = trpc.groups.list.useQuery({ 
-    search: debouncedQ || undefined, 
+    query: debouncedQ || undefined, 
     limit: 40 
   })
 
@@ -52,7 +52,7 @@ function GroupsPage() {
             </Card>
           ))}
         </div>
-      ) : groups?.length === 0 ? (
+      ) : groups?.items.length === 0 ? (
         <Card>
           <CardContent className="py-8 text-center text-muted-foreground">
             No groups found.
@@ -60,12 +60,12 @@ function GroupsPage() {
         </Card>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {groups?.map((group: any) => (
-            <Link key={group.id} to={`/groups/${group.id}`} className="block">
+          {groups?.items.map((group: any) => (
+            <Link key={group.id} to="/groups/$slug" params={{ slug: group.slug }} className="block">
               <Card className="h-full transition hover:shadow-md">
                 <div className="h-32 overflow-hidden rounded-t border-b bg-muted/10 flex items-center justify-center">
-                  {group.bannerUrl ? (
-                    <img src={group.bannerUrl} className="h-32 w-full object-cover" alt={group.name} />
+                  {group.bannerImage ? (
+                    <img src={group.bannerImage} className="h-32 w-full object-cover" alt={group.name} />
                   ) : (
                     <div className="flex h-32 w-full items-center justify-center text-muted-foreground">
                       <span className="text-sm">{group.name}</span>
@@ -77,7 +77,7 @@ function GroupsPage() {
                     <div className="min-w-0">
                       <h3 className="truncate font-semibold">{group.name}</h3>
                       <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
-                        {group.shortDescription}
+                        {group.description}
                       </p>
                     </div>
                   </div>

@@ -65,6 +65,8 @@ export const Route = createRootRoute({
   shellComponent: RootDocument,
 })
 
+import { GlobalThemeApplier } from '~/components/global-theme-applier'
+
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
     <html>
@@ -72,13 +74,14 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-     
-        <hr />
-<TRPCProvider>
-    <TooltipProvider>  
-        <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      {children}
-    </ThemeProvider></TooltipProvider></TRPCProvider> 
+        <TRPCProvider>
+          <GlobalThemeApplier />
+          <TooltipProvider>
+            <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+              {children}
+            </ThemeProvider>
+          </TooltipProvider>
+        </TRPCProvider>
         <TanStackRouterDevtools position="bottom-right" />
         <Scripts />
       </body>

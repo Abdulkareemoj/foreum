@@ -36,15 +36,15 @@ const data = {
     {
       title: 'Sections',
       items: [
-        { title: 'Dashboard', url: '/_moderator/dashboard', icon: LayoutDashboard },
-        { title: 'Reports', url: '/_moderator/reports', icon: List },
-        { title: 'Moderation Logs', url: '/_moderator/moderation', icon: Building },
+        { title: 'Dashboard', url: '/moderator-dashboard', icon: LayoutDashboard },
+        { title: 'Reports', url: '/reports', icon: List },
+        { title: 'Moderation Logs', url: '/moderation', icon: Building },
       ],
     },
     {
       title: 'Other',
       items: [
-        { title: 'Help Center', url: '/_moderator/help', icon: LifeBuoy },
+        { title: 'Help Center', url: '/help-docs', icon: LifeBuoy },
       ],
     },
   ],

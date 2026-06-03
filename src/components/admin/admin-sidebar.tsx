@@ -40,18 +40,20 @@ const data = {
 			{
 				title: 'Sections',
 				items: [
-					{ title: 'Dashboard', url: '/dashboard', icon: LayoutDashboard },
-					{ title: 'Users', url: '/users', icon: User },
+					{ title: 'Dashboard', url: '/admin-dashboard', icon: LayoutDashboard },
+					{ title: 'Users', url: '/users-list', icon: User },
+          { title: 'Analytics', url: '/admin-analytics', icon: ChartArea },
 					{ title: 'Appearance', url: '/appearance', icon: Sparkles },
-					{ title: 'Moderation Logs', url: '/moderation-logs', icon: Building },
-					{ title: 'Reports', url: '/reports', icon: List },					{ title: 'Settings', url: '/settings-admin', icon: Settings },
+					{ title: 'Moderation Logs', url: '/admin-moderation', icon: Building },
+					{ title: 'Reports', url: '/reports-summary', icon: List },
+					{ title: 'Settings', url: '/admin-settings', icon: Settings },
 					{ title: 'Announcements', url: '/announcements', icon: Speaker }
 				]
 			},
 			{
 				title: 'Other',
 				items: [
-					{ title: 'Analytics', url: '/analytics', icon: ChartArea },
+					// { title: 'Analytics', url: '/analytics', icon: ChartArea },
 					{ title: 'Help Center', url: '/help', icon: LifeBuoy }
 				]
 			}
@@ -105,7 +107,7 @@ export function AdminSidebar({
           </SidebarGroup>
         ))}
       </SidebarContent>
-      <SidebarFooter>
+      {/* <SidebarFooter>
         <hr className="border-t border-border mx-2 -mt-px" />
         <SidebarMenu>
           <SidebarMenuItem>
@@ -119,7 +121,7 @@ export function AdminSidebar({
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
-      </SidebarFooter>
+      </SidebarFooter> */}
       <SidebarRail />
     </Sidebar>
   );

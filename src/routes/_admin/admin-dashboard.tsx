@@ -9,7 +9,7 @@ import type { LucideIcon } from 'lucide-react'
 
 import { adminMiddleware } from '~/server/auth-actions'
 
-export const Route = createFileRoute('/_admin/dashboard')({
+export const Route = createFileRoute('/_admin/admin-dashboard')({
   component: AdminDashboard,
    server: {
     middleware: [adminMiddleware],
@@ -24,26 +24,22 @@ interface Stats {
 }
 
 function AdminDashboard() {
-  const { data: userStats, isLoading: userStatsLoading } = trpc.user.stats.useQuery()
   const { data: reportStats, isLoading: reportsLoading } = trpc.moderation.recentReports.useQuery(
     { limit: 5 }
   )
 
-  const isLoading = userStatsLoading || reportsLoading
+  const isLoading = reportsLoading
 
   const stats: Stats[] = [
     {
       title: 'Total Users',
-      value: userStats?.totalUsers?.toString() || '0',
-      change: {
-        value: `${userStats?.monthlyGrowth || 0}%`,
-        trend: (userStats?.monthlyGrowth || 0) > 0 ? 'up' : 'down',
-      },
+      value: '—',
+      change: { value: '+0%', trend: 'up' },
       icon: Users,
     },
     {
       title: 'Active Threads',
-      value: userStats?.activeThreads?.toString() || '0',
+      value: '—',
       change: { value: '+1.1%', trend: 'up' },
       icon: MessageSquare,
     },
@@ -58,7 +54,7 @@ function AdminDashboard() {
     },
     {
       title: 'Engagement Score',
-      value: userStats?.engagementScore?.toFixed(0) + '%' || '0%',
+      value: '—',
       change: { value: '+0.5%', trend: 'up' },
       icon: TrendingUp,
     },

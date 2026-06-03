@@ -11,7 +11,7 @@ import { toast } from 'sonner'
 import { DataTable } from '~/components/ui/data-table'
 import { ColumnDef } from '@tanstack/react-table'
 
-export const Route = createFileRoute('/_admin/reports')({
+export const Route = createFileRoute('/_admin/reports-summary')({
   component: AdminReports,
 })
 

@@ -5,7 +5,7 @@ import { trpc } from '~/lib/trpc';
 import { DataTable } from '~/components/ui/data-table';
 import { ColumnDef } from '@tanstack/react-table';
 
-export const Route = createFileRoute('/_admin/moderation')({
+export const Route = createFileRoute('/_admin/admin-moderation')({
   component: AdminModeration,
 })
 

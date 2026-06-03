@@ -13,16 +13,20 @@ import {
   BreadcrumbPage,
 } from '~/components/ui/breadcrumb'
 import UserDropdown from '~/components/shared/UserDropdown'
-import { adminMiddleware } from '~/server/auth-actions'
-
+import { adminMiddleware, getSessionFn } from '~/server/auth-actions'
 export const Route = createFileRoute('/_admin')({
   component: AdminLayout,
   server: {
     middleware: [adminMiddleware], 
   },
+  loader: async () => {
+    const session = await getSessionFn()
+    return { user: session?.user || null }
+  },
 })
 
 function AdminLayout() {
+  const { user } = Route.useLoaderData()
   return (
     <SidebarProvider>
       <AdminSidebar />
@@ -40,11 +44,11 @@ function AdminLayout() {
             </Breadcrumb>
           </div>
           <div className="ml-auto flex items-center gap-2 px-4">
-            <UserDropdown />
+            <UserDropdown user={user} />
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4">
-          <Outlet /> {/* Admin pages render here */}
+          <Outlet />
         </div>
       </SidebarInset>
     </SidebarProvider>

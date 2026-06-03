@@ -6,7 +6,7 @@ import { BarChart3, Users } from 'lucide-react';
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '~/components/ui/chart'
 
-export const Route = createFileRoute('/_admin/analytics')({
+export const Route = createFileRoute('/_admin/admin-analytics')({
   component: AdminAnalytics,
 })
 

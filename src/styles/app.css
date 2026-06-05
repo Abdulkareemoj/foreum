@@ -121,6 +121,144 @@
   --color-highlight: var(--highlight);
 }
 
+/* ── transitions.dev: shared variables ── */
+:root {
+  --icon-swap-dur: 200ms;
+  --icon-swap-blur: 2px;
+  --icon-swap-start-scale: 0.25;
+  --icon-swap-ease: ease-in-out;
+  --stagger-dur: 600ms;
+  --stagger-distance: 12px;
+  --stagger-stagger: 40ms;
+  --stagger-blur: 3px;
+  --stagger-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --panel-open-dur: 400ms;
+  --panel-close-dur: 350ms;
+  --panel-translate-y: 100px;
+  --panel-blur: 2px;
+  --panel-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer components {
+  /* Icon swap */
+  .t-icon-swap {
+    position: relative;
+    display: inline-grid;
+  }
+  .t-icon-swap .t-icon {
+    grid-area: 1 / 1;
+    transition:
+      opacity   var(--icon-swap-dur) var(--icon-swap-ease),
+      filter    var(--icon-swap-dur) var(--icon-swap-ease),
+      transform var(--icon-swap-dur) var(--icon-swap-ease);
+    will-change: opacity, filter, transform;
+  }
+  .t-icon-swap[data-state="a"] .t-icon[data-icon="a"],
+  .t-icon-swap[data-state="b"] .t-icon[data-icon="b"] {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+  }
+  .t-icon-swap[data-state="a"] .t-icon[data-icon="b"],
+  .t-icon-swap[data-state="b"] .t-icon[data-icon="a"] {
+    opacity: 0;
+    filter: blur(var(--icon-swap-blur));
+    transform: scale(var(--icon-swap-start-scale));
+  }
+
+  /* Texts stagger reveal */
+  .t-stagger-line {
+    display: block;
+    opacity: 0;
+    transform: translateY(var(--stagger-distance));
+    filter: blur(var(--stagger-blur));
+    transition:
+      opacity   var(--stagger-dur) var(--stagger-ease),
+      transform var(--stagger-dur) var(--stagger-ease),
+      filter    var(--stagger-dur) var(--stagger-ease);
+    will-change: transform, opacity, filter;
+  }
+  .t-stagger-line--2 { transition-delay: var(--stagger-stagger); }
+  .t-stagger-line--3 { transition-delay: calc(var(--stagger-stagger) * 2); }
+  .t-stagger.is-shown .t-stagger-line {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+  .t-stagger.is-hiding .t-stagger-line {
+    opacity: 0;
+    transform: translateY(0);
+    filter: blur(0);
+    transition:
+      opacity 200ms ease,
+      transform 0s linear,
+      filter 0s linear;
+    transition-delay: 0s;
+  }
+
+  /* Panel slide reveal */
+  .t-panel-slide {
+    transform: translateY(var(--panel-translate-y));
+    opacity: 0;
+    filter: blur(var(--panel-blur));
+    pointer-events: none;
+    transition:
+      transform var(--panel-close-dur) var(--panel-ease),
+      opacity   var(--panel-close-dur) var(--panel-ease),
+      filter    var(--panel-close-dur) var(--panel-ease);
+    will-change: transform, opacity, filter;
+  }
+  .t-panel-slide[data-open="true"],
+  .t-panel-slide[data-state="open"] {
+    transform: translateY(0);
+    opacity: 1;
+    filter: blur(0);
+    pointer-events: auto;
+    transition:
+      transform var(--panel-open-dur) var(--panel-ease),
+      opacity   var(--panel-open-dur) var(--panel-ease),
+      filter    var(--panel-open-dur) var(--panel-ease);
+  }
+
+  /* Empty state stagger entrance */
+  [data-slot="empty-icon"],
+  [data-slot="empty-title"],
+  [data-slot="empty-description"] {
+    opacity: 0;
+    transform: translateY(12px);
+    filter: blur(3px);
+    transition:
+      opacity   0.6s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+      filter    0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  [data-slot="empty-title"] { transition-delay: 40ms; }
+  [data-slot="empty-description"] { transition-delay: 80ms; }
+  [data-slot="empty"][data-shown] [data-slot="empty-icon"],
+  [data-slot="empty"][data-shown] [data-slot="empty-title"],
+  [data-slot="empty"][data-shown] [data-slot="empty-description"] {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-icon-swap .t-icon,
+  .t-stagger-line,
+  .t-panel-slide {
+    transition: none !important;
+  }
+  [data-slot="empty-icon"],
+  [data-slot="empty-title"],
+  [data-slot="empty-description"] {
+    transition: none !important;
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

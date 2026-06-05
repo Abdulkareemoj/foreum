@@ -35,7 +35,7 @@ import {
 } from './list-toolbar-button';
 import { MarkToolbarButton } from './mark-toolbar-button';
 import { MediaToolbarButton } from './media-toolbar-button';
-import { ModeToolbarButton } from './mode-toolbar-button';
+// import { ModeToolbarButton } from './mode-toolbar-button';
 import { MoreToolbarButton } from './more-toolbar-button';
 import { TableToolbarButton } from './table-toolbar-button';
 import { ToggleToolbarButton } from './toggle-toolbar-button';
@@ -143,10 +143,10 @@ export function FixedToolbarButtons() {
         </MarkToolbarButton>
         <CommentToolbarButton />
       </ToolbarGroup>
-
-      <ToolbarGroup>
+ {/* So you can add toobar items here to shop up when you set it up just like in this commented section */}
+      {/* <ToolbarGroup>
         <ModeToolbarButton />
-      </ToolbarGroup>
+      </ToolbarGroup> */}
     </div>
   );
 }

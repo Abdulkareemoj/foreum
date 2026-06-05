@@ -3,11 +3,12 @@ import { z } from 'zod';
 
 import { db } from '~/server/db';
 import {
+	globalSetting,
 	notificationSetting,
 	privacySetting,
 	themeSetting
 } from '~/server/db/schema/settings-schema';
-import { protectedProcedure,router } from '~/server/trpc/init';
+import { adminProcedure, protectedProcedure, router } from '~/server/trpc/init';
 
 export const settingsRouter = router({
 	getAll: protectedProcedure.query(async ({ ctx }) => {
@@ -70,6 +71,28 @@ export const settingsRouter = router({
 				.onConflictDoUpdate({
 					target: [notificationSetting.userId, notificationSetting.type],
 					set: { enabled: input.enabled }
+				});
+			return { success: true };
+		}),
+
+	getAllGlobal: adminProcedure.query(async () => {
+		const rows = await db.select().from(globalSetting);
+		const settings: Record<string, string> = {};
+		for (const row of rows) {
+			settings[row.key] = row.value;
+		}
+		return settings;
+	}),
+
+	updateGlobal: adminProcedure
+		.input(z.object({ key: z.string(), value: z.string() }))
+		.mutation(async ({ input }) => {
+			await db
+				.insert(globalSetting)
+				.values({ key: input.key, value: input.value })
+				.onConflictDoUpdate({
+					target: globalSetting.key,
+					set: { value: input.value, updatedAt: new Date() }
 				});
 			return { success: true };
 		})

@@ -13,7 +13,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import {  UserIcon, Moon, Sun, Bell as BellIcon, MessageSquare, LogOut as LogOutIcon } from "lucide-react";
 import { signOut } from "~/lib/auth-client";
 import { Switch } from "~/components/ui/switch";
-import { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
 
 interface UserDropdownProps {
   user?: {
@@ -28,20 +28,8 @@ interface UserDropdownProps {
 
 export default function UserDropdown({ user }: UserDropdownProps) {
   const navigate = useNavigate();
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  useEffect(() => {
-    // Check initial dark mode state (optional optimization)
-    setIsDarkMode(document.documentElement.classList.contains("dark"));
-  }, []);
-
-  useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, [isDarkMode]);
+  const { theme, setTheme } = useTheme();
+  const isDarkMode = theme === "dark";
 
   const handleSignOut = async () => {
     await signOut({
@@ -117,7 +105,7 @@ export default function UserDropdown({ user }: UserDropdownProps) {
               {isDarkMode ? <Moon className="size-4" /> : <Sun className="size-4" />}
               <span>Dark Mode</span>
             </div>
-            <Switch checked={isDarkMode} onCheckedChange={setIsDarkMode} />
+            <Switch checked={isDarkMode} onCheckedChange={(v) => setTheme(v ? "dark" : "light")} />
           </div>
 
           <DropdownMenuItem asChild>

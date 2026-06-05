@@ -23,27 +23,21 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '~/component
 import Logo from '~/components/shared/Logo'
 import UserDropdown from '~/components/shared/UserDropdown'
 import NotificationBell from '../shared/NotificationBell'
+import { useTheme } from 'next-themes'
 import { SearchCommand } from './SearchCommand'
 import LeftMobile from './LeftMobile'
 import RightMobile from './RightMobile'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
 interface NavbarProps {
   user: any
 }
 
 export default function Navbar({ user }: NavbarProps) {
+  const { theme, setTheme } = useTheme()
+  const isDarkMode = theme === 'dark'
   const [searchOpen, setSearchOpen] = useState(false)
   const [isSheetOpen, setIsSheetOpen] = useState(false)
-  const [isDarkMode, setIsDarkMode] = useState(false)
-
-  useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-    }
-  }, [isDarkMode])
 
   const navigationItems = [
     { href: '/threads', label: 'Home', icon: Home },
@@ -203,7 +197,7 @@ export default function Navbar({ user }: NavbarProps) {
                   {isDarkMode ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
                   <span>Dark Mode</span>
                 </div>
-                <Switch checked={isDarkMode} onCheckedChange={setIsDarkMode} />
+                <Switch checked={isDarkMode} onCheckedChange={(v) => setTheme(v ? 'dark' : 'light')} />
               </div>
 
               <Separator className="my-4" />

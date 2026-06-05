@@ -20,8 +20,10 @@ import {
   moderatorRole,
   userAc,
 } from "~/server/permissions";
+import { createLogger } from "~/server/lib/logger";
 const resend = new Resend(process.env.RESEND_API_KEY);
 const from = process.env.BETTER_AUTH_EMAIL;
+const logger = createLogger('auth');
 
 export const auth = betterAuth({
   appName: "Foreum",
@@ -69,9 +71,9 @@ export const auth = betterAuth({
               location: "",
               website: "",
             });
-            console.log(`✅ Profile created for user ${user.id}`);
+            logger.info({ userId: user.id }, 'Profile created')
           } catch (err) {
-            console.error("❌ Failed to create profile:", err);
+            logger.error({ err }, 'Failed to create profile')
           }
         },
       },
@@ -91,7 +93,7 @@ export const auth = betterAuth({
       // 	html: emailContent
       // });
       //
-      console.log(res, user.email);
+      logger.info({ email: user.email }, 'Verification email sent');
     },
     sendOnSignUp: true,
     autoSignInAfterVerification: true,
@@ -111,7 +113,7 @@ export const auth = betterAuth({
       // 	subject: 'Reset your password',
       // 	html: emailContent
       // });
-      console.log(res, `Password reset link sent to ${user.email}.`);
+      logger.info({ email: user.email }, 'Password reset link sent');
     },
     async onPasswordReset({ user }, request) {
       const emailContent = resetConfirmTemplate.replace(
@@ -126,7 +128,7 @@ export const auth = betterAuth({
       // 	subject: 'Password Reset Confirmation',
       // 	html: emailContent
       // });
-      console.log(res, `Password reset confirmation sent to ${user.email}.`);
+      logger.info({ email: user.email }, 'Password reset confirmation sent');
     },
     requireEmailVerification: true,
   },

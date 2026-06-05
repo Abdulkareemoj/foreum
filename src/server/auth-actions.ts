@@ -2,6 +2,7 @@ import { createServerFn, createMiddleware } from '@tanstack/react-start'
 import { getRequestHeaders } from '@tanstack/react-start/server'
 import { auth } from '~/server/auth'
 import { redirect } from '@tanstack/react-router'
+import { logMiddleware } from '~/utils/loggingMiddleware'
 
 export const clientAuthMiddleware = createMiddleware().server(
   async ({ next, request }) => {
@@ -27,12 +28,12 @@ export const clientAuthMiddleware = createMiddleware().server(
 )
 
 export const getSessionFn = createServerFn({ method: 'GET' })
+  .middleware([logMiddleware])
   .handler(async () => {
     const headers = getRequestHeaders()
     const session = await auth.api.getSession({ headers })
     return session
   })
-
 
 export const authMiddleware = createMiddleware().server(
   async ({ next }) => {

@@ -72,7 +72,7 @@ function EventDetailPage() {
             <div className="min-w-0">
               <h1 className="text-2xl font-bold">{event.title}</h1>
               <div className="text-sm text-muted-foreground">
-                {format(new Date(event.startsAt), 'PPP p')} — {format(new Date(event.endsAt), 'PPP p')}
+                {format(new Date(event.startsAt), 'PPP p')} - {format(new Date(event.endsAt), 'PPP p')}
                 <span> • </span>
                 {event.eventType === 'virtual' ? 'Virtual' : event.eventType === 'physical' ? 'Physical' : event.eventType === 'hybrid' ? 'Hybrid' : 'Other'}
               </div>

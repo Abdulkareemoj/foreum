@@ -20,8 +20,7 @@ import { resetPassword } from "~/lib/auth-client";
 import { KeyRound } from "lucide-react";
 import { Spinner } from "~/components/ui/spinner";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
-
-
+import { seo } from '~/utils/seo'
 
 function ResetPasswordContent() {
   const [isLoading, setIsLoading] = useState(false);
@@ -173,6 +172,9 @@ function ResetPasswordContent() {
 }
 
 export const Route = createFileRoute('/_auth/reset-password')({
+  head: () => ({
+    meta: [...seo({ title: 'Reset Password - Foreum', description: 'Reset your Foreum password.' })],
+  }),
   component: ResetPassword,
 })
 

@@ -15,8 +15,12 @@ import {
 import { trpc } from '~/lib/trpc'
 import { useSession, authClient } from '~/lib/auth-client'
 import ThreadCard from '~/components/forum/ThreadCard'
+import { seo } from '~/utils/seo'
 
 export const Route = createFileRoute('/_client/profile/$username')({
+  head: () => ({
+    meta: [...seo({ title: 'Profile - Foreum' })],
+  }),
   component: ProfilePage,
 })
 

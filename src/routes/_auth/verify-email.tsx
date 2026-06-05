@@ -9,7 +9,7 @@ import { Mail, CheckCircle2, AlertCircle } from "lucide-react";
 import { authClient } from "~/lib/auth-client";
 import { Link } from "@tanstack/react-router";
 import { Spinner } from "~/components/ui/spinner";
-
+import { seo } from '~/utils/seo'
 
 export function VerifyEmailContent() {
   const [verifying, setVerifying] = useState(false);
@@ -109,6 +109,9 @@ export function VerifyEmailContent() {
   );
 }
 export const Route = createFileRoute('/_auth/verify-email')({
+  head: () => ({
+    meta: [...seo({ title: 'Verify Email - Foreum', description: 'Verify your email address.' })],
+  }),
   component: VerifyEmail,
 })
 

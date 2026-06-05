@@ -2,8 +2,12 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 import Mainbar from '~/components/forum/Mainbar'
 import { trpc } from '~/lib/trpc'
+import { seo } from '~/utils/seo'
 
 export const Route = createFileRoute('/_client/threads/')({
+  head: () => ({
+    meta: [...seo({ title: 'Threads - Foreum', description: 'Browse discussions on Foreum.' })],
+  }),
   component: ThreadPage,
 })
 

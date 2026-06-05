@@ -3,8 +3,12 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '~/com
 import { Button } from '~/components/ui/button'
 import { ListChecks, AlertCircle, ArrowRight, ShieldCheck } from 'lucide-react'
 import { trpc } from '~/lib/trpc'
+import { seo } from '~/utils/seo'
 
 export const Route = createFileRoute('/_moderator/moderator-dashboard')({
+  head: () => ({
+    meta: [...seo({ title: 'Moderator Dashboard - Foreum' })],
+  }),
   component: ModeratorDashboard,
 })
 

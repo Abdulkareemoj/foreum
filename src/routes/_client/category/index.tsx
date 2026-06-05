@@ -5,8 +5,12 @@ import { trpc } from '~/lib/trpc'
 import { Eye, MessageSquare } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Skeleton } from '~/components/ui/skeleton'
+import { seo } from '~/utils/seo'
 
 export const Route = createFileRoute('/_client/category/')({
+  head: () => ({
+    meta: [...seo({ title: 'Categories - Foreum', description: 'Browse categories on Foreum.' })],
+  }),
   component: CategoriesPage,
 })
 

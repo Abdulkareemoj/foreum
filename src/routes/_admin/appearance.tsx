@@ -5,15 +5,20 @@ import { ThemeEditorSidebar } from '~/components/admin/theme-options/sidebar'
 import { Button } from '~/components/ui/button'
 import { Badge } from '~/components/ui/badge'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '~/components/ui/card'
-import { ScrollArea } from '~/components/ui/scroll-area'
+import { ThemeNameEditor } from '~/components/admin/theme-options/theme-name-editor'
+import { ThemePresetSelector } from '~/components/admin/theme-options/theme-preset-selector'
 import { Separator } from '~/components/ui/separator'
 import { Avatar, AvatarFallback } from '~/components/ui/avatar'
 import { Sun, Moon, RotateCcw, CheckCircle } from 'lucide-react'
 import { toast } from 'sonner'
 import { cn } from '~/lib/utils'
 import { Spinner } from '~/components/ui/spinner'
+import { seo } from '~/utils/seo'
 
 export const Route = createFileRoute('/_admin/appearance')({
+  head: () => ({
+    meta: [...seo({ title: 'Appearance - Foreum' })],
+  }),
 	component: () => (
 		<ThemeDataProvider>
 			<AdminAppearance />
@@ -207,20 +212,25 @@ function AdminAppearance() {
 			{/* Editor sidebar */}
 		
 			<div className="w-72 shrink-0 border-r flex flex-col bg-card h-full">
-				<div className="px-4 py-3 border-b shrink-0">
-					<h1 className="text-base font-semibold">Appearance</h1>
-					<p className="text-xs text-muted-foreground mt-0.5">
+				<div className="px-4 py-3 border-b shrink-0 space-y-1">
+					<div className="flex items-center gap-2">
+						<ThemeNameEditor />
+					</div>
+					<p className="text-xs text-muted-foreground">
 						Customise your forum's look and feel. Changes are saved automatically.
 					</p>
 				</div>
 			<div className="flex-1 min-h-0 overflow-y-auto">
 					<ThemeEditorSidebar />
 				</div>
+				<div className="border-t px-4 py-3 shrink-0">
+					<ThemePresetSelector />
+				</div>
 			</div>
 
 			{/* Preview area */}
 			<div className="flex-1 flex flex-col min-w-0 min-h-0">
-			<ScrollArea>		<AppearanceToolbar /></ScrollArea>
+				<AppearanceToolbar />
 				<div className="flex-1 min-h-0 overflow-y-auto">
 					<PreviewPanel />
 				</div>

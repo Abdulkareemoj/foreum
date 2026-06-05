@@ -8,8 +8,12 @@ import { format, isPast } from 'date-fns'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
 import { toast } from 'sonner'
 import { useEffect, useState } from 'react'
+import { seo } from '~/utils/seo'
 
 export const Route = createFileRoute('/_client/events/')({
+  head: () => ({
+    meta: [...seo({ title: 'Events - Foreum' })],
+  }),
   component: EventsPage,
 })
 

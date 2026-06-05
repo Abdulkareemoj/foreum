@@ -19,9 +19,12 @@ import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Label } from "~/components/ui/label";
-
+import { seo } from '~/utils/seo'
 
 export const Route = createFileRoute('/_auth/sign-up')({
+  head: () => ({
+    meta: [...seo({ title: 'Sign Up - Foreum', description: 'Create a Foreum account.' })],
+  }),
   component: SignUp,
 })
 

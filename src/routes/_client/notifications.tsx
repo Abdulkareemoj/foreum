@@ -6,8 +6,12 @@ import { Skeleton } from '~/components/ui/skeleton'
 import { trpc } from '~/lib/trpc'
 import { toast } from 'sonner'
 import { cn } from '~/lib/utils'
+import { seo } from '~/utils/seo'
 
 export const Route = createFileRoute('/_client/notifications')({
+  head: () => ({
+    meta: [...seo({ title: 'Notifications - Foreum' })],
+  }),
   component: NotificationsPage,
 })
 

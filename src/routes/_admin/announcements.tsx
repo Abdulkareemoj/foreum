@@ -9,8 +9,12 @@ import { trpc } from "~/lib/trpc";
 import { toast } from "sonner";
 import { RichTextEditor } from "~/components/ui/rich-text-editor";
 import { Field, FieldGroup, FieldLabel } from "~/components/ui/field";
+import { seo } from '~/utils/seo'
 
 export const Route = createFileRoute("/_admin/announcements")({
+  head: () => ({
+    meta: [...seo({ title: 'Announcements - Foreum' })],
+  }),
   component: AdminAnnouncements,
 });
 

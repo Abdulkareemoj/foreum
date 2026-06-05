@@ -4,8 +4,12 @@ import { History } from 'lucide-react';
 import { trpc } from '~/lib/trpc';
 import { DataTable } from '~/components/ui/data-table';
 import { ColumnDef } from '@tanstack/react-table';
+import { seo } from '~/utils/seo'
 
 export const Route = createFileRoute('/_admin/admin-moderation')({
+  head: () => ({
+    meta: [...seo({ title: 'Moderation - Foreum' })],
+  }),
   component: AdminModeration,
 })
 

@@ -1,7 +1,11 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { trpc } from '~/lib/trpc'
+import { seo } from '~/utils/seo'
 
 export const Route = createFileRoute('/_client/messages/')({
+  head: () => ({
+    meta: [...seo({ title: 'Messages - Foreum' })],
+  }),
   component: MessagesPage,
 })
 

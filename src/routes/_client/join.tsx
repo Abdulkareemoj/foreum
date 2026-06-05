@@ -1,8 +1,12 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Button } from '~/components/ui/button'
 import { ArrowRight, MessageSquare, TrendingUp, Users } from 'lucide-react'
+import { seo } from '~/utils/seo'
 
 export const Route = createFileRoute('/_client/join')({
+  head: () => ({
+    meta: [...seo({ title: 'Join Community - Foreum' })],
+  }),
   component: HomePage,
 })
 

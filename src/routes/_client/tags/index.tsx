@@ -2,8 +2,12 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 import { Badge } from '~/components/ui/badge'
 import { Card, CardHeader } from '~/components/ui/card'
 import { trpc } from '~/lib/trpc'
+import { seo } from '~/utils/seo'
 
 export const Route = createFileRoute('/_client/tags/')({
+  head: () => ({
+    meta: [...seo({ title: 'Tags - Foreum', description: 'Browse tags on Foreum.' })],
+  }),
   component: TagsPage,
 })
 

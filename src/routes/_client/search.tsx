@@ -19,8 +19,12 @@ import {
 import { trpc } from '~/lib/trpc'
 import { useDebounce } from '~/hooks/use-debounce'
 import { format } from 'date-fns'
+import { seo } from '~/utils/seo'
 
 export const Route = createFileRoute('/_client/search')({
+  head: () => ({
+    meta: [...seo({ title: 'Search - Foreum', description: 'Search discussions on Foreum.' })],
+  }),
   component: SearchPage,
   validateSearch: (search: Record<string, unknown>) => ({
     q: (search.q as string) || '',

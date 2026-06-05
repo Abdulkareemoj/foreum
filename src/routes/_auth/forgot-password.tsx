@@ -20,9 +20,12 @@ import { Spinner } from "~/components/ui/spinner";
 import { Mail, ArrowLeft } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { createFileRoute, Link } from "@tanstack/react-router";
-
+import { seo } from '~/utils/seo'
 
 export const Route = createFileRoute('/_auth/forgot-password')({
+  head: () => ({
+    meta: [...seo({ title: 'Forgot Password - Foreum', description: 'Reset your Foreum password.' })],
+  }),
   component: ForgotPassword,
 })
 

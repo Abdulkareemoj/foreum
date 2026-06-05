@@ -7,8 +7,12 @@ import { Skeleton } from '~/components/ui/skeleton'
 import { Button } from '~/components/ui/button'
 import { ArrowLeft } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
+import { seo } from '~/utils/seo'
 
 export const Route = createFileRoute('/_client/threads/$id')({
+  head: () => ({
+    meta: [...seo({ title: 'Thread - Foreum' })],
+  }),
   component: ThreadPage,
 })  
 

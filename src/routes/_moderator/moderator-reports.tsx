@@ -8,8 +8,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { Clock, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
 import { DataTable } from "~/components/ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
+import { seo } from '~/utils/seo'
 
 export const Route = createFileRoute("/_moderator/moderator-reports")({
+  head: () => ({
+    meta: [...seo({ title: 'Moderation Reports - Foreum' })],
+  }),
   component: ModeratorReports,
 });
 

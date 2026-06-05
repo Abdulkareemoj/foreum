@@ -6,8 +6,12 @@ import { trpc } from '~/lib/trpc'
 import { useTrpcErrorHandler } from '~/hooks/use-trpc-error'
 import { toast } from 'sonner'
 import { useEffect, useRef } from 'react'
+import { seo } from '~/utils/seo'
 
 export const Route = createFileRoute('/_client/bookmarks')({
+  head: () => ({
+    meta: [...seo({ title: 'Bookmarks - Foreum' })],
+  }),
   component: BookmarksPage,
 })
 

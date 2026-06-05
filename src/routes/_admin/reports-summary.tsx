@@ -5,13 +5,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
 import { Skeleton } from '~/components/ui/skeleton'
 import { Badge } from '~/components/ui/badge'
-import { ListChecks, AlertCircle, Loader2 } from 'lucide-react'
+import { ListChecks, AlertCircle, Loader2, Clock, CheckCircle } from 'lucide-react'
 import { trpc } from '~/lib/trpc'
 import { toast } from 'sonner'
 import { DataTable } from '~/components/ui/data-table'
 import { ColumnDef } from '@tanstack/react-table'
+import { seo } from '~/utils/seo'
 
 export const Route = createFileRoute('/_admin/reports-summary')({
+  head: () => ({
+    meta: [...seo({ title: 'Reports - Foreum' })],
+  }),
   component: AdminReports,
 })
 
@@ -102,6 +106,8 @@ function AdminReports() {
     isLoading: resolvedLoading,
   } = trpc.moderation.recentReports.useQuery({ limit: 50, resolved: true })
 
+  const { data: stats } = trpc.moderation.getStats.useQuery()
+
   const resolveReportMutation = trpc.moderation.resolveReport.useMutation({
     onSuccess: () => {
       toast.success('Report resolved successfully')
@@ -129,6 +135,36 @@ function AdminReports() {
         <p className="text-sm text-muted-foreground">
           Manage user-submitted reports on threads and replies.
         </p>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-3">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Pending Reports</CardTitle>
+            <Clock className="size-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats?.pendingReports ?? 0}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Resolved Reports</CardTitle>
+            <CheckCircle className="size-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{(stats?.totalReports ?? 0) - (stats?.pendingReports ?? 0)}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Reports</CardTitle>
+            <AlertCircle className="size-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats?.totalReports ?? 0}</div>
+          </CardContent>
+        </Card>
       </div>
 
       {pendingError && !isLoading && (

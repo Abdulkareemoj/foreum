@@ -67,7 +67,7 @@ function GroupThreadPage() {
         <h2 className="text-lg font-semibold mb-4">Replies ({replies?.length || 0})</h2>
 
         {!replies || replies.length === 0 ? (
-          <p className="text-muted-foreground">No replies yet — be the first to reply.</p>
+          <p className="text-muted-foreground">No replies yet - be the first to reply.</p>
         ) : (
           <div className="space-y-4">
             {replies.map((reply: any) => (

@@ -2,8 +2,12 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
 import { Button } from '~/components/ui/button'
 import { BookOpen, Shield, MessageCircle, ArrowRight } from 'lucide-react'
+import { seo } from '~/utils/seo'
 
 export const Route = createFileRoute('/_moderator/help-docs')({
+  head: () => ({
+    meta: [...seo({ title: 'Moderator Help - Foreum' })],
+  }),
   component: ModeratorHelp,
 })
 

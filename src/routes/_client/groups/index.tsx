@@ -4,8 +4,12 @@ import { Button } from '~/components/ui/button'
 import { Card, CardContent } from '~/components/ui/card'
 import { Input } from '~/components/ui/input'
 import { trpc } from '~/lib/trpc'
+import { seo } from '~/utils/seo'
 
 export const Route = createFileRoute('/_client/groups/')({
+  head: () => ({
+    meta: [...seo({ title: 'Groups - Foreum' })],
+  }),
   component: GroupsPage,
 })
 

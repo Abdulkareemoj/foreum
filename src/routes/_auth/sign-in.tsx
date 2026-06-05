@@ -19,9 +19,12 @@ import { Spinner } from "~/components/ui/spinner";
 import { toast } from "sonner";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { AlertCircleIcon } from "lucide-react";
-
+import { seo } from '~/utils/seo'
 
 export const Route = createFileRoute('/_auth/sign-in')({
+  head: () => ({
+    meta: [...seo({ title: 'Sign In - Foreum', description: 'Sign in to your Foreum account.' })],
+  }),
   component: SignIn,
 })
 

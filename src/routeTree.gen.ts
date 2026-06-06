@@ -10,20 +10,14 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ModeratorRouteRouteImport } from './routes/_moderator/route'
-import { Route as LandingRouteRouteImport } from './routes/_landing/route'
 import { Route as ClientRouteRouteImport } from './routes/_client/route'
 import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as AdminRouteRouteImport } from './routes/_admin/route'
-import { Route as LandingIndexRouteImport } from './routes/_landing/index'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as ModeratorModeratorReportsRouteImport } from './routes/_moderator/moderator-reports'
 import { Route as ModeratorModeratorDashboardRouteImport } from './routes/_moderator/moderator-dashboard'
 import { Route as ModeratorModerationRouteImport } from './routes/_moderator/moderation'
 import { Route as ModeratorHelpDocsRouteImport } from './routes/_moderator/help-docs'
-import { Route as LandingTermsRouteImport } from './routes/_landing/terms'
-import { Route as LandingPrivacyPolicyRouteImport } from './routes/_landing/privacy-policy'
-import { Route as LandingPricingRouteImport } from './routes/_landing/pricing'
-import { Route as LandingFeaturesRouteImport } from './routes/_landing/features'
-import { Route as LandingCookiesRouteImport } from './routes/_landing/cookies'
 import { Route as ClientSettingsRouteImport } from './routes/_client/settings'
 import { Route as ClientSearchRouteImport } from './routes/_client/search'
 import { Route as ClientNotificationsRouteImport } from './routes/_client/notifications'
@@ -41,11 +35,9 @@ import { Route as AdminHelpRouteImport } from './routes/_admin/help'
 import { Route as AdminAppearanceRouteImport } from './routes/_admin/appearance'
 import { Route as AdminAnnouncementsRouteImport } from './routes/_admin/announcements'
 import { Route as AdminAdminSettingsRouteImport } from './routes/_admin/admin-settings'
-import { Route as AdminAdminReportsRouteImport } from './routes/_admin/admin-reports'
 import { Route as AdminAdminModerationRouteImport } from './routes/_admin/admin-moderation'
 import { Route as AdminAdminDashboardRouteImport } from './routes/_admin/admin-dashboard'
 import { Route as AdminAdminAnalyticsRouteImport } from './routes/_admin/admin-analytics'
-import { Route as LandingSolutionIndexRouteImport } from './routes/_landing/solution/index'
 import { Route as ClientThreadsIndexRouteImport } from './routes/_client/threads/index'
 import { Route as ClientTagsIndexRouteImport } from './routes/_client/tags/index'
 import { Route as ClientResourcesIndexRouteImport } from './routes/_client/resources/index'
@@ -55,13 +47,6 @@ import { Route as ClientEventsIndexRouteImport } from './routes/_client/events/i
 import { Route as ClientCategoryIndexRouteImport } from './routes/_client/category/index'
 import { Route as ApiTrpcSplatRouteImport } from './routes/api/trpc/$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
-import { Route as LandingSolutionStartupsRouteImport } from './routes/_landing/solution/startups'
-import { Route as LandingSolutionOrganizationsRouteImport } from './routes/_landing/solution/organizations'
-import { Route as LandingSolutionManagementRouteImport } from './routes/_landing/solution/management'
-import { Route as LandingSolutionFreelancersRouteImport } from './routes/_landing/solution/freelancers'
-import { Route as LandingSolutionEducationRouteImport } from './routes/_landing/solution/education'
-import { Route as LandingSolutionDesignRouteImport } from './routes/_landing/solution/design'
-import { Route as LandingSolutionCollaborationRouteImport } from './routes/_landing/solution/collaboration'
 import { Route as ClientThreadsNewRouteImport } from './routes/_client/threads/new'
 import { Route as ClientThreadsIdRouteImport } from './routes/_client/threads/$id'
 import { Route as ClientTagsSlugRouteImport } from './routes/_client/tags/$slug'
@@ -72,7 +57,6 @@ import { Route as ClientEventsNewRouteImport } from './routes/_client/events/new
 import { Route as ClientEventsIdRouteImport } from './routes/_client/events/$id'
 import { Route as ClientCategorySlugRouteImport } from './routes/_client/category/$slug'
 import { Route as ClientGroupsSlugIndexRouteImport } from './routes/_client/groups/$slug/index'
-import { Route as ApiApiAuthSplatRouteImport } from './routes/api/api.auth.$'
 import { Route as ClientThreadsIdEditRouteImport } from './routes/_client/threads/$id.edit'
 import { Route as ClientProfileUsernameReputationRouteImport } from './routes/_client/profile/$username/reputation'
 import { Route as ClientProfileUsernameEditRouteImport } from './routes/_client/profile/$username/edit'
@@ -88,10 +72,6 @@ const ModeratorRouteRoute = ModeratorRouteRouteImport.update({
   id: '/_moderator',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LandingRouteRoute = LandingRouteRouteImport.update({
-  id: '/_landing',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ClientRouteRoute = ClientRouteRouteImport.update({
   id: '/_client',
   getParentRoute: () => rootRouteImport,
@@ -104,10 +84,10 @@ const AdminRouteRoute = AdminRouteRouteImport.update({
   id: '/_admin',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LandingIndexRoute = LandingIndexRouteImport.update({
+const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => LandingRouteRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ModeratorModeratorReportsRoute =
   ModeratorModeratorReportsRouteImport.update({
@@ -130,31 +110,6 @@ const ModeratorHelpDocsRoute = ModeratorHelpDocsRouteImport.update({
   id: '/help-docs',
   path: '/help-docs',
   getParentRoute: () => ModeratorRouteRoute,
-} as any)
-const LandingTermsRoute = LandingTermsRouteImport.update({
-  id: '/terms',
-  path: '/terms',
-  getParentRoute: () => LandingRouteRoute,
-} as any)
-const LandingPrivacyPolicyRoute = LandingPrivacyPolicyRouteImport.update({
-  id: '/privacy-policy',
-  path: '/privacy-policy',
-  getParentRoute: () => LandingRouteRoute,
-} as any)
-const LandingPricingRoute = LandingPricingRouteImport.update({
-  id: '/pricing',
-  path: '/pricing',
-  getParentRoute: () => LandingRouteRoute,
-} as any)
-const LandingFeaturesRoute = LandingFeaturesRouteImport.update({
-  id: '/features',
-  path: '/features',
-  getParentRoute: () => LandingRouteRoute,
-} as any)
-const LandingCookiesRoute = LandingCookiesRouteImport.update({
-  id: '/cookies',
-  path: '/cookies',
-  getParentRoute: () => LandingRouteRoute,
 } as any)
 const ClientSettingsRoute = ClientSettingsRouteImport.update({
   id: '/settings',
@@ -241,11 +196,6 @@ const AdminAdminSettingsRoute = AdminAdminSettingsRouteImport.update({
   path: '/admin-settings',
   getParentRoute: () => AdminRouteRoute,
 } as any)
-const AdminAdminReportsRoute = AdminAdminReportsRouteImport.update({
-  id: '/admin-reports',
-  path: '/admin-reports',
-  getParentRoute: () => AdminRouteRoute,
-} as any)
 const AdminAdminModerationRoute = AdminAdminModerationRouteImport.update({
   id: '/admin-moderation',
   path: '/admin-moderation',
@@ -260,11 +210,6 @@ const AdminAdminAnalyticsRoute = AdminAdminAnalyticsRouteImport.update({
   id: '/admin-analytics',
   path: '/admin-analytics',
   getParentRoute: () => AdminRouteRoute,
-} as any)
-const LandingSolutionIndexRoute = LandingSolutionIndexRouteImport.update({
-  id: '/solution/',
-  path: '/solution/',
-  getParentRoute: () => LandingRouteRoute,
 } as any)
 const ClientThreadsIndexRoute = ClientThreadsIndexRouteImport.update({
   id: '/threads/',
@@ -311,46 +256,6 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LandingSolutionStartupsRoute = LandingSolutionStartupsRouteImport.update({
-  id: '/solution/startups',
-  path: '/solution/startups',
-  getParentRoute: () => LandingRouteRoute,
-} as any)
-const LandingSolutionOrganizationsRoute =
-  LandingSolutionOrganizationsRouteImport.update({
-    id: '/solution/organizations',
-    path: '/solution/organizations',
-    getParentRoute: () => LandingRouteRoute,
-  } as any)
-const LandingSolutionManagementRoute =
-  LandingSolutionManagementRouteImport.update({
-    id: '/solution/management',
-    path: '/solution/management',
-    getParentRoute: () => LandingRouteRoute,
-  } as any)
-const LandingSolutionFreelancersRoute =
-  LandingSolutionFreelancersRouteImport.update({
-    id: '/solution/freelancers',
-    path: '/solution/freelancers',
-    getParentRoute: () => LandingRouteRoute,
-  } as any)
-const LandingSolutionEducationRoute =
-  LandingSolutionEducationRouteImport.update({
-    id: '/solution/education',
-    path: '/solution/education',
-    getParentRoute: () => LandingRouteRoute,
-  } as any)
-const LandingSolutionDesignRoute = LandingSolutionDesignRouteImport.update({
-  id: '/solution/design',
-  path: '/solution/design',
-  getParentRoute: () => LandingRouteRoute,
-} as any)
-const LandingSolutionCollaborationRoute =
-  LandingSolutionCollaborationRouteImport.update({
-    id: '/solution/collaboration',
-    path: '/solution/collaboration',
-    getParentRoute: () => LandingRouteRoute,
-  } as any)
 const ClientThreadsNewRoute = ClientThreadsNewRouteImport.update({
   id: '/threads/new',
   path: '/threads/new',
@@ -400,11 +305,6 @@ const ClientGroupsSlugIndexRoute = ClientGroupsSlugIndexRouteImport.update({
   id: '/groups/$slug/',
   path: '/groups/$slug/',
   getParentRoute: () => ClientRouteRoute,
-} as any)
-const ApiApiAuthSplatRoute = ApiApiAuthSplatRouteImport.update({
-  id: '/api/api/auth/$',
-  path: '/api/api/auth/$',
-  getParentRoute: () => rootRouteImport,
 } as any)
 const ClientThreadsIdEditRoute = ClientThreadsIdEditRouteImport.update({
   id: '/edit',
@@ -465,11 +365,10 @@ const ClientThreadsThreadIdReplyReplyIdEditRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof LandingIndexRoute
+  '/': typeof IndexRoute
   '/admin-analytics': typeof AdminAdminAnalyticsRoute
   '/admin-dashboard': typeof AdminAdminDashboardRoute
   '/admin-moderation': typeof AdminAdminModerationRoute
-  '/admin-reports': typeof AdminAdminReportsRoute
   '/admin-settings': typeof AdminAdminSettingsRoute
   '/announcements': typeof AdminAnnouncementsRoute
   '/appearance': typeof AdminAppearanceRoute
@@ -487,11 +386,6 @@ export interface FileRoutesByFullPath {
   '/notifications': typeof ClientNotificationsRoute
   '/search': typeof ClientSearchRoute
   '/settings': typeof ClientSettingsRoute
-  '/cookies': typeof LandingCookiesRoute
-  '/features': typeof LandingFeaturesRoute
-  '/pricing': typeof LandingPricingRoute
-  '/privacy-policy': typeof LandingPrivacyPolicyRoute
-  '/terms': typeof LandingTermsRoute
   '/help-docs': typeof ModeratorHelpDocsRoute
   '/moderation': typeof ModeratorModerationRoute
   '/moderator-dashboard': typeof ModeratorModeratorDashboardRoute
@@ -505,13 +399,6 @@ export interface FileRoutesByFullPath {
   '/tags/$slug': typeof ClientTagsSlugRoute
   '/threads/$id': typeof ClientThreadsIdRouteWithChildren
   '/threads/new': typeof ClientThreadsNewRoute
-  '/solution/collaboration': typeof LandingSolutionCollaborationRoute
-  '/solution/design': typeof LandingSolutionDesignRoute
-  '/solution/education': typeof LandingSolutionEducationRoute
-  '/solution/freelancers': typeof LandingSolutionFreelancersRoute
-  '/solution/management': typeof LandingSolutionManagementRoute
-  '/solution/organizations': typeof LandingSolutionOrganizationsRoute
-  '/solution/startups': typeof LandingSolutionStartupsRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/category/': typeof ClientCategoryIndexRoute
@@ -521,7 +408,6 @@ export interface FileRoutesByFullPath {
   '/resources/': typeof ClientResourcesIndexRoute
   '/tags/': typeof ClientTagsIndexRoute
   '/threads/': typeof ClientThreadsIndexRoute
-  '/solution/': typeof LandingSolutionIndexRoute
   '/groups/$slug/events': typeof ClientGroupsSlugEventsRoute
   '/groups/$slug/members': typeof ClientGroupsSlugMembersRoute
   '/groups/$slug/settings': typeof ClientGroupsSlugSettingsRoute
@@ -529,18 +415,16 @@ export interface FileRoutesByFullPath {
   '/profile/$username/edit': typeof ClientProfileUsernameEditRoute
   '/profile/$username/reputation': typeof ClientProfileUsernameReputationRoute
   '/threads/$id/edit': typeof ClientThreadsIdEditRoute
-  '/api/api/auth/$': typeof ApiApiAuthSplatRoute
   '/groups/$slug/': typeof ClientGroupsSlugIndexRoute
   '/groups/$slug/forum/$threadId': typeof ClientGroupsSlugForumThreadIdRoute
   '/groups/$slug/forum/': typeof ClientGroupsSlugForumIndexRoute
   '/threads/$threadId/reply/$replyId/edit': typeof ClientThreadsThreadIdReplyReplyIdEditRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof LandingIndexRoute
+  '/': typeof IndexRoute
   '/admin-analytics': typeof AdminAdminAnalyticsRoute
   '/admin-dashboard': typeof AdminAdminDashboardRoute
   '/admin-moderation': typeof AdminAdminModerationRoute
-  '/admin-reports': typeof AdminAdminReportsRoute
   '/admin-settings': typeof AdminAdminSettingsRoute
   '/announcements': typeof AdminAnnouncementsRoute
   '/appearance': typeof AdminAppearanceRoute
@@ -558,11 +442,6 @@ export interface FileRoutesByTo {
   '/notifications': typeof ClientNotificationsRoute
   '/search': typeof ClientSearchRoute
   '/settings': typeof ClientSettingsRoute
-  '/cookies': typeof LandingCookiesRoute
-  '/features': typeof LandingFeaturesRoute
-  '/pricing': typeof LandingPricingRoute
-  '/privacy-policy': typeof LandingPrivacyPolicyRoute
-  '/terms': typeof LandingTermsRoute
   '/help-docs': typeof ModeratorHelpDocsRoute
   '/moderation': typeof ModeratorModerationRoute
   '/moderator-dashboard': typeof ModeratorModeratorDashboardRoute
@@ -576,13 +455,6 @@ export interface FileRoutesByTo {
   '/tags/$slug': typeof ClientTagsSlugRoute
   '/threads/$id': typeof ClientThreadsIdRouteWithChildren
   '/threads/new': typeof ClientThreadsNewRoute
-  '/solution/collaboration': typeof LandingSolutionCollaborationRoute
-  '/solution/design': typeof LandingSolutionDesignRoute
-  '/solution/education': typeof LandingSolutionEducationRoute
-  '/solution/freelancers': typeof LandingSolutionFreelancersRoute
-  '/solution/management': typeof LandingSolutionManagementRoute
-  '/solution/organizations': typeof LandingSolutionOrganizationsRoute
-  '/solution/startups': typeof LandingSolutionStartupsRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/category': typeof ClientCategoryIndexRoute
@@ -592,7 +464,6 @@ export interface FileRoutesByTo {
   '/resources': typeof ClientResourcesIndexRoute
   '/tags': typeof ClientTagsIndexRoute
   '/threads': typeof ClientThreadsIndexRoute
-  '/solution': typeof LandingSolutionIndexRoute
   '/groups/$slug/events': typeof ClientGroupsSlugEventsRoute
   '/groups/$slug/members': typeof ClientGroupsSlugMembersRoute
   '/groups/$slug/settings': typeof ClientGroupsSlugSettingsRoute
@@ -600,7 +471,6 @@ export interface FileRoutesByTo {
   '/profile/$username/edit': typeof ClientProfileUsernameEditRoute
   '/profile/$username/reputation': typeof ClientProfileUsernameReputationRoute
   '/threads/$id/edit': typeof ClientThreadsIdEditRoute
-  '/api/api/auth/$': typeof ApiApiAuthSplatRoute
   '/groups/$slug': typeof ClientGroupsSlugIndexRoute
   '/groups/$slug/forum/$threadId': typeof ClientGroupsSlugForumThreadIdRoute
   '/groups/$slug/forum': typeof ClientGroupsSlugForumIndexRoute
@@ -608,15 +478,14 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
   '/_admin': typeof AdminRouteRouteWithChildren
   '/_auth': typeof AuthRouteRouteWithChildren
   '/_client': typeof ClientRouteRouteWithChildren
-  '/_landing': typeof LandingRouteRouteWithChildren
   '/_moderator': typeof ModeratorRouteRouteWithChildren
   '/_admin/admin-analytics': typeof AdminAdminAnalyticsRoute
   '/_admin/admin-dashboard': typeof AdminAdminDashboardRoute
   '/_admin/admin-moderation': typeof AdminAdminModerationRoute
-  '/_admin/admin-reports': typeof AdminAdminReportsRoute
   '/_admin/admin-settings': typeof AdminAdminSettingsRoute
   '/_admin/announcements': typeof AdminAnnouncementsRoute
   '/_admin/appearance': typeof AdminAppearanceRoute
@@ -634,16 +503,10 @@ export interface FileRoutesById {
   '/_client/notifications': typeof ClientNotificationsRoute
   '/_client/search': typeof ClientSearchRoute
   '/_client/settings': typeof ClientSettingsRoute
-  '/_landing/cookies': typeof LandingCookiesRoute
-  '/_landing/features': typeof LandingFeaturesRoute
-  '/_landing/pricing': typeof LandingPricingRoute
-  '/_landing/privacy-policy': typeof LandingPrivacyPolicyRoute
-  '/_landing/terms': typeof LandingTermsRoute
   '/_moderator/help-docs': typeof ModeratorHelpDocsRoute
   '/_moderator/moderation': typeof ModeratorModerationRoute
   '/_moderator/moderator-dashboard': typeof ModeratorModeratorDashboardRoute
   '/_moderator/moderator-reports': typeof ModeratorModeratorReportsRoute
-  '/_landing/': typeof LandingIndexRoute
   '/_client/category/$slug': typeof ClientCategorySlugRoute
   '/_client/events/$id': typeof ClientEventsIdRoute
   '/_client/events/new': typeof ClientEventsNewRoute
@@ -653,13 +516,6 @@ export interface FileRoutesById {
   '/_client/tags/$slug': typeof ClientTagsSlugRoute
   '/_client/threads/$id': typeof ClientThreadsIdRouteWithChildren
   '/_client/threads/new': typeof ClientThreadsNewRoute
-  '/_landing/solution/collaboration': typeof LandingSolutionCollaborationRoute
-  '/_landing/solution/design': typeof LandingSolutionDesignRoute
-  '/_landing/solution/education': typeof LandingSolutionEducationRoute
-  '/_landing/solution/freelancers': typeof LandingSolutionFreelancersRoute
-  '/_landing/solution/management': typeof LandingSolutionManagementRoute
-  '/_landing/solution/organizations': typeof LandingSolutionOrganizationsRoute
-  '/_landing/solution/startups': typeof LandingSolutionStartupsRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/_client/category/': typeof ClientCategoryIndexRoute
@@ -669,7 +525,6 @@ export interface FileRoutesById {
   '/_client/resources/': typeof ClientResourcesIndexRoute
   '/_client/tags/': typeof ClientTagsIndexRoute
   '/_client/threads/': typeof ClientThreadsIndexRoute
-  '/_landing/solution/': typeof LandingSolutionIndexRoute
   '/_client/groups/$slug/events': typeof ClientGroupsSlugEventsRoute
   '/_client/groups/$slug/members': typeof ClientGroupsSlugMembersRoute
   '/_client/groups/$slug/settings': typeof ClientGroupsSlugSettingsRoute
@@ -677,7 +532,6 @@ export interface FileRoutesById {
   '/_client/profile/$username/edit': typeof ClientProfileUsernameEditRoute
   '/_client/profile/$username/reputation': typeof ClientProfileUsernameReputationRoute
   '/_client/threads/$id/edit': typeof ClientThreadsIdEditRoute
-  '/api/api/auth/$': typeof ApiApiAuthSplatRoute
   '/_client/groups/$slug/': typeof ClientGroupsSlugIndexRoute
   '/_client/groups/$slug/forum/$threadId': typeof ClientGroupsSlugForumThreadIdRoute
   '/_client/groups/$slug/forum/': typeof ClientGroupsSlugForumIndexRoute
@@ -690,7 +544,6 @@ export interface FileRouteTypes {
     | '/admin-analytics'
     | '/admin-dashboard'
     | '/admin-moderation'
-    | '/admin-reports'
     | '/admin-settings'
     | '/announcements'
     | '/appearance'
@@ -708,11 +561,6 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/search'
     | '/settings'
-    | '/cookies'
-    | '/features'
-    | '/pricing'
-    | '/privacy-policy'
-    | '/terms'
     | '/help-docs'
     | '/moderation'
     | '/moderator-dashboard'
@@ -726,13 +574,6 @@ export interface FileRouteTypes {
     | '/tags/$slug'
     | '/threads/$id'
     | '/threads/new'
-    | '/solution/collaboration'
-    | '/solution/design'
-    | '/solution/education'
-    | '/solution/freelancers'
-    | '/solution/management'
-    | '/solution/organizations'
-    | '/solution/startups'
     | '/api/auth/$'
     | '/api/trpc/$'
     | '/category/'
@@ -742,7 +583,6 @@ export interface FileRouteTypes {
     | '/resources/'
     | '/tags/'
     | '/threads/'
-    | '/solution/'
     | '/groups/$slug/events'
     | '/groups/$slug/members'
     | '/groups/$slug/settings'
@@ -750,7 +590,6 @@ export interface FileRouteTypes {
     | '/profile/$username/edit'
     | '/profile/$username/reputation'
     | '/threads/$id/edit'
-    | '/api/api/auth/$'
     | '/groups/$slug/'
     | '/groups/$slug/forum/$threadId'
     | '/groups/$slug/forum/'
@@ -761,7 +600,6 @@ export interface FileRouteTypes {
     | '/admin-analytics'
     | '/admin-dashboard'
     | '/admin-moderation'
-    | '/admin-reports'
     | '/admin-settings'
     | '/announcements'
     | '/appearance'
@@ -779,11 +617,6 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/search'
     | '/settings'
-    | '/cookies'
-    | '/features'
-    | '/pricing'
-    | '/privacy-policy'
-    | '/terms'
     | '/help-docs'
     | '/moderation'
     | '/moderator-dashboard'
@@ -797,13 +630,6 @@ export interface FileRouteTypes {
     | '/tags/$slug'
     | '/threads/$id'
     | '/threads/new'
-    | '/solution/collaboration'
-    | '/solution/design'
-    | '/solution/education'
-    | '/solution/freelancers'
-    | '/solution/management'
-    | '/solution/organizations'
-    | '/solution/startups'
     | '/api/auth/$'
     | '/api/trpc/$'
     | '/category'
@@ -813,7 +639,6 @@ export interface FileRouteTypes {
     | '/resources'
     | '/tags'
     | '/threads'
-    | '/solution'
     | '/groups/$slug/events'
     | '/groups/$slug/members'
     | '/groups/$slug/settings'
@@ -821,22 +646,20 @@ export interface FileRouteTypes {
     | '/profile/$username/edit'
     | '/profile/$username/reputation'
     | '/threads/$id/edit'
-    | '/api/api/auth/$'
     | '/groups/$slug'
     | '/groups/$slug/forum/$threadId'
     | '/groups/$slug/forum'
     | '/threads/$threadId/reply/$replyId/edit'
   id:
     | '__root__'
+    | '/'
     | '/_admin'
     | '/_auth'
     | '/_client'
-    | '/_landing'
     | '/_moderator'
     | '/_admin/admin-analytics'
     | '/_admin/admin-dashboard'
     | '/_admin/admin-moderation'
-    | '/_admin/admin-reports'
     | '/_admin/admin-settings'
     | '/_admin/announcements'
     | '/_admin/appearance'
@@ -854,16 +677,10 @@ export interface FileRouteTypes {
     | '/_client/notifications'
     | '/_client/search'
     | '/_client/settings'
-    | '/_landing/cookies'
-    | '/_landing/features'
-    | '/_landing/pricing'
-    | '/_landing/privacy-policy'
-    | '/_landing/terms'
     | '/_moderator/help-docs'
     | '/_moderator/moderation'
     | '/_moderator/moderator-dashboard'
     | '/_moderator/moderator-reports'
-    | '/_landing/'
     | '/_client/category/$slug'
     | '/_client/events/$id'
     | '/_client/events/new'
@@ -873,13 +690,6 @@ export interface FileRouteTypes {
     | '/_client/tags/$slug'
     | '/_client/threads/$id'
     | '/_client/threads/new'
-    | '/_landing/solution/collaboration'
-    | '/_landing/solution/design'
-    | '/_landing/solution/education'
-    | '/_landing/solution/freelancers'
-    | '/_landing/solution/management'
-    | '/_landing/solution/organizations'
-    | '/_landing/solution/startups'
     | '/api/auth/$'
     | '/api/trpc/$'
     | '/_client/category/'
@@ -889,7 +699,6 @@ export interface FileRouteTypes {
     | '/_client/resources/'
     | '/_client/tags/'
     | '/_client/threads/'
-    | '/_landing/solution/'
     | '/_client/groups/$slug/events'
     | '/_client/groups/$slug/members'
     | '/_client/groups/$slug/settings'
@@ -897,7 +706,6 @@ export interface FileRouteTypes {
     | '/_client/profile/$username/edit'
     | '/_client/profile/$username/reputation'
     | '/_client/threads/$id/edit'
-    | '/api/api/auth/$'
     | '/_client/groups/$slug/'
     | '/_client/groups/$slug/forum/$threadId'
     | '/_client/groups/$slug/forum/'
@@ -905,14 +713,13 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
   AdminRouteRoute: typeof AdminRouteRouteWithChildren
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
   ClientRouteRoute: typeof ClientRouteRouteWithChildren
-  LandingRouteRoute: typeof LandingRouteRouteWithChildren
   ModeratorRouteRoute: typeof ModeratorRouteRouteWithChildren
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiTrpcSplatRoute: typeof ApiTrpcSplatRoute
-  ApiApiAuthSplatRoute: typeof ApiApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -922,13 +729,6 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof ModeratorRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_landing': {
-      id: '/_landing'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof LandingRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_client': {
@@ -952,12 +752,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_landing/': {
-      id: '/_landing/'
+    '/': {
+      id: '/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof LandingIndexRouteImport
-      parentRoute: typeof LandingRouteRoute
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_moderator/moderator-reports': {
       id: '/_moderator/moderator-reports'
@@ -986,41 +786,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/help-docs'
       preLoaderRoute: typeof ModeratorHelpDocsRouteImport
       parentRoute: typeof ModeratorRouteRoute
-    }
-    '/_landing/terms': {
-      id: '/_landing/terms'
-      path: '/terms'
-      fullPath: '/terms'
-      preLoaderRoute: typeof LandingTermsRouteImport
-      parentRoute: typeof LandingRouteRoute
-    }
-    '/_landing/privacy-policy': {
-      id: '/_landing/privacy-policy'
-      path: '/privacy-policy'
-      fullPath: '/privacy-policy'
-      preLoaderRoute: typeof LandingPrivacyPolicyRouteImport
-      parentRoute: typeof LandingRouteRoute
-    }
-    '/_landing/pricing': {
-      id: '/_landing/pricing'
-      path: '/pricing'
-      fullPath: '/pricing'
-      preLoaderRoute: typeof LandingPricingRouteImport
-      parentRoute: typeof LandingRouteRoute
-    }
-    '/_landing/features': {
-      id: '/_landing/features'
-      path: '/features'
-      fullPath: '/features'
-      preLoaderRoute: typeof LandingFeaturesRouteImport
-      parentRoute: typeof LandingRouteRoute
-    }
-    '/_landing/cookies': {
-      id: '/_landing/cookies'
-      path: '/cookies'
-      fullPath: '/cookies'
-      preLoaderRoute: typeof LandingCookiesRouteImport
-      parentRoute: typeof LandingRouteRoute
     }
     '/_client/settings': {
       id: '/_client/settings'
@@ -1141,13 +906,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdminSettingsRouteImport
       parentRoute: typeof AdminRouteRoute
     }
-    '/_admin/admin-reports': {
-      id: '/_admin/admin-reports'
-      path: '/admin-reports'
-      fullPath: '/admin-reports'
-      preLoaderRoute: typeof AdminAdminReportsRouteImport
-      parentRoute: typeof AdminRouteRoute
-    }
     '/_admin/admin-moderation': {
       id: '/_admin/admin-moderation'
       path: '/admin-moderation'
@@ -1168,13 +926,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin-analytics'
       preLoaderRoute: typeof AdminAdminAnalyticsRouteImport
       parentRoute: typeof AdminRouteRoute
-    }
-    '/_landing/solution/': {
-      id: '/_landing/solution/'
-      path: '/solution'
-      fullPath: '/solution/'
-      preLoaderRoute: typeof LandingSolutionIndexRouteImport
-      parentRoute: typeof LandingRouteRoute
     }
     '/_client/threads/': {
       id: '/_client/threads/'
@@ -1238,55 +989,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/auth/$'
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/_landing/solution/startups': {
-      id: '/_landing/solution/startups'
-      path: '/solution/startups'
-      fullPath: '/solution/startups'
-      preLoaderRoute: typeof LandingSolutionStartupsRouteImport
-      parentRoute: typeof LandingRouteRoute
-    }
-    '/_landing/solution/organizations': {
-      id: '/_landing/solution/organizations'
-      path: '/solution/organizations'
-      fullPath: '/solution/organizations'
-      preLoaderRoute: typeof LandingSolutionOrganizationsRouteImport
-      parentRoute: typeof LandingRouteRoute
-    }
-    '/_landing/solution/management': {
-      id: '/_landing/solution/management'
-      path: '/solution/management'
-      fullPath: '/solution/management'
-      preLoaderRoute: typeof LandingSolutionManagementRouteImport
-      parentRoute: typeof LandingRouteRoute
-    }
-    '/_landing/solution/freelancers': {
-      id: '/_landing/solution/freelancers'
-      path: '/solution/freelancers'
-      fullPath: '/solution/freelancers'
-      preLoaderRoute: typeof LandingSolutionFreelancersRouteImport
-      parentRoute: typeof LandingRouteRoute
-    }
-    '/_landing/solution/education': {
-      id: '/_landing/solution/education'
-      path: '/solution/education'
-      fullPath: '/solution/education'
-      preLoaderRoute: typeof LandingSolutionEducationRouteImport
-      parentRoute: typeof LandingRouteRoute
-    }
-    '/_landing/solution/design': {
-      id: '/_landing/solution/design'
-      path: '/solution/design'
-      fullPath: '/solution/design'
-      preLoaderRoute: typeof LandingSolutionDesignRouteImport
-      parentRoute: typeof LandingRouteRoute
-    }
-    '/_landing/solution/collaboration': {
-      id: '/_landing/solution/collaboration'
-      path: '/solution/collaboration'
-      fullPath: '/solution/collaboration'
-      preLoaderRoute: typeof LandingSolutionCollaborationRouteImport
-      parentRoute: typeof LandingRouteRoute
     }
     '/_client/threads/new': {
       id: '/_client/threads/new'
@@ -1357,13 +1059,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/groups/$slug/'
       preLoaderRoute: typeof ClientGroupsSlugIndexRouteImport
       parentRoute: typeof ClientRouteRoute
-    }
-    '/api/api/auth/$': {
-      id: '/api/api/auth/$'
-      path: '/api/api/auth/$'
-      fullPath: '/api/api/auth/$'
-      preLoaderRoute: typeof ApiApiAuthSplatRouteImport
-      parentRoute: typeof rootRouteImport
     }
     '/_client/threads/$id/edit': {
       id: '/_client/threads/$id/edit'
@@ -1442,7 +1137,6 @@ interface AdminRouteRouteChildren {
   AdminAdminAnalyticsRoute: typeof AdminAdminAnalyticsRoute
   AdminAdminDashboardRoute: typeof AdminAdminDashboardRoute
   AdminAdminModerationRoute: typeof AdminAdminModerationRoute
-  AdminAdminReportsRoute: typeof AdminAdminReportsRoute
   AdminAdminSettingsRoute: typeof AdminAdminSettingsRoute
   AdminAnnouncementsRoute: typeof AdminAnnouncementsRoute
   AdminAppearanceRoute: typeof AdminAppearanceRoute
@@ -1455,7 +1149,6 @@ const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminAdminAnalyticsRoute: AdminAdminAnalyticsRoute,
   AdminAdminDashboardRoute: AdminAdminDashboardRoute,
   AdminAdminModerationRoute: AdminAdminModerationRoute,
-  AdminAdminReportsRoute: AdminAdminReportsRoute,
   AdminAdminSettingsRoute: AdminAdminSettingsRoute,
   AdminAnnouncementsRoute: AdminAnnouncementsRoute,
   AdminAppearanceRoute: AdminAppearanceRoute,
@@ -1586,44 +1279,6 @@ const ClientRouteRouteWithChildren = ClientRouteRoute._addFileChildren(
   ClientRouteRouteChildren,
 )
 
-interface LandingRouteRouteChildren {
-  LandingCookiesRoute: typeof LandingCookiesRoute
-  LandingFeaturesRoute: typeof LandingFeaturesRoute
-  LandingPricingRoute: typeof LandingPricingRoute
-  LandingPrivacyPolicyRoute: typeof LandingPrivacyPolicyRoute
-  LandingTermsRoute: typeof LandingTermsRoute
-  LandingIndexRoute: typeof LandingIndexRoute
-  LandingSolutionCollaborationRoute: typeof LandingSolutionCollaborationRoute
-  LandingSolutionDesignRoute: typeof LandingSolutionDesignRoute
-  LandingSolutionEducationRoute: typeof LandingSolutionEducationRoute
-  LandingSolutionFreelancersRoute: typeof LandingSolutionFreelancersRoute
-  LandingSolutionManagementRoute: typeof LandingSolutionManagementRoute
-  LandingSolutionOrganizationsRoute: typeof LandingSolutionOrganizationsRoute
-  LandingSolutionStartupsRoute: typeof LandingSolutionStartupsRoute
-  LandingSolutionIndexRoute: typeof LandingSolutionIndexRoute
-}
-
-const LandingRouteRouteChildren: LandingRouteRouteChildren = {
-  LandingCookiesRoute: LandingCookiesRoute,
-  LandingFeaturesRoute: LandingFeaturesRoute,
-  LandingPricingRoute: LandingPricingRoute,
-  LandingPrivacyPolicyRoute: LandingPrivacyPolicyRoute,
-  LandingTermsRoute: LandingTermsRoute,
-  LandingIndexRoute: LandingIndexRoute,
-  LandingSolutionCollaborationRoute: LandingSolutionCollaborationRoute,
-  LandingSolutionDesignRoute: LandingSolutionDesignRoute,
-  LandingSolutionEducationRoute: LandingSolutionEducationRoute,
-  LandingSolutionFreelancersRoute: LandingSolutionFreelancersRoute,
-  LandingSolutionManagementRoute: LandingSolutionManagementRoute,
-  LandingSolutionOrganizationsRoute: LandingSolutionOrganizationsRoute,
-  LandingSolutionStartupsRoute: LandingSolutionStartupsRoute,
-  LandingSolutionIndexRoute: LandingSolutionIndexRoute,
-}
-
-const LandingRouteRouteWithChildren = LandingRouteRoute._addFileChildren(
-  LandingRouteRouteChildren,
-)
-
 interface ModeratorRouteRouteChildren {
   ModeratorHelpDocsRoute: typeof ModeratorHelpDocsRoute
   ModeratorModerationRoute: typeof ModeratorModerationRoute
@@ -1643,14 +1298,13 @@ const ModeratorRouteRouteWithChildren = ModeratorRouteRoute._addFileChildren(
 )
 
 const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
   AdminRouteRoute: AdminRouteRouteWithChildren,
   AuthRouteRoute: AuthRouteRouteWithChildren,
   ClientRouteRoute: ClientRouteRouteWithChildren,
-  LandingRouteRoute: LandingRouteRouteWithChildren,
   ModeratorRouteRoute: ModeratorRouteRouteWithChildren,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiTrpcSplatRoute: ApiTrpcSplatRoute,
-  ApiApiAuthSplatRoute: ApiApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

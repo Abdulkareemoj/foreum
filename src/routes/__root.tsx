@@ -26,9 +26,8 @@ export const Route = createRootRoute({
         content: 'width=device-width, initial-scale=1',
       },
       ...seo({
-        title:
-          'TanStack Start | Type-Safe, Client-First, Full-Stack React Framework',
-        description: `TanStack Start is a type-safe, client-first, full-stack React framework. `,
+        title: 'Foreum - Modern Forum Platform',
+        description: 'A modern forum platform for communities and discussions.',
       }),
     ],
     links: [
@@ -69,7 +68,7 @@ import { GlobalThemeApplier } from '~/components/global-theme-applier'
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html>
+    <html suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
@@ -77,7 +76,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <TRPCProvider>
           <GlobalThemeApplier />
           <TooltipProvider>
-            <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+            <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme" attribute="class">
               {children}
             </ThemeProvider>
           </TooltipProvider>

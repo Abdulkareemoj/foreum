@@ -7,6 +7,5 @@ export default defineConfig({
 	dialect: 'postgresql',
 	dbCredentials: { url: process.env.DATABASE_URL },
 	verbose: true,
-	strict: true,
-	tablesFilter: ['forum-app_*']
+	strict: true
 });

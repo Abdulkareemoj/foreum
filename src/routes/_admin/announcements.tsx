@@ -9,11 +9,11 @@ import { trpc } from "~/lib/trpc";
 import { toast } from "sonner";
 import { RichTextEditor } from "~/components/ui/rich-text-editor";
 import { Field, FieldGroup, FieldLabel } from "~/components/ui/field";
-import { seo } from '~/utils/seo'
+import { seo } from "~/utils/seo";
 
 export const Route = createFileRoute("/_admin/announcements")({
   head: () => ({
-    meta: [...seo({ title: 'Announcements - Foreum' })],
+    meta: [...seo({ title: "Announcements - Foreum" })],
   }),
   component: AdminAnnouncements,
 });
@@ -21,7 +21,7 @@ export const Route = createFileRoute("/_admin/announcements")({
 function AdminAnnouncements() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  
+
   const utils = trpc.useUtils();
 
   const { data: announcements, isLoading } = trpc.announcement.list.useQuery();
@@ -78,21 +78,28 @@ function AdminAnnouncements() {
         </CardHeader>
         <CardContent className="divide-y">
           {isLoading ? (
-            <p className="text-sm text-muted-foreground py-4">Loading announcements...</p>
+            <p className="text-sm text-muted-foreground py-4">
+              Loading announcements...
+            </p>
           ) : !announcements || announcements.length === 0 ? (
-            <p className="text-sm text-muted-foreground py-4">No announcements found.</p>
+            <p className="text-sm text-muted-foreground py-4">
+              No announcements found.
+            </p>
           ) : (
             announcements.map((ann) => (
-              <div key={ann.id} className="flex items-center justify-between py-4">
+              <div
+                key={ann.id}
+                className="flex items-center justify-between py-4"
+              >
                 <div className="flex flex-col gap-1">
                   <p className="font-medium">{ann.title}</p>
-                  <div 
+                  <div
                     className="text-sm text-muted-foreground"
                     dangerouslySetInnerHTML={{ __html: ann.content }}
                   />
                 </div>
-                <Switch 
-                  checked={ann.active} 
+                <Switch
+                  checked={ann.active}
                   onCheckedChange={(checked) => {
                     toggleActive.mutate({ id: ann.id, active: checked });
                   }}
@@ -111,27 +118,31 @@ function AdminAnnouncements() {
           <FieldGroup>
             <Field>
               <FieldLabel htmlFor="title">Title</FieldLabel>
-              <Input 
-                id="title" 
-                placeholder="Announcement Title" 
+              <Input
+                id="title"
+                placeholder="Announcement Title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
               />
             </Field>
-            
+
             <Field>
               <FieldLabel htmlFor="content">Content</FieldLabel>
-              <RichTextEditor 
-                id="content" 
-                placeholder="Write your announcement here..." 
+              <RichTextEditor
+                id="content"
+                placeholder="Write your announcement here..."
                 value={content}
                 onChange={setContent}
                 disabled={createAnnouncement.isPending}
+                maxLength={200}
               />
             </Field>
 
             <div className="flex justify-end mt-4">
-              <Button onClick={handlePublish} disabled={createAnnouncement.isPending}>
+              <Button
+                onClick={handlePublish}
+                disabled={createAnnouncement.isPending}
+              >
                 {createAnnouncement.isPending ? "Publishing..." : "Publish"}
               </Button>
             </div>

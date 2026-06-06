@@ -11,4 +11,5 @@ export * from './reputations-schema';
 export * from './resources-schema';
 export * from './settings-schema';
 export * from './tag-schema';
+export * from './theme-preset-schema';
 export * from './thread-schema';

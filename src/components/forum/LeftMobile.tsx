@@ -3,7 +3,7 @@ import { Link } from '@tanstack/react-router'
 import { Home, TrendingUp, Bookmark, Users, Settings, MessageSquare, Tag } from 'lucide-react'
 import { Button } from '~/components/ui/button'
 import { Separator } from '~/components/ui/separator'
-import { Sheet, SheetContent, SheetTrigger } from '~/components/ui/sheet'
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from '~/components/ui/sheet'
 import { Skeleton } from '~/components/ui/skeleton'
 import { trpc } from '~/lib/trpc'
 import { cn } from '~/lib/utils'
@@ -44,6 +44,8 @@ export default function LeftMobile({ user }: LeftMobileProps) {
       </SheetTrigger>
       
       <SheetContent side="left" className="w-72 p-0">
+        <SheetTitle className="sr-only">Navigation</SheetTitle>
+        <SheetDescription className="sr-only">Mobile navigation menu with categories and tags</SheetDescription>
         <div className="flex h-full flex-col">
           {/* Header */}
           <div className="flex items-center justify-between border-b p-4">

@@ -10,7 +10,16 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { Link, useNavigate } from "@tanstack/react-router";
-import {  UserIcon, Moon, Sun, Bell as BellIcon, MessageSquare, LogOut as LogOutIcon } from "lucide-react";
+import {
+  UserIcon,
+  Moon,
+  Sun,
+  Bell as BellIcon,
+  MessageSquare,
+  LogOut as LogOutIcon,
+  Settings,
+  Shield,
+} from "lucide-react";
 import { signOut } from "~/lib/auth-client";
 import { Switch } from "~/components/ui/switch";
 import { useTheme } from "next-themes";
@@ -23,6 +32,7 @@ interface UserDropdownProps {
     image?: string;
     username?: string;
     displayUsername?: string;
+    role?: string | null;
   };
 }
 
@@ -68,7 +78,12 @@ export default function UserDropdown({ user }: UserDropdownProps) {
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="w-56 rounded-lg" side="bottom" align="end" sideOffset={4}>
+      <DropdownMenuContent
+        className="w-56 rounded-lg"
+        side="bottom"
+        align="end"
+        sideOffset={4}
+      >
         <DropdownMenuLabel className="p-0 font-normal">
           <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
             <Avatar className="size-8 rounded-lg">
@@ -81,11 +96,13 @@ export default function UserDropdown({ user }: UserDropdownProps) {
               <span className="truncate font-medium">
                 {user.displayUsername || user.username || user.name}
               </span>
-              <span className="truncate text-xs text-muted-foreground">{user.email}</span>
+              <span className="truncate text-xs text-muted-foreground">
+                {user.email}
+              </span>
             </div>
           </div>
         </DropdownMenuLabel>
-        
+
         <DropdownMenuSeparator />
 
         <DropdownMenuGroup>
@@ -98,24 +115,48 @@ export default function UserDropdown({ user }: UserDropdownProps) {
               <UserIcon className="size-4" /> View Profile
             </Link>
           </DropdownMenuItem>
-          
+
+          {user.role === 'admin' && (
+            <DropdownMenuItem asChild>
+              <Link
+                to="/admin-dashboard"
+                className="flex items-center gap-2 cursor-pointer w-full"
+              >
+                <Shield className="size-4" /> Admin
+              </Link>
+            </DropdownMenuItem>
+          )}
+
           {/* Dark Mode Toggle */}
           <div className="flex items-center justify-between px-2 py-1.5">
             <div className="flex items-center gap-2 text-sm">
-              {isDarkMode ? <Moon className="size-4" /> : <Sun className="size-4" />}
+              {isDarkMode ? (
+                <Moon className="size-4" />
+              ) : (
+                <Sun className="size-4" />
+              )}
               <span>Dark Mode</span>
             </div>
-            <Switch checked={isDarkMode} onCheckedChange={(v) => setTheme(v ? "dark" : "light")} />
+            <Switch
+              checked={isDarkMode}
+              onCheckedChange={(v) => setTheme(v ? "dark" : "light")}
+            />
           </div>
 
           <DropdownMenuItem asChild>
-            <Link to="/notifications" className="flex items-center gap-2 cursor-pointer w-full">
-              <BellIcon className="size-4" /> Notifications
+            <Link
+              to="/settings"
+              className="flex items-center gap-2 cursor-pointer w-full"
+            >
+              <Settings className="size-4" /> Settings
             </Link>
           </DropdownMenuItem>
-          
+
           <DropdownMenuItem asChild>
-            <Link to="/messages" className="flex items-center gap-2 cursor-pointer w-full">
+            <Link
+              to="/messages"
+              className="flex items-center gap-2 cursor-pointer w-full"
+            >
               <MessageSquare className="size-4" /> Messages
             </Link>
           </DropdownMenuItem>
@@ -123,7 +164,10 @@ export default function UserDropdown({ user }: UserDropdownProps) {
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-100 dark:focus:bg-red-950/50">
+        <DropdownMenuItem
+          onClick={handleSignOut}
+          className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-100 dark:focus:bg-red-950/50"
+        >
           <LogOutIcon className="size-4 mr-2" /> Log Out
         </DropdownMenuItem>
       </DropdownMenuContent>

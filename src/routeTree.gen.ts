@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ModeratorRouteRouteImport } from './routes/_moderator/route'
+import { Route as LandingRouteRouteImport } from './routes/_landing/route'
 import { Route as ClientRouteRouteImport } from './routes/_client/route'
 import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as AdminRouteRouteImport } from './routes/_admin/route'
@@ -18,6 +19,9 @@ import { Route as ModeratorModeratorReportsRouteImport } from './routes/_moderat
 import { Route as ModeratorModeratorDashboardRouteImport } from './routes/_moderator/moderator-dashboard'
 import { Route as ModeratorModerationRouteImport } from './routes/_moderator/moderation'
 import { Route as ModeratorHelpDocsRouteImport } from './routes/_moderator/help-docs'
+import { Route as LandingTermsRouteImport } from './routes/_landing/terms'
+import { Route as LandingPrivacyPolicyRouteImport } from './routes/_landing/privacy-policy'
+import { Route as LandingCookiesRouteImport } from './routes/_landing/cookies'
 import { Route as ClientSettingsRouteImport } from './routes/_client/settings'
 import { Route as ClientSearchRouteImport } from './routes/_client/search'
 import { Route as ClientNotificationsRouteImport } from './routes/_client/notifications'
@@ -72,6 +76,10 @@ const ModeratorRouteRoute = ModeratorRouteRouteImport.update({
   id: '/_moderator',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LandingRouteRoute = LandingRouteRouteImport.update({
+  id: '/_landing',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ClientRouteRoute = ClientRouteRouteImport.update({
   id: '/_client',
   getParentRoute: () => rootRouteImport,
@@ -110,6 +118,21 @@ const ModeratorHelpDocsRoute = ModeratorHelpDocsRouteImport.update({
   id: '/help-docs',
   path: '/help-docs',
   getParentRoute: () => ModeratorRouteRoute,
+} as any)
+const LandingTermsRoute = LandingTermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => LandingRouteRoute,
+} as any)
+const LandingPrivacyPolicyRoute = LandingPrivacyPolicyRouteImport.update({
+  id: '/privacy-policy',
+  path: '/privacy-policy',
+  getParentRoute: () => LandingRouteRoute,
+} as any)
+const LandingCookiesRoute = LandingCookiesRouteImport.update({
+  id: '/cookies',
+  path: '/cookies',
+  getParentRoute: () => LandingRouteRoute,
 } as any)
 const ClientSettingsRoute = ClientSettingsRouteImport.update({
   id: '/settings',
@@ -386,6 +409,9 @@ export interface FileRoutesByFullPath {
   '/notifications': typeof ClientNotificationsRoute
   '/search': typeof ClientSearchRoute
   '/settings': typeof ClientSettingsRoute
+  '/cookies': typeof LandingCookiesRoute
+  '/privacy-policy': typeof LandingPrivacyPolicyRoute
+  '/terms': typeof LandingTermsRoute
   '/help-docs': typeof ModeratorHelpDocsRoute
   '/moderation': typeof ModeratorModerationRoute
   '/moderator-dashboard': typeof ModeratorModeratorDashboardRoute
@@ -442,6 +468,9 @@ export interface FileRoutesByTo {
   '/notifications': typeof ClientNotificationsRoute
   '/search': typeof ClientSearchRoute
   '/settings': typeof ClientSettingsRoute
+  '/cookies': typeof LandingCookiesRoute
+  '/privacy-policy': typeof LandingPrivacyPolicyRoute
+  '/terms': typeof LandingTermsRoute
   '/help-docs': typeof ModeratorHelpDocsRoute
   '/moderation': typeof ModeratorModerationRoute
   '/moderator-dashboard': typeof ModeratorModeratorDashboardRoute
@@ -482,6 +511,7 @@ export interface FileRoutesById {
   '/_admin': typeof AdminRouteRouteWithChildren
   '/_auth': typeof AuthRouteRouteWithChildren
   '/_client': typeof ClientRouteRouteWithChildren
+  '/_landing': typeof LandingRouteRouteWithChildren
   '/_moderator': typeof ModeratorRouteRouteWithChildren
   '/_admin/admin-analytics': typeof AdminAdminAnalyticsRoute
   '/_admin/admin-dashboard': typeof AdminAdminDashboardRoute
@@ -503,6 +533,9 @@ export interface FileRoutesById {
   '/_client/notifications': typeof ClientNotificationsRoute
   '/_client/search': typeof ClientSearchRoute
   '/_client/settings': typeof ClientSettingsRoute
+  '/_landing/cookies': typeof LandingCookiesRoute
+  '/_landing/privacy-policy': typeof LandingPrivacyPolicyRoute
+  '/_landing/terms': typeof LandingTermsRoute
   '/_moderator/help-docs': typeof ModeratorHelpDocsRoute
   '/_moderator/moderation': typeof ModeratorModerationRoute
   '/_moderator/moderator-dashboard': typeof ModeratorModeratorDashboardRoute
@@ -561,6 +594,9 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/search'
     | '/settings'
+    | '/cookies'
+    | '/privacy-policy'
+    | '/terms'
     | '/help-docs'
     | '/moderation'
     | '/moderator-dashboard'
@@ -617,6 +653,9 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/search'
     | '/settings'
+    | '/cookies'
+    | '/privacy-policy'
+    | '/terms'
     | '/help-docs'
     | '/moderation'
     | '/moderator-dashboard'
@@ -656,6 +695,7 @@ export interface FileRouteTypes {
     | '/_admin'
     | '/_auth'
     | '/_client'
+    | '/_landing'
     | '/_moderator'
     | '/_admin/admin-analytics'
     | '/_admin/admin-dashboard'
@@ -677,6 +717,9 @@ export interface FileRouteTypes {
     | '/_client/notifications'
     | '/_client/search'
     | '/_client/settings'
+    | '/_landing/cookies'
+    | '/_landing/privacy-policy'
+    | '/_landing/terms'
     | '/_moderator/help-docs'
     | '/_moderator/moderation'
     | '/_moderator/moderator-dashboard'
@@ -717,6 +760,7 @@ export interface RootRouteChildren {
   AdminRouteRoute: typeof AdminRouteRouteWithChildren
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
   ClientRouteRoute: typeof ClientRouteRouteWithChildren
+  LandingRouteRoute: typeof LandingRouteRouteWithChildren
   ModeratorRouteRoute: typeof ModeratorRouteRouteWithChildren
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiTrpcSplatRoute: typeof ApiTrpcSplatRoute
@@ -729,6 +773,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof ModeratorRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_landing': {
+      id: '/_landing'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof LandingRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_client': {
@@ -786,6 +837,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/help-docs'
       preLoaderRoute: typeof ModeratorHelpDocsRouteImport
       parentRoute: typeof ModeratorRouteRoute
+    }
+    '/_landing/terms': {
+      id: '/_landing/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof LandingTermsRouteImport
+      parentRoute: typeof LandingRouteRoute
+    }
+    '/_landing/privacy-policy': {
+      id: '/_landing/privacy-policy'
+      path: '/privacy-policy'
+      fullPath: '/privacy-policy'
+      preLoaderRoute: typeof LandingPrivacyPolicyRouteImport
+      parentRoute: typeof LandingRouteRoute
+    }
+    '/_landing/cookies': {
+      id: '/_landing/cookies'
+      path: '/cookies'
+      fullPath: '/cookies'
+      preLoaderRoute: typeof LandingCookiesRouteImport
+      parentRoute: typeof LandingRouteRoute
     }
     '/_client/settings': {
       id: '/_client/settings'
@@ -1279,6 +1351,22 @@ const ClientRouteRouteWithChildren = ClientRouteRoute._addFileChildren(
   ClientRouteRouteChildren,
 )
 
+interface LandingRouteRouteChildren {
+  LandingCookiesRoute: typeof LandingCookiesRoute
+  LandingPrivacyPolicyRoute: typeof LandingPrivacyPolicyRoute
+  LandingTermsRoute: typeof LandingTermsRoute
+}
+
+const LandingRouteRouteChildren: LandingRouteRouteChildren = {
+  LandingCookiesRoute: LandingCookiesRoute,
+  LandingPrivacyPolicyRoute: LandingPrivacyPolicyRoute,
+  LandingTermsRoute: LandingTermsRoute,
+}
+
+const LandingRouteRouteWithChildren = LandingRouteRoute._addFileChildren(
+  LandingRouteRouteChildren,
+)
+
 interface ModeratorRouteRouteChildren {
   ModeratorHelpDocsRoute: typeof ModeratorHelpDocsRoute
   ModeratorModerationRoute: typeof ModeratorModerationRoute
@@ -1302,6 +1390,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRouteRoute: AdminRouteRouteWithChildren,
   AuthRouteRoute: AuthRouteRouteWithChildren,
   ClientRouteRoute: ClientRouteRouteWithChildren,
+  LandingRouteRoute: LandingRouteRouteWithChildren,
   ModeratorRouteRoute: ModeratorRouteRouteWithChildren,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiTrpcSplatRoute: ApiTrpcSplatRoute,

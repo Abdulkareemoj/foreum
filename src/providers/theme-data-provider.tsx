@@ -11,11 +11,14 @@ type ThemeContextValue = {
 	theme: ShadcnTheme | null
 	isLoading: boolean
 	isSaving: boolean
+	themeName: string
+	setThemeName: (name: string) => void
 	updateVar: (key: ColorKey, value: string, options?: { mode?: 'light' | 'dark' }) => void
 	updateVarDirect: (key: ColorKey, value: string, options?: { mode?: 'light' | 'dark' }) => void
 	updateRadius: (value: string) => void
 	updateFont: (fontType: FontType, value: string) => void
 	saveTheme: () => void
+	loadThemeFromPreset: (data: ShadcnTheme) => void
 	resetTheme: () => void
 	previewMode: 'light' | 'dark'
 	setPreviewMode: (mode: 'light' | 'dark') => void
@@ -30,11 +33,14 @@ const ThemeDataContext = React.createContext<ThemeContextValue>({
 	theme: getDefaultShadcnTheme(),
 	isLoading: false,
 	isSaving: false,
+	themeName: 'Untitled Theme',
+	setThemeName: () => {},
 	updateVar: () => {},
 	updateVarDirect: () => {},
 	updateRadius: () => {},
 	updateFont: () => {},
 	saveTheme: () => {},
+	loadThemeFromPreset: () => {},
 	resetTheme: () => {},
 	previewMode: 'light',
 	setPreviewMode: () => {},
@@ -54,6 +60,7 @@ export function ThemeDataProvider({ children }: { children: React.ReactNode }) {
 	const utils = trpc.useUtils()
 
 	const [theme, setTheme] = React.useState<ShadcnTheme | null>(null)
+	const [themeName, setThemeName] = React.useState('Untitled Theme')
 	const [needsUpdate, setNeedsUpdate] = React.useState(false)
 	const [previewMode, setPreviewMode] = React.useState<'light' | 'dark'>(() => {
 		if (typeof window !== 'undefined') {
@@ -77,10 +84,11 @@ export function ThemeDataProvider({ children }: { children: React.ReactNode }) {
 	// Load remote theme once available
 	React.useEffect(() => {
 		if (remoteTheme && !theme) {
-			// The stored data might be the old simple format — parse safely
+			// The stored data might be the old simple format - parse safely
 			try {
 				const parsed = parseShadcnThemeFromJson(remoteTheme)
 				setTheme(parsed)
+				if (parsed.name) setThemeName(parsed.name)
 			} catch {
 				setTheme(getDefaultShadcnTheme())
 			}
@@ -127,15 +135,24 @@ export function ThemeDataProvider({ children }: { children: React.ReactNode }) {
 
 	const saveTheme = React.useCallback(() => {
 		if (!theme) return
-		saveGlobal.mutate(theme, {
+		saveGlobal.mutate({ ...theme, name: themeName }, {
 			onSuccess: () => utils.theme.getGlobal.invalidate()
 		})
-	}, [theme, saveGlobal, utils])
+	}, [theme, themeName, saveGlobal, utils])
+
+	const loadThemeFromPreset = React.useCallback((data: ShadcnTheme) => {
+		setTheme(data)
+		setThemeName(data.name || 'Untitled Theme')
+		setEditingColorKey(null)
+		setNeedsUpdate(false)
+	}, [])
 
 	const resetTheme = React.useCallback(() => {
 		resetGlobal.mutate(undefined, {
 			onSuccess: () => {
-				setTheme(getDefaultShadcnTheme())
+				const defaultTheme = getDefaultShadcnTheme()
+				setTheme(defaultTheme)
+				setThemeName(defaultTheme.name || 'Untitled Theme')
 				setNeedsUpdate(false)
 				utils.theme.getGlobal.invalidate()
 			}
@@ -146,23 +163,26 @@ export function ThemeDataProvider({ children }: { children: React.ReactNode }) {
 	React.useEffect(() => {
 		if (!needsUpdate || !theme) return
 		const handle = setTimeout(() => {
-			saveGlobal.mutate(theme, {
+			saveGlobal.mutate({ ...theme, name: themeName }, {
 				onSuccess: () => utils.theme.getGlobal.invalidate()
 			})
 			setNeedsUpdate(false)
 		}, 500)
 		return () => clearTimeout(handle)
-	}, [needsUpdate, theme, saveGlobal, utils])
+	}, [needsUpdate, theme, themeName, saveGlobal, utils])
 
 	const ctx = React.useMemo<ThemeContextValue>(() => ({
 		theme,
 		isLoading,
 		isSaving: saveGlobal.isPending,
+		themeName,
+		setThemeName,
 		updateVar,
 		updateVarDirect,
 		updateRadius,
 		updateFont,
 		saveTheme,
+		loadThemeFromPreset,
 		resetTheme,
 		previewMode,
 		setPreviewMode,
@@ -173,8 +193,9 @@ export function ThemeDataProvider({ children }: { children: React.ReactNode }) {
 		themedScopeRef
 	}), [
 		theme, isLoading, saveGlobal.isPending,
+		themeName, setThemeName,
 		updateVar, updateVarDirect, updateRadius, updateFont,
-		saveTheme, resetTheme,
+		saveTheme, loadThemeFromPreset, resetTheme,
 		previewMode, activeExample, editingColorKey
 	])
 

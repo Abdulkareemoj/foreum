@@ -49,9 +49,9 @@ export const zShadcnTheme = z
 	.object({
 		theme: zShadcnThemeShared,
 		light: zShadcnThemeVars.partial(),
-		dark: zShadcnThemeVars.partial()
+		dark: zShadcnThemeVars.partial(),
+		name: z.string().optional()
 	})
-	.strict()
 
 export type ShadcnTheme = z.infer<typeof zShadcnTheme>
 export type ShadcnThemeVars = z.infer<typeof zShadcnThemeVars>
@@ -59,6 +59,7 @@ export type ShadcnThemeShared = z.infer<typeof zShadcnThemeShared>
 export type ColorKey = keyof ShadcnThemeVars
 
 export const getDefaultShadcnTheme = (): ShadcnTheme => ({
+	name: 'Untitled Theme',
 	theme: {
 		'font-sans':
 			"ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif",
@@ -189,6 +190,9 @@ export const parseShadcnThemeFromJson = (json: unknown): ShadcnTheme => {
 				out.dark,
 				input.dark as Record<string, unknown>
 			)
+		}
+		if (typeof input.name === 'string') {
+			out.name = input.name
 		}
 		return out
 	} catch (e) {

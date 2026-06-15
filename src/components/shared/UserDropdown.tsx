@@ -127,6 +127,17 @@ export default function UserDropdown({ user }: UserDropdownProps) {
             </DropdownMenuItem>
           )}
 
+          {user.role === 'moderator' && (
+            <DropdownMenuItem asChild>
+              <Link
+                to="/moderator-dashboard"
+                className="flex items-center gap-2 cursor-pointer w-full"
+              >
+                <Shield className="size-4" /> Moderation
+              </Link>
+            </DropdownMenuItem>
+          )}
+
           {/* Dark Mode Toggle */}
           <div className="flex items-center justify-between px-2 py-1.5">
             <div className="flex items-center gap-2 text-sm">

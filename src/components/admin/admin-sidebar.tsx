@@ -1,17 +1,16 @@
-
 import * as React from "react";
 import {
- Building,
-		ChartArea,
-		LayoutDashboard,
-		LifeBuoy,
-		List,
-		LogOut,
-		Settings,
-		Shield,
-		Sparkles,
-		Speaker,
-		User
+  Building,
+  ChartArea,
+  LayoutDashboard,
+  LifeBuoy,
+  List,
+  LogOut,
+  Settings,
+  Shield,
+  Sparkles,
+  Speaker,
+  User,
 } from "lucide-react";
 
 import { SearchForm } from "~/components/shared/SearchForm";
@@ -31,33 +30,28 @@ import {
 import { Link } from "@tanstack/react-router";
 
 const data = {
-  user: {
-    name: "Admin",
-    email: "admin@emailforge.com",
-    avatar: "/avatars/admin.jpg",
-  },
- navMain: [
-			{
-				title: 'Sections',
-				items: [
-					{ title: 'Dashboard', url: '/admin-dashboard', icon: LayoutDashboard },
-					{ title: 'Users', url: '/users-list', icon: User },
-          { title: 'Analytics', url: '/admin-analytics', icon: ChartArea },
-					{ title: 'Appearance', url: '/appearance', icon: Sparkles },
-					{ title: 'Moderation Logs', url: '/admin-moderation', icon: Building },
-					{ title: 'Reports', url: '/reports-summary', icon: List },
-					{ title: 'Settings', url: '/admin-settings', icon: Settings },
-					{ title: 'Announcements', url: '/announcements', icon: Speaker }
-				]
-			},
-			{
-				title: 'Other',
-				items: [
-					// { title: 'Analytics', url: '/analytics', icon: ChartArea },
-					{ title: 'Help Center', url: '/help', icon: LifeBuoy }
-				]
-			}
-		]
+  navMain: [
+    {
+      title: "Sections",
+      items: [
+        { title: "Dashboard", url: "/admin-dashboard", icon: LayoutDashboard },
+        { title: "Users", url: "/users-list", icon: User },
+        { title: "Analytics", url: "/admin-analytics", icon: ChartArea },
+        { title: "Appearance", url: "/appearance", icon: Sparkles },
+        { title: "Moderation Logs", url: "/admin-moderation", icon: Building },
+        { title: "Reports", url: "/reports-summary", icon: List },
+        { title: "Settings", url: "/admin-settings", icon: Settings },
+        { title: "Announcements", url: "/announcements", icon: Speaker },
+      ],
+    },
+    {
+      title: "Other",
+      items: [
+        // { title: 'Analytics', url: '/analytics', icon: ChartArea },
+        { title: "Help Center", url: "/help", icon: LifeBuoy },
+      ],
+    },
+  ],
 };
 
 export function AdminSidebar({
@@ -66,11 +60,11 @@ export function AdminSidebar({
   return (
     <Sidebar {...props}>
       <SidebarHeader>
-        <div className="flex items-center gap-2 px-2 py-1">
+        <div className="flex items-center gap-2 px-2 py-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-red-500 to-red-600 text-white">
             <Shield className="h-4 w-4" />
           </div>
-          <span className="font-bold text-lg">EmailForge Admin</span>
+          <span className="font-bold text-lg">Foreum Admin</span>
         </div>
         <hr className="border-t border-border mx-2 -mt-px" />
         <SearchForm className="mt-3" />

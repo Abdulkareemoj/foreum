@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-router'
+import { Link } from "@tanstack/react-router";
 import {
   Bell,
   ChevronDown,
@@ -11,47 +11,58 @@ import {
   Settings,
   Sun,
   TrendingUp,
-  Users
-} from 'lucide-react'
-import { Button, buttonVariants } from '~/components/ui/button'
-import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
-import { Input } from '~/components/ui/input'
-import { Separator } from '~/components/ui/separator'
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '~/components/ui/sheet'
-import { Switch } from '~/components/ui/switch'
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '~/components/ui/collapsible'
-import Logo from '~/components/shared/Logo'
-import UserDropdown from '~/components/shared/UserDropdown'
-import NotificationBell from '../shared/NotificationBell'
-import { useTheme } from 'next-themes'
-import { SearchCommand } from './SearchCommand'
-import LeftMobile from './LeftMobile'
-import RightMobile from './RightMobile'
-import { useState } from 'react'
+  Users,
+} from "lucide-react";
+import { Button } from "~/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { Separator } from "~/components/ui/separator";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "~/components/ui/sheet";
+import { Switch } from "~/components/ui/switch";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "~/components/ui/collapsible";
+import UserDropdown from "~/components/shared/UserDropdown";
+import NotificationBell from "../shared/NotificationBell";
+import { useTheme } from "next-themes";
+import { SearchCommand } from "./SearchCommand";
+import LeftMobile from "./LeftMobile";
+import RightMobile from "./RightMobile";
+import { useState } from "react";
 
 interface NavbarProps {
-  user: any
+  user: any;
 }
 
 export default function Navbar({ user }: NavbarProps) {
-  const { theme, setTheme } = useTheme()
-  const isDarkMode = theme === 'dark'
-  const [searchOpen, setSearchOpen] = useState(false)
-  const [isSheetOpen, setIsSheetOpen] = useState(false)
+  const { theme, setTheme } = useTheme();
+  const isDarkMode = theme === "dark";
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   const navigationItems = [
-    { href: '/threads', label: 'Home', icon: Home },
-    { href: '/communities', label: 'Communities', icon: Users },
-    { href: '/trending', label: 'Trending', icon: TrendingUp },
-    { href: '/messages', label: 'Messages', icon: MessageSquare }
-  ]
+    { href: "/threads", label: "Home", icon: Home },
+    { href: "/communities", label: "Communities", icon: Users },
+    { href: "/trending", label: "Trending", icon: TrendingUp },
+    { href: "/messages", label: "Messages", icon: MessageSquare },
+  ];
 
   return (
     <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
       <nav className="flex w-full items-center justify-between gap-6 font-medium">
         {/* Left Section */}
         <div className="flex items-center gap-4">
-          <Link to="/threads" className="flex items-center gap-2 text-lg font-semibold md:text-base">
+          <Link
+            to="/threads"
+            className="flex items-center gap-2 text-lg font-semibold md:text-base"
+          >
             {/* If Logo does not exist just use Foreum text */}
             <span className="font-bold text-xl">Foreum</span>
           </Link>
@@ -60,14 +71,14 @@ export default function Navbar({ user }: NavbarProps) {
         {/* Middle Section */}
         <div className="flex flex-1 justify-center">
           <div className="w-full max-w-md relative">
-             <Button
-                variant="outline"
-                onClick={() => setSearchOpen(true)}
-                className="w-full justify-start text-muted-foreground h-9 px-3"
-              >
-                <Search className="mr-2 h-4 w-4" />
-                <span>Search...</span>
-             </Button>
+            <Button
+              variant="outline"
+              onClick={() => setSearchOpen(true)}
+              className="w-full justify-start text-muted-foreground h-9 px-3"
+            >
+              <Search className="mr-2 h-4 w-4" />
+              <span>Search...</span>
+            </Button>
           </div>
         </div>
 
@@ -78,10 +89,8 @@ export default function Navbar({ user }: NavbarProps) {
               <PlusIcon className="h-5 w-5 mr-1" /> New Thread
             </Button>
           </Link>
+
           <NotificationBell />
-          <Button variant="outline" size="icon" className="hidden md:inline-flex">
-            <Settings className="h-5 w-5" />
-          </Button>
 
           {user ? (
             <UserDropdown user={user} />
@@ -95,7 +104,11 @@ export default function Navbar({ user }: NavbarProps) {
         {/* Mobile Sheet */}
         <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
           <SheetTrigger asChild>
-            <Button variant="outline" size="icon" className="shrink-0 md:hidden">
+            <Button
+              variant="outline"
+              size="icon"
+              className="shrink-0 md:hidden"
+            >
               <Menu className="h-5 w-5" />
               <span className="sr-only">Toggle navigation menu</span>
             </Button>
@@ -103,7 +116,7 @@ export default function Navbar({ user }: NavbarProps) {
           <SheetContent side="left" className="w-80">
             <SheetHeader className="text-left">
               <SheetTitle className="flex items-center gap-2">
-                 <span className="font-bold text-xl">Foreum</span>
+                <span className="font-bold text-xl">Foreum</span>
               </SheetTitle>
             </SheetHeader>
 
@@ -119,7 +132,9 @@ export default function Navbar({ user }: NavbarProps) {
                   >
                     <Avatar className="h-8 w-8 rounded-lg grayscale">
                       <AvatarImage src={user.image} alt={user.name} />
-                      <AvatarFallback>{user.name?.slice(0, 2).toUpperCase()}</AvatarFallback>
+                      <AvatarFallback>
+                        {user.name?.slice(0, 2).toUpperCase()}
+                      </AvatarFallback>
                     </Avatar>
                     <div className="grid flex-1 text-left text-sm leading-tight">
                       <span className="truncate font-medium">{user.name}</span>
@@ -129,7 +144,12 @@ export default function Navbar({ user }: NavbarProps) {
                     </div>
                   </Link>
                 ) : (
-                  <Link to="/sign-in" className="text-sm font-medium text-primary">Sign in</Link>
+                  <Link
+                    to="/sign-in"
+                    className="text-sm font-medium text-primary"
+                  >
+                    Sign in
+                  </Link>
                 )}
               </div>
 
@@ -137,7 +157,7 @@ export default function Navbar({ user }: NavbarProps) {
 
               <nav className="flex flex-col gap-2 px-4">
                 {navigationItems.map((item) => {
-                  const Icon = item.icon
+                  const Icon = item.icon;
                   return (
                     <Link
                       key={item.href}
@@ -148,16 +168,19 @@ export default function Navbar({ user }: NavbarProps) {
                       <Icon className="h-5 w-5" />
                       {item.label}
                     </Link>
-                  )
+                  );
                 })}
               </nav>
 
               <Separator className="my-4" />
-              
+
               <div className="px-4 py-2">
-                <Link to="/notifications" className="flex items-center gap-3 rounded-lg px-3 py-2 transition-colors hover:bg-accent hover:text-accent-foreground">
-                  <Bell className="h-5 w-5" />
-                  <span>Notifications</span>
+                <Link
+                  to="/settings"
+                  className="flex items-center gap-3 rounded-lg px-3 py-2 transition-colors hover:bg-accent hover:text-accent-foreground"
+                >
+                  <Settings className="h-5 w-5" />
+                  <span>Settings</span>
                 </Link>
               </div>
 
@@ -166,7 +189,11 @@ export default function Navbar({ user }: NavbarProps) {
               <div className="flex flex-col gap-2 px-2">
                 <Collapsible defaultOpen>
                   <CollapsibleTrigger asChild>
-                    <Button variant="ghost" size="sm" className="flex w-full items-center justify-between px-3 py-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="flex w-full items-center justify-between px-3 py-2"
+                    >
                       <span className="text-base font-medium">Links</span>
                       <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform data-[state=open]:rotate-180" />
                     </Button>
@@ -178,7 +205,11 @@ export default function Navbar({ user }: NavbarProps) {
 
                 <Collapsible defaultOpen>
                   <CollapsibleTrigger asChild>
-                    <Button variant="ghost" size="sm" className="flex w-full items-center justify-between px-3 py-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="flex w-full items-center justify-between px-3 py-2"
+                    >
                       <span className="text-base font-medium">More</span>
                       <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform data-[state=open]:rotate-180" />
                     </Button>
@@ -194,10 +225,17 @@ export default function Navbar({ user }: NavbarProps) {
               {/* Dark Mode Toggle */}
               <div className="flex items-center justify-between px-4 py-2">
                 <div className="flex items-center gap-3">
-                  {isDarkMode ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
+                  {isDarkMode ? (
+                    <Moon className="h-5 w-5" />
+                  ) : (
+                    <Sun className="h-5 w-5" />
+                  )}
                   <span>Dark Mode</span>
                 </div>
-                <Switch checked={isDarkMode} onCheckedChange={(v) => setTheme(v ? 'dark' : 'light')} />
+                <Switch
+                  checked={isDarkMode}
+                  onCheckedChange={(v) => setTheme(v ? "dark" : "light")}
+                />
               </div>
 
               <Separator className="my-4" />
@@ -213,6 +251,5 @@ export default function Navbar({ user }: NavbarProps) {
       </nav>
       <SearchCommand open={searchOpen} onOpenChange={setSearchOpen} />
     </header>
-  )
+  );
 }
-

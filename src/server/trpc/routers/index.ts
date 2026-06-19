@@ -12,6 +12,7 @@ import { notificationsRouter } from './notification';
 import { replyRouter } from './reply';
 import { reputationRouter } from './reputation';
 import { resourcesRouter } from './resources';
+import { pagesRouter } from './pages';
 import { searchRouter } from './search';
 import { settingsRouter } from './settings';
 import { tagRouter } from './tag';
@@ -37,7 +38,8 @@ export const appRouter = router({
 	groups: groupsRouter,
 	reputation: reputationRouter,
 	search: searchRouter,
-	theme: themeRouter
+	theme: themeRouter,
+	pages: pagesRouter
 });
 
 export type AppRouter = typeof appRouter;

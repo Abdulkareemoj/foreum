@@ -3,6 +3,7 @@ import postgres from "postgres";
 
 import * as authSchema from "./schema/auth-schema";
 import * as bookmarkSchema from "./schema/bookmark-schema";
+import * as customPageSchema from "./schema/custom-page-schema";
 import * as eventsSchema from "./schema/events-schema";
 import * as groupsSchema from "./schema/groups-schema";
 import * as messagingSchema from "./schema/messaging-schema";
@@ -14,6 +15,7 @@ import * as reputationSchema from "./schema/reputations-schema";
 import * as resourcesSchema from "./schema/resources-schema";
 import * as settingSchema from "./schema/settings-schema";
 import * as tagSchema from "./schema/tag-schema";
+import * as themePresetSchema from "./schema/theme-preset-schema";
 import * as forumSchema from "./schema/thread-schema";
 
 if (!process.env.DATABASE_URL) throw new Error("DATABASE_URL is not set");
@@ -26,14 +28,14 @@ export const schema = {
   ...resourcesSchema,
   ...settingSchema,
   ...tagSchema,
+  ...themePresetSchema,
   ...notificationSchema,
   ...profileSchema,
   ...bookmarkSchema,
-  ...reputationSchema,
+  ...customPageSchema,
   ...eventsSchema,
   ...groupsSchema,
   ...messagingSchema,
-  ...resourcesSchema,
 };
 const globalForDb = globalThis as unknown as {
   client: postgres.Sql | undefined;

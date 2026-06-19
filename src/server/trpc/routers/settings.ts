@@ -8,7 +8,7 @@ import {
 	privacySetting,
 	themeSetting
 } from '~/server/db/schema/settings-schema';
-import { adminProcedure, protectedProcedure, router } from '~/server/trpc/init';
+import { adminProcedure, protectedProcedure, publicProcedure, router } from '~/server/trpc/init';
 
 export const settingsRouter = router({
 	getAll: protectedProcedure.query(async ({ ctx }) => {
@@ -95,5 +95,45 @@ export const settingsRouter = router({
 					set: { value: input.value, updatedAt: new Date() }
 				});
 			return { success: true };
-		})
+		}),
+
+	getPublicSettings: publicProcedure.query(async () => {
+		const rows = await db.select().from(globalSetting);
+		const settings: Record<string, string> = {};
+		for (const row of rows) {
+			settings[row.key] = row.value;
+		}
+		return {
+			forumName: settings.forum_name ?? 'Foreum',
+			forumDescription: settings.forum_description ?? '',
+			forumLogo: settings.forum_logo ?? '',
+			forumBanner: settings.forum_banner ?? '',
+			faviconUrl: settings.favicon_url ?? '',
+			footerText: settings.footer_text ?? '',
+			footerCopyright: settings.footer_copyright ?? '',
+			homepageLayout: settings.homepage_layout ?? 'latest',
+			customCss: settings.custom_css ?? '',
+			defaultAvatar: settings.default_avatar ?? '',
+			socialLinks: settings.social_links ?? '[]',
+			metaTitleSuffix: settings.meta_title_suffix ?? '',
+			ogImage: settings.og_image ?? '',
+			navItems: settings.nav_items ?? '[]',
+		};
+	}),
+
+	updateMultiple: adminProcedure
+		.input(z.object({ settings: z.record(z.string(), z.string()) }))
+		.mutation(async ({ input }) => {
+			const now = new Date();
+			for (const [key, value] of Object.entries(input.settings)) {
+				await db
+					.insert(globalSetting)
+					.values({ key, value })
+					.onConflictDoUpdate({
+						target: globalSetting.key,
+						set: { value, updatedAt: now },
+					});
+			}
+			return { success: true };
+		}),
 });

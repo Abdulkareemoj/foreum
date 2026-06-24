@@ -1,5 +1,3 @@
-
-
 import { useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
@@ -13,20 +11,25 @@ import {
 } from "~/components/ui/field";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
-import {  signInSchema } from "~/lib/schemas";
+import { signInSchema } from "~/lib/schemas";
 import { signIn } from "~/lib/auth-client";
 import { Spinner } from "~/components/ui/spinner";
 import { toast } from "sonner";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { AlertCircleIcon } from "lucide-react";
-import { seo } from '~/utils/seo'
+import { seo } from "~/utils/seo";
 
-export const Route = createFileRoute('/_auth/sign-in')({
+export const Route = createFileRoute("/_auth/sign-in")({
   head: () => ({
-    meta: [...seo({ title: 'Sign In - Foreum', description: 'Sign in to your Foreum account.' })],
+    meta: [
+      ...seo({
+        title: "Sign In - Foreum",
+        description: "Sign in to your Foreum account.",
+      }),
+    ],
   }),
   component: SignIn,
-})
+});
 
 function SignIn() {
   const [serverError, setServerError] = useState<string | null>(null);
@@ -54,13 +57,13 @@ function SignIn() {
           result = await signIn.email({
             email: value.identifier,
             password: value.password,
-            callbackURL: "/dashboard",
+            callbackURL: "/threads",
           });
         } else {
           result = await signIn.username({
             username: value.identifier,
             password: value.password,
-            callbackURL: "/dashboard",
+            callbackURL: "/threads",
           });
         }
 
@@ -82,7 +85,7 @@ function SignIn() {
     try {
       await signIn.social({
         provider: "google",
-        callbackURL: "/dashboard",
+        callbackURL: "/threads",
       });
     } catch (error) {
       setServerError("Google login failed");
@@ -92,7 +95,6 @@ function SignIn() {
   };
 
   return (
- 
     <div className="flex flex-col gap-6">
       <FieldGroup>
         <div className="flex flex-col gap-2">
@@ -130,7 +132,9 @@ function SignIn() {
                 field.state.meta.isTouched && !field.state.meta.isValid;
               return (
                 <Field data-invalid={isInvalid}>
-                  <FieldLabel htmlFor={field.name}>Email or Username</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>
+                    Email or Username
+                  </FieldLabel>
                   <Input
                     id={field.name}
                     name={field.name}
@@ -142,9 +146,7 @@ function SignIn() {
                     aria-invalid={isInvalid}
                     disabled={isLoading}
                   />
-                  {isInvalid && (
-                    <FieldError errors={field.state.meta.errors} />
-                  )}
+                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
                 </Field>
               );
             }}
@@ -176,9 +178,7 @@ function SignIn() {
                     aria-invalid={isInvalid}
                     disabled={isLoading}
                   />
-                  {isInvalid && (
-                    <FieldError errors={field.state.meta.errors} />
-                  )}
+                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
                 </Field>
               );
             }}

@@ -31,6 +31,8 @@ import {
 } from "~/components/ui/collapsible";
 import UserDropdown from "~/components/shared/UserDropdown";
 import NotificationBell from "../shared/NotificationBell";
+import Logo from "~/components/shared/Logo";
+import { trpc } from "~/lib/trpc";
 import { useTheme } from "next-themes";
 import { SearchCommand } from "./SearchCommand";
 import LeftMobile from "./LeftMobile";
@@ -46,6 +48,8 @@ export default function Navbar({ user }: NavbarProps) {
   const isDarkMode = theme === "dark";
   const [searchOpen, setSearchOpen] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const { data: settings } = trpc.settings.getPublicSettings.useQuery();
+  const forumName = settings?.forumName ?? "Foreum";
 
   const navigationItems = [
     { href: "/threads", label: "Home", icon: Home },
@@ -63,8 +67,7 @@ export default function Navbar({ user }: NavbarProps) {
             to="/threads"
             className="flex items-center gap-2 text-lg font-semibold md:text-base"
           >
-            {/* If Logo does not exist just use Foreum text */}
-            <span className="font-bold text-xl">Foreum</span>
+            <Logo />
           </Link>
         </div>
 
@@ -116,7 +119,7 @@ export default function Navbar({ user }: NavbarProps) {
           <SheetContent side="left" className="w-80">
             <SheetHeader className="text-left">
               <SheetTitle className="flex items-center gap-2">
-                <span className="font-bold text-xl">Foreum</span>
+                <Logo />
               </SheetTitle>
             </SheetHeader>
 
@@ -242,7 +245,7 @@ export default function Navbar({ user }: NavbarProps) {
 
               <div className="mt-auto py-4">
                 <p className="text-center text-xs text-muted-foreground">
-                  © 2024 Foreum. All rights reserved.
+                  &copy; 2024 {forumName}. All rights reserved.
                 </p>
               </div>
             </div>

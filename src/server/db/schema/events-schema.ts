@@ -23,7 +23,7 @@ export const events = pgTable('events', {
 	category: varchar('category', { length: 100 }),
 	maxAttendees: integer('max_attendees'),
 
-	createdBy: uuid('created_by').notNull(),
+	createdBy: text('created_by').notNull(),
 
 	groupId: uuid('group_id'),
 
@@ -35,6 +35,6 @@ export const eventAttendees = pgTable('event_attendees', {
 	eventId: uuid('event_id')
 		.notNull()
 		.references(() => events.id, { onDelete: 'cascade' }),
-	userId: uuid('user_id').notNull(), // references users table
+	userId: text('user_id').notNull(), // references users table
 	status: varchar('status', { length: 20 }).notNull() // 'going', 'maybe', 'not_going'
 });

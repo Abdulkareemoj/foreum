@@ -1,7 +1,7 @@
 import { pgTable, primaryKey,text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
 
 export const reputation = pgTable('reputation', {
-	userId: uuid('user_id').primaryKey(),
+	userId: text('user_id').primaryKey(),
 	points: varchar('points').default('0'),
 	lastUpdated: timestamp('last_updated').defaultNow()
 });
@@ -16,7 +16,7 @@ export const badges = pgTable('badges', {
 export const userBadges = pgTable(
 	'user_badges',
 	{
-		userId: uuid('user_id').notNull(),
+		userId: text('user_id').notNull(),
 		badgeId: uuid('badge_id').notNull(),
 		awardedAt: timestamp('awarded_at').defaultNow()
 	},

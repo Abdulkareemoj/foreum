@@ -1,16 +1,17 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { RichTextEditor } from "~/components/ui/rich-text-editor";
-import { Label } from "~/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import { ArrowLeft, User } from "lucide-react";
+import { Spinner } from "~/components/ui/spinner";
+import { ArrowLeft, User, Save } from "lucide-react";
 import { trpc } from "~/lib/trpc";
 import { toast } from "sonner";
 import { useSession } from "~/lib/auth-client";
-import { redirect } from "@tanstack/react-router";
+import { useProfileStore } from "~/stores/profile-store";
+import { FieldGroup, Field, FieldLabel, FieldDescription } from "~/components/ui/field";
 
 export const Route = createFileRoute("/_client/profile/$username/edit")({
   component: EditProfilePage,
@@ -19,30 +20,17 @@ export const Route = createFileRoute("/_client/profile/$username/edit")({
 function EditProfilePage() {
   const { username } = Route.useParams();
   const navigate = useNavigate();
-  const { data: session } = useSession();
+  const { data: session, isPending: sessionLoading } = useSession();
   const utils = trpc.useUtils();
+  const { profileUser, formData, setFormField, setProfileUser, initializeForm } = useProfileStore();
 
-  const { data: profileUser, isLoading } = trpc.user.byUsername.useQuery({
-    username,
-  });
-
-  const [name, setName] = useState("");
-  const [usernameVal, setUsernameVal] = useState("");
-  const [image, setImage] = useState("");
-  const [bio, setBio] = useState("");
-  const [location, setLocation] = useState("");
-  const [website, setWebsite] = useState("");
+  const { data: fetchedUser, isLoading: fetching } = trpc.user.byUsername.useQuery({ username });
 
   useEffect(() => {
-    if (profileUser) {
-      setName(profileUser.name || "");
-      setUsernameVal(profileUser.username || "");
-      setImage(profileUser.image || "");
-      setBio(profileUser.bio || "");
-      setLocation(profileUser.location || "");
-      setWebsite(profileUser.website || "");
-    }
-  }, [profileUser]);
+    if (!fetchedUser) return;
+    setProfileUser(fetchedUser);
+    initializeForm();
+  }, [fetchedUser, setProfileUser, initializeForm]);
 
   const updateProfile = trpc.user.updateProfile.useMutation({
     onSuccess: () => {
@@ -50,7 +38,7 @@ function EditProfilePage() {
       utils.user.byUsername.invalidate({ username });
       navigate({
         to: "/profile/$username",
-        params: { username: usernameVal },
+        params: { username: formData.username },
       });
     },
     onError: (error) => {
@@ -62,163 +50,162 @@ function EditProfilePage() {
     },
   });
 
-  // Guard: only own profile
-  if (!isLoading && session?.user?.id !== profileUser?.id) {
+  // Guard: only own profile (wait for session to load first)
+  if (!fetching && !sessionLoading && profileUser && session?.user?.id !== profileUser.id) {
     navigate({ to: "/profile/$username", params: { username } });
     return null;
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!name.trim()) {
+  const handleSave = () => {
+    if (!formData.name.trim()) {
       toast.error("Name is required");
       return;
     }
-
-    if (!usernameVal.trim()) {
+    if (!formData.username.trim()) {
       toast.error("Username is required");
       return;
     }
-
-    if (!/^[a-z0-9_-]+$/.test(usernameVal)) {
-      toast.error(
-        "Username can only contain lowercase letters, numbers, _ and -",
-      );
+    if (!/^[a-z0-9_-]+$/.test(formData.username)) {
+      toast.error("Username can only contain lowercase letters, numbers, _ and -");
       return;
     }
-
     updateProfile.mutate({
-      name: name.trim(),
-      username: usernameVal.trim().toLowerCase(),
-      image: image.trim() || undefined,
-      bio: bio || undefined,
-      location: location.trim() || undefined,
-      website: website.trim() || undefined,
+      name: formData.name.trim(),
+      username: formData.username.trim().toLowerCase(),
+      image: formData.image.trim() || undefined,
+      bio: formData.bio || undefined,
+      location: formData.location.trim() || undefined,
+      website: formData.website.trim() || undefined,
     });
   };
 
-  if (isLoading) {
-    return <div className="container max-w-2xl py-6">Loading...</div>;
+  if (fetching || sessionLoading) {
+    return (
+      <div className="container flex max-w-2xl items-center justify-center py-20">
+        <Spinner className="size-5" />
+      </div>
+    );
   }
 
   return (
-    <div className="container max-w-2xl py-6 space-y-6">
+    <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 py-6">
       <Button
         variant="ghost"
+        className="w-fit self-start"
         onClick={() =>
           navigate({ to: "/profile/$username", params: { username } })
         }
       >
-        <ArrowLeft className="h-4 w-4 mr-2" />
+        <ArrowLeft data-icon="inline-start" />
         Back to Profile
       </Button>
 
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <User className="h-5 w-5" />
+            <User className="size-5" />
             Edit Profile
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Avatar Preview */}
-            <div className="flex items-center gap-4">
-              <Avatar className="h-20 w-20">
-                <AvatarImage src={image} />
-                <AvatarFallback className="text-2xl">
-                  {name?.[0]}
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex-1 space-y-2">
-                <Label htmlFor="image">Avatar URL</Label>
+          <FieldGroup>
+            {/* Avatar */}
+            <Field>
+              <FieldLabel htmlFor="image">Avatar</FieldLabel>
+              <div className="flex items-center gap-4">
+                <Avatar className="size-16">
+                  <AvatarImage src={formData.image} />
+                  <AvatarFallback className="text-xl">
+                    {formData.name?.[0]}
+                  </AvatarFallback>
+                </Avatar>
                 <Input
                   id="image"
                   type="url"
-                  value={image}
-                  onChange={(e) => setImage(e.target.value)}
+                  value={formData.image}
+                  onChange={(e) => setFormField("image", e.target.value)}
                   placeholder="https://example.com/avatar.jpg"
                   disabled={updateProfile.isPending}
                 />
               </div>
-            </div>
+            </Field>
 
             {/* Name */}
-            <div className="space-y-2">
-              <Label htmlFor="name">Display Name *</Label>
+            <Field>
+              <FieldLabel htmlFor="name">Display Name *</FieldLabel>
               <Input
                 id="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={formData.name}
+                onChange={(e) => setFormField("name", e.target.value)}
                 placeholder="Your display name"
                 disabled={updateProfile.isPending}
                 maxLength={100}
               />
-            </div>
+            </Field>
 
             {/* Username */}
-            <div className="space-y-2">
-              <Label htmlFor="username">Username *</Label>
+            <Field>
+              <FieldLabel htmlFor="username">Username *</FieldLabel>
               <div className="flex items-center gap-2">
                 <span className="text-muted-foreground text-sm">@</span>
                 <Input
                   id="username"
-                  value={usernameVal}
-                  onChange={(e) => setUsernameVal(e.target.value.toLowerCase())}
+                  value={formData.username}
+                  onChange={(e) =>
+                    setFormField("username", e.target.value.toLowerCase())
+                  }
                   placeholder="username"
                   disabled={updateProfile.isPending}
                   maxLength={30}
                 />
               </div>
-              <p className="text-xs text-muted-foreground">
+              <FieldDescription>
                 Only lowercase letters, numbers, underscores, and hyphens
-              </p>
-            </div>
+              </FieldDescription>
+            </Field>
 
             {/* Bio */}
-            <div className="space-y-2">
-              <Label htmlFor="bio">Bio</Label>
+            <Field>
+              <FieldLabel>Bio</FieldLabel>
               <RichTextEditor
-                value={bio}
-                onChange={setBio}
-                placeholder="Tell community about yourself..."
+                value={formData.bio}
+                onChange={(v) => setFormField("bio", v)}
+                placeholder="Tell the community about yourself..."
                 disabled={updateProfile.isPending}
-                showCharacterCount={true}
+                showCharacterCount
                 maxLength={500}
               />
-            </div>
+            </Field>
 
             {/* Location */}
-            <div className="space-y-2">
-              <Label htmlFor="location">Location</Label>
+            <Field>
+              <FieldLabel htmlFor="location">Location</FieldLabel>
               <Input
                 id="location"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
+                value={formData.location}
+                onChange={(e) => setFormField("location", e.target.value)}
                 placeholder="City, Country"
                 disabled={updateProfile.isPending}
                 maxLength={100}
               />
-            </div>
+            </Field>
 
             {/* Website */}
-            <div className="space-y-2">
-              <Label htmlFor="website">Website</Label>
+            <Field>
+              <FieldLabel htmlFor="website">Website</FieldLabel>
               <Input
                 id="website"
                 type="url"
-                value={website}
-                onChange={(e) => setWebsite(e.target.value)}
+                value={formData.website}
+                onChange={(e) => setFormField("website", e.target.value)}
                 placeholder="https://yourwebsite.com"
                 disabled={updateProfile.isPending}
               />
-            </div>
+            </Field>
 
             {/* Actions */}
-            <div className="flex justify-end gap-2 pt-4">
+            <div className="flex justify-end gap-2 pt-2">
               <Button
-                type="button"
                 variant="ghost"
                 onClick={() =>
                   navigate({ to: "/profile/$username", params: { username } })
@@ -227,11 +214,16 @@ function EditProfilePage() {
               >
                 Cancel
               </Button>
-              <Button type="submit" disabled={updateProfile.isPending}>
-                {updateProfile.isPending ? "Saving..." : "Save Changes"}
+              <Button onClick={handleSave} disabled={updateProfile.isPending}>
+                {updateProfile.isPending ? (
+                  <Spinner data-icon="inline-start" />
+                ) : (
+                  <Save data-icon="inline-start" />
+                )}
+                Save Changes
               </Button>
             </div>
-          </form>
+          </FieldGroup>
         </CardContent>
       </Card>
     </div>

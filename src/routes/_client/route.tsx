@@ -3,6 +3,8 @@ import { clientAuthMiddleware, getSessionFn } from '~/server/auth-actions'
 import Navbar from '~/components/forum/Navbar'
 import LeftSidebar from '~/components/forum/LeftSidebar'
 import RightSidebar from '~/components/forum/RightSidebar'
+import ForumFooter from '~/components/shared/ForumFooter'
+import { trpc } from '~/lib/trpc'
 
 export const Route = createFileRoute('/_client')({
   component: ClientLayout,
@@ -19,6 +21,7 @@ export const Route = createFileRoute('/_client')({
 
 function ClientLayout() {
   const { user } = Route.useLoaderData()
+  const { data: settings } = trpc.settings.getPublicSettings.useQuery()
 
   const location = useLocation()
   const pathname = location.pathname
@@ -38,7 +41,8 @@ function ClientLayout() {
           pathname.startsWith('/messages') ||
           pathname.startsWith('/search') ||
           pathname.startsWith('/tags') ||
-          pathname.startsWith('/events'),
+          pathname.startsWith('/events') ||
+          pathname.startsWith('/pages'),
     // Right sidebar for stats and recent activity
     right: pathname === '/' ||
            pathname.startsWith('/threads') ||
@@ -68,8 +72,11 @@ function ClientLayout() {
         )}
 
         {/* Main Content Area */}
-        <main className="relative min-w-0 flex-1 overflow-y-auto p-2">
-          <Outlet />
+        <main className="relative min-w-0 flex-1 overflow-y-auto">
+          <div className="p-2">
+            <Outlet />
+          </div>
+          <ForumFooter />
         </main>
 
         {/* Right Sidebar (desktop) */}

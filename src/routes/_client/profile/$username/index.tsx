@@ -1,4 +1,5 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
+import { useEffect } from 'react'
 import { Button } from '~/components/ui/button'
 import { Card, CardContent } from '~/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
@@ -7,17 +8,17 @@ import { Skeleton } from '~/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
 import { Input } from '~/components/ui/input'
 import {
-  MessageSquare,
   Edit,
   LogOut,
   Globe,
 } from 'lucide-react'
 import { trpc } from '~/lib/trpc'
 import { useSession, authClient } from '~/lib/auth-client'
+import { useProfileStore } from '~/stores/profile-store'
 import ThreadCard from '~/components/forum/ThreadCard'
 import { seo } from '~/utils/seo'
 
-export const Route = createFileRoute('/_client/profile/$username')({
+export const Route = createFileRoute('/_client/profile/$username/')({
   head: () => ({
     meta: [...seo({ title: 'Profile - Foreum' })],
   }),
@@ -69,6 +70,14 @@ function ProfilePage() {
 
   const isOwnProfile = session?.user?.id === user?.id
 
+  const { setProfileUser, initializeForm } = useProfileStore()
+
+  useEffect(() => {
+    if (!user) return
+    setProfileUser(user)
+    initializeForm()
+  }, [user, setProfileUser, initializeForm])
+
   if (isLoading) {
     return (
       <div className="container mx-auto max-w-6xl px-4 py-12">
@@ -109,9 +118,11 @@ function ProfilePage() {
               </Avatar>
 
               <h1 className="mt-4 text-2xl font-semibold tracking-tight">
-                {user.username}
+                {user.name}
               </h1>
-              <p className="text-muted-foreground">{user.name}</p>
+              {user.username && (
+                <p className="text-muted-foreground">@{user.username}</p>
+              )}
 
               {user.website && (
                 <a
@@ -129,13 +140,14 @@ function ProfilePage() {
             <div className="flex flex-col gap-2">
               {isOwnProfile && (
                 <>
-                  <Link to="/profile/$username/edit" params={{ username: user.username || '' }}>
+                  <Link to="/profile/$username/edit" params={{ username }}>
                     <Button variant="outline" className="w-full justify-start">
-                      <Edit className="mr-2 h-4 w-4" /> Edit Profile
+                      <Edit data-icon="inline-start" />
+                      Edit Profile
                     </Button>
                   </Link>
                   <Button variant="destructive" className="w-full justify-start" onClick={handleLogout}>
-                    <LogOut className="mr-2 h-4 w-4" /> Log Out
+                    <LogOut data-icon="inline-start" /> Log Out
                   </Button>
                 </>
               )}

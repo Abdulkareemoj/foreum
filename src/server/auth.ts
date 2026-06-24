@@ -2,7 +2,6 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { emailOTP, oneTap, username } from "better-auth/plugins";
 import { admin } from "better-auth/plugins/admin";
-import { Resend } from "resend";
 
 import { tanstackStartCookies } from "better-auth/tanstack-start";
 
@@ -21,8 +20,8 @@ import {
   userAc,
 } from "~/server/permissions";
 import { createLogger } from "~/server/lib/logger";
-const resend = new Resend(process.env.RESEND_API_KEY);
-const from = process.env.BETTER_AUTH_EMAIL;
+import { createTransporter } from "~/server/lib/get-smtp-config";
+
 const logger = createLogger('auth');
 
 export const auth = betterAuth({
@@ -31,7 +30,9 @@ export const auth = betterAuth({
     provider: "pg",
     schema,
   }),
-  trustedOrigins: ["http://localhost:3000"],
+  trustedOrigins: process.env.TRUSTED_ORIGINS
+    ? process.env.TRUSTED_ORIGINS.split(",").map((s) => s.trim())
+    : ["http://localhost:3000"],
   plugins: [
     admin({
       defaultRole: "user",
@@ -81,54 +82,59 @@ export const auth = betterAuth({
   },
   emailVerification: {
     async sendVerificationEmail({ user, url, token }, request) {
-      const emailContent = verificationTemplate
-        .replace("{{username}}", user.name || user.email)
-        .replace(/{{url}}/g, url);
-
-      const res = await resend.emails.send;
-      // ({
-      // 	from,
-      // 	to: user.email,
-      // 	subject: 'Verify your email address',
-      // 	html: emailContent
-      // });
-      //
-      logger.info({ email: user.email }, 'Verification email sent');
+      try {
+        const { transporter, from } = await createTransporter();
+        await transporter.sendMail({
+          from,
+          to: user.email,
+          subject: 'Verify your email address',
+          html: verificationTemplate
+            .replace("{{username}}", user.name || user.email)
+            .replace(/{{url}}/g, url),
+        });
+        logger.info({ email: user.email }, 'Verification email sent');
+      } catch (err) {
+        logger.error({ err, email: user.email }, 'Failed to send verification email');
+      }
     },
     sendOnSignUp: true,
     autoSignInAfterVerification: true,
-    expiresIn: 3600, // 1 hour
+    expiresIn: 3600,
   },
   emailAndPassword: {
     enabled: true,
     async sendResetPassword({ user, url, token }, request) {
-      const emailContent = resetTemplate
-        .replace("{{username}}", user.name || user.email)
-        .replace(/{{url}}/g, url);
-
-      const res = await resend.emails.send;
-      // ({
-      // 	from,
-      // 	to: user.email,
-      // 	subject: 'Reset your password',
-      // 	html: emailContent
-      // });
-      logger.info({ email: user.email }, 'Password reset link sent');
+      try {
+        const { transporter, from } = await createTransporter();
+        await transporter.sendMail({
+          from,
+          to: user.email,
+          subject: 'Reset your password',
+          html: resetTemplate
+            .replace("{{username}}", user.name || user.email)
+            .replace(/{{url}}/g, url),
+        });
+        logger.info({ email: user.email }, 'Password reset link sent');
+      } catch (err) {
+        logger.error({ err, email: user.email }, 'Failed to send password reset');
+      }
     },
     async onPasswordReset({ user }, request) {
-      const emailContent = resetConfirmTemplate.replace(
-        "{{username}}",
-        user.name || user.email,
-      );
-
-      const res = await resend.emails.send;
-      // ({
-      // 	from,
-      // 	to: user.email,
-      // 	subject: 'Password Reset Confirmation',
-      // 	html: emailContent
-      // });
-      logger.info({ email: user.email }, 'Password reset confirmation sent');
+      try {
+        const { transporter, from } = await createTransporter();
+        await transporter.sendMail({
+          from,
+          to: user.email,
+          subject: 'Password Reset Confirmation',
+          html: resetConfirmTemplate.replace(
+            "{{username}}",
+            user.name || user.email,
+          ),
+        });
+        logger.info({ email: user.email }, 'Password reset confirmation sent');
+      } catch (err) {
+        logger.error({ err, email: user.email }, 'Failed to send reset confirmation');
+      }
     },
     requireEmailVerification: true,
   },

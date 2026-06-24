@@ -147,6 +147,30 @@ export const userRouter = router({
 			}
 		}),
 
+	getMyProfile: protectedProcedure.query(async ({ ctx }) => {
+			try {
+				const [result] = await db
+					.select({
+						id: user.id,
+						name: user.name,
+						username: user.username,
+						email: user.email,
+						image: user.image,
+						bio: profile.bio,
+						location: profile.location,
+						website: profile.website,
+					})
+					.from(user)
+					.leftJoin(profile, eq(profile.id, user.id))
+					.where(eq(user.id, ctx.user.id))
+
+				return result ?? null
+			} catch (error) {
+				logger.error({ err: error }, 'Failed to fetch my profile')
+				throw apiError('INTERNAL_SERVER_ERROR', 'Failed to fetch profile')
+			}
+		}),
+
 	updateProfile: protectedProcedure
 		.input(
 			z.object({

@@ -2,6 +2,7 @@ import { initTRPC, TRPCError } from '@trpc/server'
 import superjson from 'superjson'
 import type { Context } from '~/server/trpc/context'
 import { createLogger } from '~/server/lib/logger'
+import { rateLimiter, getIdentifier } from '~/server/lib/rate-limiter'
 
 const t = initTRPC.context<Context>().create({
   transformer: superjson,
@@ -26,7 +27,37 @@ const logMiddleware = t.middleware(async ({ path, next, type }) => {
   }
 })
 
-export const publicProcedure = baseProcedure.use(logMiddleware)
+// Rate limit middleware — runs before auth to block early
+const rateLimitMiddleware = t.middleware(async ({ ctx, next }) => {
+  const identifier = getIdentifier(ctx)
+
+  let tier: string
+  if (ctx.user?.role === 'admin' || ctx.user?.role === 'superadmin') {
+    tier = 'admin'
+  } else if (ctx.user) {
+    tier = 'protected'
+  } else {
+    tier = 'public'
+  }
+
+  const result = rateLimiter.check(tier, identifier)
+
+  ctx.resHeaders?.set('x-ratelimit-remaining', String(result.remaining))
+  ctx.resHeaders?.set('x-ratelimit-reset', String(Math.ceil(result.resetMs / 1000)))
+
+  if (!result.allowed) {
+    const retryAfter = Math.ceil(result.resetMs / 1000)
+    ctx.resHeaders?.set('retry-after', String(retryAfter))
+    throw new TRPCError({
+      code: 'TOO_MANY_REQUESTS',
+      message: `Rate limit exceeded. Try again in ${retryAfter}s.`,
+    })
+  }
+
+  return next()
+})
+
+export const publicProcedure = baseProcedure.use(logMiddleware).use(rateLimitMiddleware)
 
 // Auth middleware
 const isAuthed = t.middleware(({ ctx, next }) => {

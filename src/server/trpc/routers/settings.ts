@@ -112,12 +112,17 @@ export const settingsRouter = router({
 			footerText: settings.footer_text ?? '',
 			footerCopyright: settings.footer_copyright ?? '',
 			homepageLayout: settings.homepage_layout ?? 'latest',
-			customCss: settings.custom_css ?? '',
 			defaultAvatar: settings.default_avatar ?? '',
 			socialLinks: settings.social_links ?? '[]',
 			metaTitleSuffix: settings.meta_title_suffix ?? '',
 			ogImage: settings.og_image ?? '',
 			navItems: settings.nav_items ?? '[]',
+			customCss: settings.custom_css ?? '',
+			customJsHead: settings.custom_js_head ?? '',
+			customJsBody: settings.custom_js_body ?? '',
+			customHeadHtml: settings.custom_head_html ?? '',
+			maintenanceMode: settings.maintenance_mode === 'true',
+			maintenanceMessage: settings.maintenance_message ?? '',
 		};
 	}),
 
@@ -135,5 +140,19 @@ export const settingsRouter = router({
 					});
 			}
 			return { success: true };
+		}),
+
+	testEmail: adminProcedure
+		.input(z.object({
+			host: z.string(),
+			port: z.number(),
+			secure: z.boolean(),
+			user: z.string(),
+			pass: z.string(),
+			to: z.string().email(),
+		}))
+		.mutation(async ({ input }) => {
+			const { testSmtpConnection } = await import('~/server/lib/get-smtp-config');
+			return testSmtpConnection(input.host, input.port, input.secure, input.user, input.pass, input.to);
 		}),
 });

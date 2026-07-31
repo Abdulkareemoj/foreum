@@ -23,8 +23,10 @@ function GroupSlugPage() {
   
   const [activeTab, setActiveTab] = useState<'overview' | 'forum' | 'members'>('overview')
 
-  const { data: group, isLoading, refetch } = trpc.groups.byId.useQuery({ id: slug })
-  const { data: recentThreads } = trpc.groups.threads.useQuery({ groupId: slug, limit: 5 })
+  const { data: group, isLoading, refetch } = trpc.groups.bySlug.useQuery({ slug })
+  const { data: recentThreadsData } = trpc.groups.threads.useQuery({ groupId: slug, limit: 5 })
+
+  const recentThreads = recentThreadsData?.items ?? []
 
   const joinGroup = trpc.groups.join.useMutation({
     onSuccess: () => refetch()
@@ -66,14 +68,14 @@ function GroupSlugPage() {
           {group.isMember ? (
             <Button
               variant="outline"
-              onClick={() => leaveGroup.mutate({ id: group.id })}
+              onClick={() => leaveGroup.mutate({ groupId: group.id })}
               disabled={leaveGroup.isPending}
             >
               Leave
             </Button>
           ) : (
             <Button 
-              onClick={() => joinGroup.mutate({ id: group.id })}
+              onClick={() => joinGroup.mutate({ groupId: group.id })}
               disabled={joinGroup.isPending}
             >
               Join
@@ -111,11 +113,11 @@ function GroupSlugPage() {
               <Card>
                 <CardHeader>Recent posts</CardHeader>
                 <CardContent>
-                  {!recentThreads || recentThreads.length === 0 ? (
+                  {recentThreads.length === 0 ? (
                     <p className="text-sm text-muted-foreground">No threads yet.</p>
                   ) : (
                     <div className="space-y-4">
-                      {recentThreads.map((t: any) => (
+                      {recentThreads.map((t) => (
                         <Link key={t.id} to={`/threads/${t.id}` as any} className="block rounded p-3 hover:bg-muted/30">
                           <div className="font-medium">{t.title}</div>
                           <div className="text-sm text-muted-foreground">

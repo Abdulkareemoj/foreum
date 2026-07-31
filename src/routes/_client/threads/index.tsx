@@ -48,7 +48,7 @@ function ThreadPage() {
                   <PlusIcon /> New Thread
                 </Button>
               </Link>
-              <Link to="/communities">
+              <Link to="/groups">
                 <Button variant="secondary" className="gap-2">
                   <Users /> Browse Communities
                 </Button>

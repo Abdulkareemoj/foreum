@@ -40,7 +40,7 @@ export default function CategoriesWidget() {
         )}
 
         <Link
-          to="/categories"
+          to="/category"
           className="block text-center text-sm text-primary hover:underline pt-2"
         >
           View all categories

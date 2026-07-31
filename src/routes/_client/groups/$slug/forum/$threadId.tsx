@@ -9,9 +9,10 @@ export const Route = createFileRoute('/_client/groups/$slug/forum/$threadId')({
 })
 
 // Stub for HTML content
-const renderTipTap = (content: string | null) => {
+const renderTipTap = (content: unknown) => {
   if (!content) return ''
-  return `<p>${content}</p>`
+  if (typeof content === 'string') return `<p>${content}</p>`
+  return `<p>${JSON.stringify(content)}</p>`
 }
 
 function GroupThreadPage() {
@@ -51,7 +52,7 @@ function GroupThreadPage() {
             </Avatar>
             <span>{thread.author?.name}</span>
             <span>•</span>
-            <span>{new Date(thread.createdAt).toLocaleString()}</span>
+            <span>{thread.createdAt ? new Date(thread.createdAt).toLocaleString() : ''}</span>
           </div>
         </CardHeader>
 
@@ -98,7 +99,7 @@ function GroupThreadPage() {
       </div>
 
       <div>
-        <ReplyForm threadId={thread.id} onSubmitted={() => refetchReplies()} />
+        <ReplyForm threadId={thread.id} onSuccess={() => refetchReplies()} />
       </div>
     </div>
   )

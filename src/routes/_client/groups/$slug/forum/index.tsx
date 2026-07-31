@@ -33,12 +33,12 @@ function GroupForumPage() {
     return () => clearTimeout(timer)
   }, [search])
 
-  const { data: threads, isLoading } = trpc.groups.threads.useQuery({ 
+  const { data: threadsData, isLoading } = trpc.groups.threads.useQuery({ 
     groupId: slug, 
-    search: debouncedSearch || undefined, 
-    sortBy: sortBy === 'popular' ? 'popular' : 'recent', 
     limit: 30 
   })
+
+  const threads = threadsData?.items ?? []
 
   const handleOpenNew = () => {
     // Navigate using a query parameter for group assignment if thread creation handles it
@@ -82,7 +82,7 @@ function GroupForumPage() {
             </Card>
           ))}
         </div>
-      ) : !threads || threads.length === 0 ? (
+      ) : threads.length === 0 ? (
         <Card>
           <CardContent className="py-8 text-center text-muted-foreground">
             No threads yet.
@@ -90,7 +90,7 @@ function GroupForumPage() {
         </Card>
       ) : (
         <div className="space-y-4">
-          {threads.map((thread: any) => (
+          {threads.map((thread) => (
             <ThreadCard key={thread.id} thread={thread} />
           ))}
         </div>

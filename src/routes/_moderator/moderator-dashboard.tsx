@@ -68,7 +68,7 @@ function ModeratorDashboard() {
           </CardHeader>
           <CardContent className="flex flex-col gap-2">
             <Button asChild variant="outline" className="justify-between w-full">
-              <Link to="/reports">
+              <Link to="/moderator-reports">
                 Review Reports
                 <ArrowRight className="size-4 ml-2" />
               </Link>
@@ -98,7 +98,7 @@ function ModeratorDashboard() {
                     <p className="text-xs text-muted-foreground">Type: {report.type}</p>
                   </div>
                   <Button size="sm" variant="ghost" asChild>
-                    <Link to="/reports">View</Link>
+                    <Link to="/moderator-reports">View</Link>
                   </Button>
                 </div>
               ))

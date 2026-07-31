@@ -89,8 +89,12 @@ export function MediaToolbarButton({
   const { openFilePicker } = useFilePicker({
     accept: currentConfig.accept,
     multiple: true,
-    onFilesSelected: ({ plainFiles: updatedFiles }) => {
-      editor.getTransforms(PlaceholderPlugin).insert.media(updatedFiles);
+    onFilesSelected: (data: { plainFiles?: File[]; errors?: unknown[] }) => {
+      const updatedFiles = data.plainFiles;
+      if (!updatedFiles) return;
+      const dt = new DataTransfer();
+      updatedFiles.forEach((f) => dt.items.add(f));
+      editor.getTransforms(PlaceholderPlugin).insert.media(dt.files);
     },
   });
 

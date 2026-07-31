@@ -16,7 +16,7 @@ import {
   RenderLeafProps,
   ReactEditor,
 } from "slate-react";
-import { withHistory } from "slate-history";
+import { withHistory, HistoryEditor } from "slate-history";
 import { cn } from "~/lib/utils";
 import { Button } from "./button";
 import {
@@ -40,7 +40,7 @@ import { Separator } from "./separator";
 
 declare module "slate" {
   interface CustomTypes {
-    Editor: BaseEditor & ReactEditor;
+    Editor: BaseEditor & ReactEditor & HistoryEditor;
     Element: CustomElement;
     Text: CustomText;
   }
@@ -216,8 +216,8 @@ function Toolbar({ editor, className, disabled }: ToolbarProps) {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => editor.undo()}
-            disabled={disabled || !editor.undo()}
+            onClick={() => (editor as HistoryEditor).undo()}
+            disabled={disabled || editor.history.undos.length === 0}
           >
             <Undo className="h-4 w-4" />
           </Button>
@@ -230,8 +230,8 @@ function Toolbar({ editor, className, disabled }: ToolbarProps) {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => editor.redo()}
-            disabled={disabled || !editor.redo()}
+            onClick={() => (editor as HistoryEditor).redo()}
+            disabled={disabled || editor.history.redos.length === 0}
           >
             <Redo className="h-4 w-4" />
           </Button>

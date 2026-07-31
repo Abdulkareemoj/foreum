@@ -9,226 +9,99 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as ModeratorRouteRouteImport } from './routes/_moderator/route'
-import { Route as LandingRouteRouteImport } from './routes/_landing/route'
-import { Route as ClientRouteRouteImport } from './routes/_client/route'
-import { Route as AuthRouteRouteImport } from './routes/_auth/route'
-import { Route as AdminRouteRouteImport } from './routes/_admin/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ModeratorModeratorReportsRouteImport } from './routes/_moderator/moderator-reports'
-import { Route as ModeratorModeratorDashboardRouteImport } from './routes/_moderator/moderator-dashboard'
-import { Route as ModeratorModerationRouteImport } from './routes/_moderator/moderation'
-import { Route as ModeratorHelpDocsRouteImport } from './routes/_moderator/help-docs'
-import { Route as LandingTermsRouteImport } from './routes/_landing/terms'
-import { Route as LandingPrivacyPolicyRouteImport } from './routes/_landing/privacy-policy'
-import { Route as LandingCookiesRouteImport } from './routes/_landing/cookies'
-import { Route as ClientSettingsRouteImport } from './routes/_client/settings'
-import { Route as ClientSearchRouteImport } from './routes/_client/search'
-import { Route as ClientNotificationsRouteImport } from './routes/_client/notifications'
-import { Route as ClientJoinRouteImport } from './routes/_client/join'
-import { Route as ClientEmbedRouteImport } from './routes/_client/embed'
-import { Route as ClientBookmarksRouteImport } from './routes/_client/bookmarks'
-import { Route as AuthVerifyEmailRouteImport } from './routes/_auth/verify-email'
-import { Route as AuthSignUpRouteImport } from './routes/_auth/sign-up'
-import { Route as AuthSignInRouteImport } from './routes/_auth/sign-in'
-import { Route as AuthResetPasswordRouteImport } from './routes/_auth/reset-password'
-import { Route as AuthForgotPasswordRouteImport } from './routes/_auth/forgot-password'
-import { Route as AdminUsersListRouteImport } from './routes/_admin/users-list'
-import { Route as AdminReportsSummaryRouteImport } from './routes/_admin/reports-summary'
-import { Route as AdminHelpRouteImport } from './routes/_admin/help'
-import { Route as AdminAppearanceRouteImport } from './routes/_admin/appearance'
-import { Route as AdminAnnouncementsRouteImport } from './routes/_admin/announcements'
-import { Route as AdminAdminSettingsRouteImport } from './routes/_admin/admin-settings'
-import { Route as AdminAdminPagesRouteImport } from './routes/_admin/admin-pages'
-import { Route as AdminAdminModerationRouteImport } from './routes/_admin/admin-moderation'
-import { Route as AdminAdminDashboardRouteImport } from './routes/_admin/admin-dashboard'
+import { Route as AdminRouteRouteImport } from './routes/_admin/route'
+import { Route as AuthRouteRouteImport } from './routes/_auth/route'
+import { Route as ClientRouteRouteImport } from './routes/_client/route'
+import { Route as LandingRouteRouteImport } from './routes/_landing/route'
+import { Route as ModeratorRouteRouteImport } from './routes/_moderator/route'
 import { Route as AdminAdminAnalyticsRouteImport } from './routes/_admin/admin-analytics'
-import { Route as ClientThreadsIndexRouteImport } from './routes/_client/threads/index'
-import { Route as ClientTagsIndexRouteImport } from './routes/_client/tags/index'
-import { Route as ClientResourcesIndexRouteImport } from './routes/_client/resources/index'
-import { Route as ClientMessagesIndexRouteImport } from './routes/_client/messages/index'
-import { Route as ClientGroupsIndexRouteImport } from './routes/_client/groups/index'
-import { Route as ClientEventsIndexRouteImport } from './routes/_client/events/index'
+import { Route as AdminAdminDashboardRouteImport } from './routes/_admin/admin-dashboard'
+import { Route as AdminAdminModerationRouteImport } from './routes/_admin/admin-moderation'
+import { Route as AdminAdminPagesRouteImport } from './routes/_admin/admin-pages'
+import { Route as AdminAdminSettingsRouteImport } from './routes/_admin/admin-settings'
+import { Route as AdminAnnouncementsRouteImport } from './routes/_admin/announcements'
+import { Route as AdminAppearanceRouteImport } from './routes/_admin/appearance'
+import { Route as AdminHelpRouteImport } from './routes/_admin/help'
+import { Route as AdminReportsSummaryRouteImport } from './routes/_admin/reports-summary'
+import { Route as AdminUsersListRouteImport } from './routes/_admin/users-list'
+import { Route as AuthForgotPasswordRouteImport } from './routes/_auth/forgot-password'
+import { Route as AuthResetPasswordRouteImport } from './routes/_auth/reset-password'
+import { Route as AuthSignInRouteImport } from './routes/_auth/sign-in'
+import { Route as AuthSignUpRouteImport } from './routes/_auth/sign-up'
+import { Route as AuthVerifyEmailRouteImport } from './routes/_auth/verify-email'
+import { Route as ClientBookmarksRouteImport } from './routes/_client/bookmarks'
+import { Route as ClientEmbedRouteImport } from './routes/_client/embed'
+import { Route as ClientJoinRouteImport } from './routes/_client/join'
+import { Route as ClientNotificationsRouteImport } from './routes/_client/notifications'
+import { Route as ClientSearchRouteImport } from './routes/_client/search'
+import { Route as ClientSettingsRouteImport } from './routes/_client/settings'
+import { Route as LandingCookiesRouteImport } from './routes/_landing/cookies'
+import { Route as LandingPrivacyPolicyRouteImport } from './routes/_landing/privacy-policy'
+import { Route as LandingTermsRouteImport } from './routes/_landing/terms'
+import { Route as ModeratorHelpDocsRouteImport } from './routes/_moderator/help-docs'
+import { Route as ModeratorModerationRouteImport } from './routes/_moderator/moderation'
+import { Route as ModeratorModeratorDashboardRouteImport } from './routes/_moderator/moderator-dashboard'
+import { Route as ModeratorModeratorReportsRouteImport } from './routes/_moderator/moderator-reports'
 import { Route as ClientCategoryIndexRouteImport } from './routes/_client/category/index'
-import { Route as ApiTrpcSplatRouteImport } from './routes/api/trpc/$'
-import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
-import { Route as ClientThreadsNewRouteImport } from './routes/_client/threads/new'
-import { Route as ClientThreadsIdRouteImport } from './routes/_client/threads/$id'
-import { Route as ClientTagsSlugRouteImport } from './routes/_client/tags/$slug'
-import { Route as ClientPagesSlugRouteImport } from './routes/_client/pages/$slug'
-import { Route as ClientMessagesIdRouteImport } from './routes/_client/messages/$id'
-import { Route as ClientGroupsNewRouteImport } from './routes/_client/groups/new'
-import { Route as ClientEventsNewRouteImport } from './routes/_client/events/new'
-import { Route as ClientEventsIdRouteImport } from './routes/_client/events/$id'
 import { Route as ClientCategorySlugRouteImport } from './routes/_client/category/$slug'
-import { Route as ClientProfileUsernameIndexRouteImport } from './routes/_client/profile/$username/index'
+import { Route as ClientEventsIndexRouteImport } from './routes/_client/events/index'
+import { Route as ClientEventsIdRouteImport } from './routes/_client/events/$id'
+import { Route as ClientEventsNewRouteImport } from './routes/_client/events/new'
+import { Route as ClientGroupsIndexRouteImport } from './routes/_client/groups/index'
+import { Route as ClientGroupsNewRouteImport } from './routes/_client/groups/new'
+import { Route as ClientMessagesIndexRouteImport } from './routes/_client/messages/index'
+import { Route as ClientMessagesIdRouteImport } from './routes/_client/messages/$id'
+import { Route as ClientPagesSlugRouteImport } from './routes/_client/pages/$slug'
+import { Route as ClientResourcesIndexRouteImport } from './routes/_client/resources/index'
+import { Route as ClientTagsIndexRouteImport } from './routes/_client/tags/index'
+import { Route as ClientTagsSlugRouteImport } from './routes/_client/tags/$slug'
+import { Route as ClientThreadsIndexRouteImport } from './routes/_client/threads/index'
+import { Route as ClientThreadsIdRouteImport } from './routes/_client/threads/$id'
+import { Route as ClientThreadsNewRouteImport } from './routes/_client/threads/new'
+import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as ApiTrpcSplatRouteImport } from './routes/api/trpc/$'
 import { Route as ClientGroupsSlugIndexRouteImport } from './routes/_client/groups/$slug/index'
-import { Route as ClientThreadsIdEditRouteImport } from './routes/_client/threads/$id.edit'
-import { Route as ClientProfileUsernameReputationRouteImport } from './routes/_client/profile/$username/reputation'
-import { Route as ClientProfileUsernameEditRouteImport } from './routes/_client/profile/$username/edit'
-import { Route as ClientProfileUsernameBadgesRouteImport } from './routes/_client/profile/$username/badges'
-import { Route as ClientGroupsSlugSettingsRouteImport } from './routes/_client/groups/$slug/settings'
-import { Route as ClientGroupsSlugMembersRouteImport } from './routes/_client/groups/$slug/members'
 import { Route as ClientGroupsSlugEventsRouteImport } from './routes/_client/groups/$slug/events'
+import { Route as ClientGroupsSlugMembersRouteImport } from './routes/_client/groups/$slug/members'
+import { Route as ClientGroupsSlugSettingsRouteImport } from './routes/_client/groups/$slug/settings'
+import { Route as ClientProfileUsernameIndexRouteImport } from './routes/_client/profile/$username/index'
+import { Route as ClientProfileUsernameBadgesRouteImport } from './routes/_client/profile/$username/badges'
+import { Route as ClientProfileUsernameEditRouteImport } from './routes/_client/profile/$username/edit'
+import { Route as ClientProfileUsernameReputationRouteImport } from './routes/_client/profile/$username/reputation'
+import { Route as ClientThreadsIdEditRouteImport } from './routes/_client/threads/$id.edit'
 import { Route as ClientGroupsSlugForumIndexRouteImport } from './routes/_client/groups/$slug/forum/index'
 import { Route as ClientGroupsSlugForumThreadIdRouteImport } from './routes/_client/groups/$slug/forum/$threadId'
 import { Route as ClientThreadsThreadIdReplyReplyIdEditRouteImport } from './routes/_client/threads/$threadId.reply.$replyId.edit'
 
-const ModeratorRouteRoute = ModeratorRouteRouteImport.update({
-  id: '/_moderator',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LandingRouteRoute = LandingRouteRouteImport.update({
-  id: '/_landing',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ClientRouteRoute = ClientRouteRouteImport.update({
-  id: '/_client',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthRouteRoute = AuthRouteRouteImport.update({
-  id: '/_auth',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRouteRoute = AdminRouteRouteImport.update({
   id: '/_admin',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const AuthRouteRoute = AuthRouteRouteImport.update({
+  id: '/_auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ModeratorModeratorReportsRoute =
-  ModeratorModeratorReportsRouteImport.update({
-    id: '/moderator-reports',
-    path: '/moderator-reports',
-    getParentRoute: () => ModeratorRouteRoute,
-  } as any)
-const ModeratorModeratorDashboardRoute =
-  ModeratorModeratorDashboardRouteImport.update({
-    id: '/moderator-dashboard',
-    path: '/moderator-dashboard',
-    getParentRoute: () => ModeratorRouteRoute,
-  } as any)
-const ModeratorModerationRoute = ModeratorModerationRouteImport.update({
-  id: '/moderation',
-  path: '/moderation',
-  getParentRoute: () => ModeratorRouteRoute,
+const ClientRouteRoute = ClientRouteRouteImport.update({
+  id: '/_client',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const ModeratorHelpDocsRoute = ModeratorHelpDocsRouteImport.update({
-  id: '/help-docs',
-  path: '/help-docs',
-  getParentRoute: () => ModeratorRouteRoute,
+const LandingRouteRoute = LandingRouteRouteImport.update({
+  id: '/_landing',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const LandingTermsRoute = LandingTermsRouteImport.update({
-  id: '/terms',
-  path: '/terms',
-  getParentRoute: () => LandingRouteRoute,
+const ModeratorRouteRoute = ModeratorRouteRouteImport.update({
+  id: '/_moderator',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const LandingPrivacyPolicyRoute = LandingPrivacyPolicyRouteImport.update({
-  id: '/privacy-policy',
-  path: '/privacy-policy',
-  getParentRoute: () => LandingRouteRoute,
-} as any)
-const LandingCookiesRoute = LandingCookiesRouteImport.update({
-  id: '/cookies',
-  path: '/cookies',
-  getParentRoute: () => LandingRouteRoute,
-} as any)
-const ClientSettingsRoute = ClientSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => ClientRouteRoute,
-} as any)
-const ClientSearchRoute = ClientSearchRouteImport.update({
-  id: '/search',
-  path: '/search',
-  getParentRoute: () => ClientRouteRoute,
-} as any)
-const ClientNotificationsRoute = ClientNotificationsRouteImport.update({
-  id: '/notifications',
-  path: '/notifications',
-  getParentRoute: () => ClientRouteRoute,
-} as any)
-const ClientJoinRoute = ClientJoinRouteImport.update({
-  id: '/join',
-  path: '/join',
-  getParentRoute: () => ClientRouteRoute,
-} as any)
-const ClientEmbedRoute = ClientEmbedRouteImport.update({
-  id: '/embed',
-  path: '/embed',
-  getParentRoute: () => ClientRouteRoute,
-} as any)
-const ClientBookmarksRoute = ClientBookmarksRouteImport.update({
-  id: '/bookmarks',
-  path: '/bookmarks',
-  getParentRoute: () => ClientRouteRoute,
-} as any)
-const AuthVerifyEmailRoute = AuthVerifyEmailRouteImport.update({
-  id: '/verify-email',
-  path: '/verify-email',
-  getParentRoute: () => AuthRouteRoute,
-} as any)
-const AuthSignUpRoute = AuthSignUpRouteImport.update({
-  id: '/sign-up',
-  path: '/sign-up',
-  getParentRoute: () => AuthRouteRoute,
-} as any)
-const AuthSignInRoute = AuthSignInRouteImport.update({
-  id: '/sign-in',
-  path: '/sign-in',
-  getParentRoute: () => AuthRouteRoute,
-} as any)
-const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
-  id: '/reset-password',
-  path: '/reset-password',
-  getParentRoute: () => AuthRouteRoute,
-} as any)
-const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
-  id: '/forgot-password',
-  path: '/forgot-password',
-  getParentRoute: () => AuthRouteRoute,
-} as any)
-const AdminUsersListRoute = AdminUsersListRouteImport.update({
-  id: '/users-list',
-  path: '/users-list',
-  getParentRoute: () => AdminRouteRoute,
-} as any)
-const AdminReportsSummaryRoute = AdminReportsSummaryRouteImport.update({
-  id: '/reports-summary',
-  path: '/reports-summary',
-  getParentRoute: () => AdminRouteRoute,
-} as any)
-const AdminHelpRoute = AdminHelpRouteImport.update({
-  id: '/help',
-  path: '/help',
-  getParentRoute: () => AdminRouteRoute,
-} as any)
-const AdminAppearanceRoute = AdminAppearanceRouteImport.update({
-  id: '/appearance',
-  path: '/appearance',
-  getParentRoute: () => AdminRouteRoute,
-} as any)
-const AdminAnnouncementsRoute = AdminAnnouncementsRouteImport.update({
-  id: '/announcements',
-  path: '/announcements',
-  getParentRoute: () => AdminRouteRoute,
-} as any)
-const AdminAdminSettingsRoute = AdminAdminSettingsRouteImport.update({
-  id: '/admin-settings',
-  path: '/admin-settings',
-  getParentRoute: () => AdminRouteRoute,
-} as any)
-const AdminAdminPagesRoute = AdminAdminPagesRouteImport.update({
-  id: '/admin-pages',
-  path: '/admin-pages',
-  getParentRoute: () => AdminRouteRoute,
-} as any)
-const AdminAdminModerationRoute = AdminAdminModerationRouteImport.update({
-  id: '/admin-moderation',
-  path: '/admin-moderation',
+const AdminAdminAnalyticsRoute = AdminAdminAnalyticsRouteImport.update({
+  id: '/admin-analytics',
+  path: '/admin-analytics',
   getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminAdminDashboardRoute = AdminAdminDashboardRouteImport.update({
@@ -236,94 +109,141 @@ const AdminAdminDashboardRoute = AdminAdminDashboardRouteImport.update({
   path: '/admin-dashboard',
   getParentRoute: () => AdminRouteRoute,
 } as any)
-const AdminAdminAnalyticsRoute = AdminAdminAnalyticsRouteImport.update({
-  id: '/admin-analytics',
-  path: '/admin-analytics',
+const AdminAdminModerationRoute = AdminAdminModerationRouteImport.update({
+  id: '/admin-moderation',
+  path: '/admin-moderation',
   getParentRoute: () => AdminRouteRoute,
 } as any)
-const ClientThreadsIndexRoute = ClientThreadsIndexRouteImport.update({
-  id: '/threads/',
-  path: '/threads/',
+const AdminAdminPagesRoute = AdminAdminPagesRouteImport.update({
+  id: '/admin-pages',
+  path: '/admin-pages',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminAdminSettingsRoute = AdminAdminSettingsRouteImport.update({
+  id: '/admin-settings',
+  path: '/admin-settings',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminAnnouncementsRoute = AdminAnnouncementsRouteImport.update({
+  id: '/announcements',
+  path: '/announcements',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminAppearanceRoute = AdminAppearanceRouteImport.update({
+  id: '/appearance',
+  path: '/appearance',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminHelpRoute = AdminHelpRouteImport.update({
+  id: '/help',
+  path: '/help',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminReportsSummaryRoute = AdminReportsSummaryRouteImport.update({
+  id: '/reports-summary',
+  path: '/reports-summary',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminUsersListRoute = AdminUsersListRouteImport.update({
+  id: '/users-list',
+  path: '/users-list',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthSignInRoute = AuthSignInRouteImport.update({
+  id: '/sign-in',
+  path: '/sign-in',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthSignUpRoute = AuthSignUpRouteImport.update({
+  id: '/sign-up',
+  path: '/sign-up',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthVerifyEmailRoute = AuthVerifyEmailRouteImport.update({
+  id: '/verify-email',
+  path: '/verify-email',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const ClientBookmarksRoute = ClientBookmarksRouteImport.update({
+  id: '/bookmarks',
+  path: '/bookmarks',
   getParentRoute: () => ClientRouteRoute,
 } as any)
-const ClientTagsIndexRoute = ClientTagsIndexRouteImport.update({
-  id: '/tags/',
-  path: '/tags/',
+const ClientEmbedRoute = ClientEmbedRouteImport.update({
+  id: '/embed',
+  path: '/embed',
   getParentRoute: () => ClientRouteRoute,
 } as any)
-const ClientResourcesIndexRoute = ClientResourcesIndexRouteImport.update({
-  id: '/resources/',
-  path: '/resources/',
+const ClientJoinRoute = ClientJoinRouteImport.update({
+  id: '/join',
+  path: '/join',
   getParentRoute: () => ClientRouteRoute,
 } as any)
-const ClientMessagesIndexRoute = ClientMessagesIndexRouteImport.update({
-  id: '/messages/',
-  path: '/messages/',
+const ClientNotificationsRoute = ClientNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
   getParentRoute: () => ClientRouteRoute,
 } as any)
-const ClientGroupsIndexRoute = ClientGroupsIndexRouteImport.update({
-  id: '/groups/',
-  path: '/groups/',
+const ClientSearchRoute = ClientSearchRouteImport.update({
+  id: '/search',
+  path: '/search',
   getParentRoute: () => ClientRouteRoute,
 } as any)
-const ClientEventsIndexRoute = ClientEventsIndexRouteImport.update({
-  id: '/events/',
-  path: '/events/',
+const ClientSettingsRoute = ClientSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => ClientRouteRoute,
 } as any)
+const LandingCookiesRoute = LandingCookiesRouteImport.update({
+  id: '/cookies',
+  path: '/cookies',
+  getParentRoute: () => LandingRouteRoute,
+} as any)
+const LandingPrivacyPolicyRoute = LandingPrivacyPolicyRouteImport.update({
+  id: '/privacy-policy',
+  path: '/privacy-policy',
+  getParentRoute: () => LandingRouteRoute,
+} as any)
+const LandingTermsRoute = LandingTermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => LandingRouteRoute,
+} as any)
+const ModeratorHelpDocsRoute = ModeratorHelpDocsRouteImport.update({
+  id: '/help-docs',
+  path: '/help-docs',
+  getParentRoute: () => ModeratorRouteRoute,
+} as any)
+const ModeratorModerationRoute = ModeratorModerationRouteImport.update({
+  id: '/moderation',
+  path: '/moderation',
+  getParentRoute: () => ModeratorRouteRoute,
+} as any)
+const ModeratorModeratorDashboardRoute =
+  ModeratorModeratorDashboardRouteImport.update({
+    id: '/moderator-dashboard',
+    path: '/moderator-dashboard',
+    getParentRoute: () => ModeratorRouteRoute,
+  } as any)
+const ModeratorModeratorReportsRoute =
+  ModeratorModeratorReportsRouteImport.update({
+    id: '/moderator-reports',
+    path: '/moderator-reports',
+    getParentRoute: () => ModeratorRouteRoute,
+  } as any)
 const ClientCategoryIndexRoute = ClientCategoryIndexRouteImport.update({
   id: '/category/',
   path: '/category/',
-  getParentRoute: () => ClientRouteRoute,
-} as any)
-const ApiTrpcSplatRoute = ApiTrpcSplatRouteImport.update({
-  id: '/api/trpc/$',
-  path: '/api/trpc/$',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
-  id: '/api/auth/$',
-  path: '/api/auth/$',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ClientThreadsNewRoute = ClientThreadsNewRouteImport.update({
-  id: '/threads/new',
-  path: '/threads/new',
-  getParentRoute: () => ClientRouteRoute,
-} as any)
-const ClientThreadsIdRoute = ClientThreadsIdRouteImport.update({
-  id: '/threads/$id',
-  path: '/threads/$id',
-  getParentRoute: () => ClientRouteRoute,
-} as any)
-const ClientTagsSlugRoute = ClientTagsSlugRouteImport.update({
-  id: '/tags/$slug',
-  path: '/tags/$slug',
-  getParentRoute: () => ClientRouteRoute,
-} as any)
-const ClientPagesSlugRoute = ClientPagesSlugRouteImport.update({
-  id: '/pages/$slug',
-  path: '/pages/$slug',
-  getParentRoute: () => ClientRouteRoute,
-} as any)
-const ClientMessagesIdRoute = ClientMessagesIdRouteImport.update({
-  id: '/messages/$id',
-  path: '/messages/$id',
-  getParentRoute: () => ClientRouteRoute,
-} as any)
-const ClientGroupsNewRoute = ClientGroupsNewRouteImport.update({
-  id: '/groups/new',
-  path: '/groups/new',
-  getParentRoute: () => ClientRouteRoute,
-} as any)
-const ClientEventsNewRoute = ClientEventsNewRouteImport.update({
-  id: '/events/new',
-  path: '/events/new',
-  getParentRoute: () => ClientRouteRoute,
-} as any)
-const ClientEventsIdRoute = ClientEventsIdRouteImport.update({
-  id: '/events/$id',
-  path: '/events/$id',
   getParentRoute: () => ClientRouteRoute,
 } as any)
 const ClientCategorySlugRoute = ClientCategorySlugRouteImport.update({
@@ -331,32 +251,111 @@ const ClientCategorySlugRoute = ClientCategorySlugRouteImport.update({
   path: '/category/$slug',
   getParentRoute: () => ClientRouteRoute,
 } as any)
-const ClientProfileUsernameIndexRoute =
-  ClientProfileUsernameIndexRouteImport.update({
-    id: '/profile/$username/',
-    path: '/profile/$username/',
-    getParentRoute: () => ClientRouteRoute,
-  } as any)
+const ClientEventsIndexRoute = ClientEventsIndexRouteImport.update({
+  id: '/events/',
+  path: '/events/',
+  getParentRoute: () => ClientRouteRoute,
+} as any)
+const ClientEventsIdRoute = ClientEventsIdRouteImport.update({
+  id: '/events/$id',
+  path: '/events/$id',
+  getParentRoute: () => ClientRouteRoute,
+} as any)
+const ClientEventsNewRoute = ClientEventsNewRouteImport.update({
+  id: '/events/new',
+  path: '/events/new',
+  getParentRoute: () => ClientRouteRoute,
+} as any)
+const ClientGroupsIndexRoute = ClientGroupsIndexRouteImport.update({
+  id: '/groups/',
+  path: '/groups/',
+  getParentRoute: () => ClientRouteRoute,
+} as any)
+const ClientGroupsNewRoute = ClientGroupsNewRouteImport.update({
+  id: '/groups/new',
+  path: '/groups/new',
+  getParentRoute: () => ClientRouteRoute,
+} as any)
+const ClientMessagesIndexRoute = ClientMessagesIndexRouteImport.update({
+  id: '/messages/',
+  path: '/messages/',
+  getParentRoute: () => ClientRouteRoute,
+} as any)
+const ClientMessagesIdRoute = ClientMessagesIdRouteImport.update({
+  id: '/messages/$id',
+  path: '/messages/$id',
+  getParentRoute: () => ClientRouteRoute,
+} as any)
+const ClientPagesSlugRoute = ClientPagesSlugRouteImport.update({
+  id: '/pages/$slug',
+  path: '/pages/$slug',
+  getParentRoute: () => ClientRouteRoute,
+} as any)
+const ClientResourcesIndexRoute = ClientResourcesIndexRouteImport.update({
+  id: '/resources/',
+  path: '/resources/',
+  getParentRoute: () => ClientRouteRoute,
+} as any)
+const ClientTagsIndexRoute = ClientTagsIndexRouteImport.update({
+  id: '/tags/',
+  path: '/tags/',
+  getParentRoute: () => ClientRouteRoute,
+} as any)
+const ClientTagsSlugRoute = ClientTagsSlugRouteImport.update({
+  id: '/tags/$slug',
+  path: '/tags/$slug',
+  getParentRoute: () => ClientRouteRoute,
+} as any)
+const ClientThreadsIndexRoute = ClientThreadsIndexRouteImport.update({
+  id: '/threads/',
+  path: '/threads/',
+  getParentRoute: () => ClientRouteRoute,
+} as any)
+const ClientThreadsIdRoute = ClientThreadsIdRouteImport.update({
+  id: '/threads/$id',
+  path: '/threads/$id',
+  getParentRoute: () => ClientRouteRoute,
+} as any)
+const ClientThreadsNewRoute = ClientThreadsNewRouteImport.update({
+  id: '/threads/new',
+  path: '/threads/new',
+  getParentRoute: () => ClientRouteRoute,
+} as any)
+const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
+  id: '/api/auth/$',
+  path: '/api/auth/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiTrpcSplatRoute = ApiTrpcSplatRouteImport.update({
+  id: '/api/trpc/$',
+  path: '/api/trpc/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ClientGroupsSlugIndexRoute = ClientGroupsSlugIndexRouteImport.update({
   id: '/groups/$slug/',
   path: '/groups/$slug/',
   getParentRoute: () => ClientRouteRoute,
 } as any)
-const ClientThreadsIdEditRoute = ClientThreadsIdEditRouteImport.update({
-  id: '/edit',
-  path: '/edit',
-  getParentRoute: () => ClientThreadsIdRoute,
+const ClientGroupsSlugEventsRoute = ClientGroupsSlugEventsRouteImport.update({
+  id: '/groups/$slug/events',
+  path: '/groups/$slug/events',
+  getParentRoute: () => ClientRouteRoute,
 } as any)
-const ClientProfileUsernameReputationRoute =
-  ClientProfileUsernameReputationRouteImport.update({
-    id: '/profile/$username/reputation',
-    path: '/profile/$username/reputation',
+const ClientGroupsSlugMembersRoute = ClientGroupsSlugMembersRouteImport.update({
+  id: '/groups/$slug/members',
+  path: '/groups/$slug/members',
+  getParentRoute: () => ClientRouteRoute,
+} as any)
+const ClientGroupsSlugSettingsRoute =
+  ClientGroupsSlugSettingsRouteImport.update({
+    id: '/groups/$slug/settings',
+    path: '/groups/$slug/settings',
     getParentRoute: () => ClientRouteRoute,
   } as any)
-const ClientProfileUsernameEditRoute =
-  ClientProfileUsernameEditRouteImport.update({
-    id: '/profile/$username/edit',
-    path: '/profile/$username/edit',
+const ClientProfileUsernameIndexRoute =
+  ClientProfileUsernameIndexRouteImport.update({
+    id: '/profile/$username/',
+    path: '/profile/$username/',
     getParentRoute: () => ClientRouteRoute,
   } as any)
 const ClientProfileUsernameBadgesRoute =
@@ -365,21 +364,22 @@ const ClientProfileUsernameBadgesRoute =
     path: '/profile/$username/badges',
     getParentRoute: () => ClientRouteRoute,
   } as any)
-const ClientGroupsSlugSettingsRoute =
-  ClientGroupsSlugSettingsRouteImport.update({
-    id: '/groups/$slug/settings',
-    path: '/groups/$slug/settings',
+const ClientProfileUsernameEditRoute =
+  ClientProfileUsernameEditRouteImport.update({
+    id: '/profile/$username/edit',
+    path: '/profile/$username/edit',
     getParentRoute: () => ClientRouteRoute,
   } as any)
-const ClientGroupsSlugMembersRoute = ClientGroupsSlugMembersRouteImport.update({
-  id: '/groups/$slug/members',
-  path: '/groups/$slug/members',
-  getParentRoute: () => ClientRouteRoute,
-} as any)
-const ClientGroupsSlugEventsRoute = ClientGroupsSlugEventsRouteImport.update({
-  id: '/groups/$slug/events',
-  path: '/groups/$slug/events',
-  getParentRoute: () => ClientRouteRoute,
+const ClientProfileUsernameReputationRoute =
+  ClientProfileUsernameReputationRouteImport.update({
+    id: '/profile/$username/reputation',
+    path: '/profile/$username/reputation',
+    getParentRoute: () => ClientRouteRoute,
+  } as any)
+const ClientThreadsIdEditRoute = ClientThreadsIdEditRouteImport.update({
+  id: '/edit',
+  path: '/edit',
+  getParentRoute: () => ClientThreadsIdRoute,
 } as any)
 const ClientGroupsSlugForumIndexRoute =
   ClientGroupsSlugForumIndexRouteImport.update({
@@ -793,32 +793,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_moderator': {
-      id: '/_moderator'
-      path: ''
+    '/': {
+      id: '/'
+      path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof ModeratorRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_landing': {
-      id: '/_landing'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof LandingRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_client': {
-      id: '/_client'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof ClientRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_auth': {
-      id: '/_auth'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof AuthRouteRouteImport
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_admin': {
@@ -828,193 +807,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
+    '/_auth': {
+      id: '/_auth'
+      path: ''
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+      preLoaderRoute: typeof AuthRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_moderator/moderator-reports': {
-      id: '/_moderator/moderator-reports'
-      path: '/moderator-reports'
-      fullPath: '/moderator-reports'
-      preLoaderRoute: typeof ModeratorModeratorReportsRouteImport
-      parentRoute: typeof ModeratorRouteRoute
+    '/_client': {
+      id: '/_client'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof ClientRouteRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_moderator/moderator-dashboard': {
-      id: '/_moderator/moderator-dashboard'
-      path: '/moderator-dashboard'
-      fullPath: '/moderator-dashboard'
-      preLoaderRoute: typeof ModeratorModeratorDashboardRouteImport
-      parentRoute: typeof ModeratorRouteRoute
+    '/_landing': {
+      id: '/_landing'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof LandingRouteRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_moderator/moderation': {
-      id: '/_moderator/moderation'
-      path: '/moderation'
-      fullPath: '/moderation'
-      preLoaderRoute: typeof ModeratorModerationRouteImport
-      parentRoute: typeof ModeratorRouteRoute
+    '/_moderator': {
+      id: '/_moderator'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof ModeratorRouteRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_moderator/help-docs': {
-      id: '/_moderator/help-docs'
-      path: '/help-docs'
-      fullPath: '/help-docs'
-      preLoaderRoute: typeof ModeratorHelpDocsRouteImport
-      parentRoute: typeof ModeratorRouteRoute
-    }
-    '/_landing/terms': {
-      id: '/_landing/terms'
-      path: '/terms'
-      fullPath: '/terms'
-      preLoaderRoute: typeof LandingTermsRouteImport
-      parentRoute: typeof LandingRouteRoute
-    }
-    '/_landing/privacy-policy': {
-      id: '/_landing/privacy-policy'
-      path: '/privacy-policy'
-      fullPath: '/privacy-policy'
-      preLoaderRoute: typeof LandingPrivacyPolicyRouteImport
-      parentRoute: typeof LandingRouteRoute
-    }
-    '/_landing/cookies': {
-      id: '/_landing/cookies'
-      path: '/cookies'
-      fullPath: '/cookies'
-      preLoaderRoute: typeof LandingCookiesRouteImport
-      parentRoute: typeof LandingRouteRoute
-    }
-    '/_client/settings': {
-      id: '/_client/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof ClientSettingsRouteImport
-      parentRoute: typeof ClientRouteRoute
-    }
-    '/_client/search': {
-      id: '/_client/search'
-      path: '/search'
-      fullPath: '/search'
-      preLoaderRoute: typeof ClientSearchRouteImport
-      parentRoute: typeof ClientRouteRoute
-    }
-    '/_client/notifications': {
-      id: '/_client/notifications'
-      path: '/notifications'
-      fullPath: '/notifications'
-      preLoaderRoute: typeof ClientNotificationsRouteImport
-      parentRoute: typeof ClientRouteRoute
-    }
-    '/_client/join': {
-      id: '/_client/join'
-      path: '/join'
-      fullPath: '/join'
-      preLoaderRoute: typeof ClientJoinRouteImport
-      parentRoute: typeof ClientRouteRoute
-    }
-    '/_client/embed': {
-      id: '/_client/embed'
-      path: '/embed'
-      fullPath: '/embed'
-      preLoaderRoute: typeof ClientEmbedRouteImport
-      parentRoute: typeof ClientRouteRoute
-    }
-    '/_client/bookmarks': {
-      id: '/_client/bookmarks'
-      path: '/bookmarks'
-      fullPath: '/bookmarks'
-      preLoaderRoute: typeof ClientBookmarksRouteImport
-      parentRoute: typeof ClientRouteRoute
-    }
-    '/_auth/verify-email': {
-      id: '/_auth/verify-email'
-      path: '/verify-email'
-      fullPath: '/verify-email'
-      preLoaderRoute: typeof AuthVerifyEmailRouteImport
-      parentRoute: typeof AuthRouteRoute
-    }
-    '/_auth/sign-up': {
-      id: '/_auth/sign-up'
-      path: '/sign-up'
-      fullPath: '/sign-up'
-      preLoaderRoute: typeof AuthSignUpRouteImport
-      parentRoute: typeof AuthRouteRoute
-    }
-    '/_auth/sign-in': {
-      id: '/_auth/sign-in'
-      path: '/sign-in'
-      fullPath: '/sign-in'
-      preLoaderRoute: typeof AuthSignInRouteImport
-      parentRoute: typeof AuthRouteRoute
-    }
-    '/_auth/reset-password': {
-      id: '/_auth/reset-password'
-      path: '/reset-password'
-      fullPath: '/reset-password'
-      preLoaderRoute: typeof AuthResetPasswordRouteImport
-      parentRoute: typeof AuthRouteRoute
-    }
-    '/_auth/forgot-password': {
-      id: '/_auth/forgot-password'
-      path: '/forgot-password'
-      fullPath: '/forgot-password'
-      preLoaderRoute: typeof AuthForgotPasswordRouteImport
-      parentRoute: typeof AuthRouteRoute
-    }
-    '/_admin/users-list': {
-      id: '/_admin/users-list'
-      path: '/users-list'
-      fullPath: '/users-list'
-      preLoaderRoute: typeof AdminUsersListRouteImport
-      parentRoute: typeof AdminRouteRoute
-    }
-    '/_admin/reports-summary': {
-      id: '/_admin/reports-summary'
-      path: '/reports-summary'
-      fullPath: '/reports-summary'
-      preLoaderRoute: typeof AdminReportsSummaryRouteImport
-      parentRoute: typeof AdminRouteRoute
-    }
-    '/_admin/help': {
-      id: '/_admin/help'
-      path: '/help'
-      fullPath: '/help'
-      preLoaderRoute: typeof AdminHelpRouteImport
-      parentRoute: typeof AdminRouteRoute
-    }
-    '/_admin/appearance': {
-      id: '/_admin/appearance'
-      path: '/appearance'
-      fullPath: '/appearance'
-      preLoaderRoute: typeof AdminAppearanceRouteImport
-      parentRoute: typeof AdminRouteRoute
-    }
-    '/_admin/announcements': {
-      id: '/_admin/announcements'
-      path: '/announcements'
-      fullPath: '/announcements'
-      preLoaderRoute: typeof AdminAnnouncementsRouteImport
-      parentRoute: typeof AdminRouteRoute
-    }
-    '/_admin/admin-settings': {
-      id: '/_admin/admin-settings'
-      path: '/admin-settings'
-      fullPath: '/admin-settings'
-      preLoaderRoute: typeof AdminAdminSettingsRouteImport
-      parentRoute: typeof AdminRouteRoute
-    }
-    '/_admin/admin-pages': {
-      id: '/_admin/admin-pages'
-      path: '/admin-pages'
-      fullPath: '/admin-pages'
-      preLoaderRoute: typeof AdminAdminPagesRouteImport
-      parentRoute: typeof AdminRouteRoute
-    }
-    '/_admin/admin-moderation': {
-      id: '/_admin/admin-moderation'
-      path: '/admin-moderation'
-      fullPath: '/admin-moderation'
-      preLoaderRoute: typeof AdminAdminModerationRouteImport
+    '/_admin/admin-analytics': {
+      id: '/_admin/admin-analytics'
+      path: '/admin-analytics'
+      fullPath: '/admin-analytics'
+      preLoaderRoute: typeof AdminAdminAnalyticsRouteImport
       parentRoute: typeof AdminRouteRoute
     }
     '/_admin/admin-dashboard': {
@@ -1024,130 +849,193 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdminDashboardRouteImport
       parentRoute: typeof AdminRouteRoute
     }
-    '/_admin/admin-analytics': {
-      id: '/_admin/admin-analytics'
-      path: '/admin-analytics'
-      fullPath: '/admin-analytics'
-      preLoaderRoute: typeof AdminAdminAnalyticsRouteImport
+    '/_admin/admin-moderation': {
+      id: '/_admin/admin-moderation'
+      path: '/admin-moderation'
+      fullPath: '/admin-moderation'
+      preLoaderRoute: typeof AdminAdminModerationRouteImport
       parentRoute: typeof AdminRouteRoute
     }
-    '/_client/threads/': {
-      id: '/_client/threads/'
-      path: '/threads'
-      fullPath: '/threads/'
-      preLoaderRoute: typeof ClientThreadsIndexRouteImport
+    '/_admin/admin-pages': {
+      id: '/_admin/admin-pages'
+      path: '/admin-pages'
+      fullPath: '/admin-pages'
+      preLoaderRoute: typeof AdminAdminPagesRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/_admin/admin-settings': {
+      id: '/_admin/admin-settings'
+      path: '/admin-settings'
+      fullPath: '/admin-settings'
+      preLoaderRoute: typeof AdminAdminSettingsRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/_admin/announcements': {
+      id: '/_admin/announcements'
+      path: '/announcements'
+      fullPath: '/announcements'
+      preLoaderRoute: typeof AdminAnnouncementsRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/_admin/appearance': {
+      id: '/_admin/appearance'
+      path: '/appearance'
+      fullPath: '/appearance'
+      preLoaderRoute: typeof AdminAppearanceRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/_admin/help': {
+      id: '/_admin/help'
+      path: '/help'
+      fullPath: '/help'
+      preLoaderRoute: typeof AdminHelpRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/_admin/reports-summary': {
+      id: '/_admin/reports-summary'
+      path: '/reports-summary'
+      fullPath: '/reports-summary'
+      preLoaderRoute: typeof AdminReportsSummaryRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/_admin/users-list': {
+      id: '/_admin/users-list'
+      path: '/users-list'
+      fullPath: '/users-list'
+      preLoaderRoute: typeof AdminUsersListRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/_auth/forgot-password': {
+      id: '/_auth/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof AuthForgotPasswordRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_auth/reset-password': {
+      id: '/_auth/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof AuthResetPasswordRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_auth/sign-in': {
+      id: '/_auth/sign-in'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof AuthSignInRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_auth/sign-up': {
+      id: '/_auth/sign-up'
+      path: '/sign-up'
+      fullPath: '/sign-up'
+      preLoaderRoute: typeof AuthSignUpRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_auth/verify-email': {
+      id: '/_auth/verify-email'
+      path: '/verify-email'
+      fullPath: '/verify-email'
+      preLoaderRoute: typeof AuthVerifyEmailRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_client/bookmarks': {
+      id: '/_client/bookmarks'
+      path: '/bookmarks'
+      fullPath: '/bookmarks'
+      preLoaderRoute: typeof ClientBookmarksRouteImport
       parentRoute: typeof ClientRouteRoute
     }
-    '/_client/tags/': {
-      id: '/_client/tags/'
-      path: '/tags'
-      fullPath: '/tags/'
-      preLoaderRoute: typeof ClientTagsIndexRouteImport
+    '/_client/embed': {
+      id: '/_client/embed'
+      path: '/embed'
+      fullPath: '/embed'
+      preLoaderRoute: typeof ClientEmbedRouteImport
       parentRoute: typeof ClientRouteRoute
     }
-    '/_client/resources/': {
-      id: '/_client/resources/'
-      path: '/resources'
-      fullPath: '/resources/'
-      preLoaderRoute: typeof ClientResourcesIndexRouteImport
+    '/_client/join': {
+      id: '/_client/join'
+      path: '/join'
+      fullPath: '/join'
+      preLoaderRoute: typeof ClientJoinRouteImport
       parentRoute: typeof ClientRouteRoute
     }
-    '/_client/messages/': {
-      id: '/_client/messages/'
-      path: '/messages'
-      fullPath: '/messages/'
-      preLoaderRoute: typeof ClientMessagesIndexRouteImport
+    '/_client/notifications': {
+      id: '/_client/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof ClientNotificationsRouteImport
       parentRoute: typeof ClientRouteRoute
     }
-    '/_client/groups/': {
-      id: '/_client/groups/'
-      path: '/groups'
-      fullPath: '/groups/'
-      preLoaderRoute: typeof ClientGroupsIndexRouteImport
+    '/_client/search': {
+      id: '/_client/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof ClientSearchRouteImport
       parentRoute: typeof ClientRouteRoute
     }
-    '/_client/events/': {
-      id: '/_client/events/'
-      path: '/events'
-      fullPath: '/events/'
-      preLoaderRoute: typeof ClientEventsIndexRouteImport
+    '/_client/settings': {
+      id: '/_client/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof ClientSettingsRouteImport
       parentRoute: typeof ClientRouteRoute
+    }
+    '/_landing/cookies': {
+      id: '/_landing/cookies'
+      path: '/cookies'
+      fullPath: '/cookies'
+      preLoaderRoute: typeof LandingCookiesRouteImport
+      parentRoute: typeof LandingRouteRoute
+    }
+    '/_landing/privacy-policy': {
+      id: '/_landing/privacy-policy'
+      path: '/privacy-policy'
+      fullPath: '/privacy-policy'
+      preLoaderRoute: typeof LandingPrivacyPolicyRouteImport
+      parentRoute: typeof LandingRouteRoute
+    }
+    '/_landing/terms': {
+      id: '/_landing/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof LandingTermsRouteImport
+      parentRoute: typeof LandingRouteRoute
+    }
+    '/_moderator/help-docs': {
+      id: '/_moderator/help-docs'
+      path: '/help-docs'
+      fullPath: '/help-docs'
+      preLoaderRoute: typeof ModeratorHelpDocsRouteImport
+      parentRoute: typeof ModeratorRouteRoute
+    }
+    '/_moderator/moderation': {
+      id: '/_moderator/moderation'
+      path: '/moderation'
+      fullPath: '/moderation'
+      preLoaderRoute: typeof ModeratorModerationRouteImport
+      parentRoute: typeof ModeratorRouteRoute
+    }
+    '/_moderator/moderator-dashboard': {
+      id: '/_moderator/moderator-dashboard'
+      path: '/moderator-dashboard'
+      fullPath: '/moderator-dashboard'
+      preLoaderRoute: typeof ModeratorModeratorDashboardRouteImport
+      parentRoute: typeof ModeratorRouteRoute
+    }
+    '/_moderator/moderator-reports': {
+      id: '/_moderator/moderator-reports'
+      path: '/moderator-reports'
+      fullPath: '/moderator-reports'
+      preLoaderRoute: typeof ModeratorModeratorReportsRouteImport
+      parentRoute: typeof ModeratorRouteRoute
     }
     '/_client/category/': {
       id: '/_client/category/'
       path: '/category'
       fullPath: '/category/'
       preLoaderRoute: typeof ClientCategoryIndexRouteImport
-      parentRoute: typeof ClientRouteRoute
-    }
-    '/api/trpc/$': {
-      id: '/api/trpc/$'
-      path: '/api/trpc/$'
-      fullPath: '/api/trpc/$'
-      preLoaderRoute: typeof ApiTrpcSplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/auth/$': {
-      id: '/api/auth/$'
-      path: '/api/auth/$'
-      fullPath: '/api/auth/$'
-      preLoaderRoute: typeof ApiAuthSplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_client/threads/new': {
-      id: '/_client/threads/new'
-      path: '/threads/new'
-      fullPath: '/threads/new'
-      preLoaderRoute: typeof ClientThreadsNewRouteImport
-      parentRoute: typeof ClientRouteRoute
-    }
-    '/_client/threads/$id': {
-      id: '/_client/threads/$id'
-      path: '/threads/$id'
-      fullPath: '/threads/$id'
-      preLoaderRoute: typeof ClientThreadsIdRouteImport
-      parentRoute: typeof ClientRouteRoute
-    }
-    '/_client/tags/$slug': {
-      id: '/_client/tags/$slug'
-      path: '/tags/$slug'
-      fullPath: '/tags/$slug'
-      preLoaderRoute: typeof ClientTagsSlugRouteImport
-      parentRoute: typeof ClientRouteRoute
-    }
-    '/_client/pages/$slug': {
-      id: '/_client/pages/$slug'
-      path: '/pages/$slug'
-      fullPath: '/pages/$slug'
-      preLoaderRoute: typeof ClientPagesSlugRouteImport
-      parentRoute: typeof ClientRouteRoute
-    }
-    '/_client/messages/$id': {
-      id: '/_client/messages/$id'
-      path: '/messages/$id'
-      fullPath: '/messages/$id'
-      preLoaderRoute: typeof ClientMessagesIdRouteImport
-      parentRoute: typeof ClientRouteRoute
-    }
-    '/_client/groups/new': {
-      id: '/_client/groups/new'
-      path: '/groups/new'
-      fullPath: '/groups/new'
-      preLoaderRoute: typeof ClientGroupsNewRouteImport
-      parentRoute: typeof ClientRouteRoute
-    }
-    '/_client/events/new': {
-      id: '/_client/events/new'
-      path: '/events/new'
-      fullPath: '/events/new'
-      preLoaderRoute: typeof ClientEventsNewRouteImport
-      parentRoute: typeof ClientRouteRoute
-    }
-    '/_client/events/$id': {
-      id: '/_client/events/$id'
-      path: '/events/$id'
-      fullPath: '/events/$id'
-      preLoaderRoute: typeof ClientEventsIdRouteImport
       parentRoute: typeof ClientRouteRoute
     }
     '/_client/category/$slug': {
@@ -1157,12 +1045,117 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClientCategorySlugRouteImport
       parentRoute: typeof ClientRouteRoute
     }
-    '/_client/profile/$username/': {
-      id: '/_client/profile/$username/'
-      path: '/profile/$username'
-      fullPath: '/profile/$username/'
-      preLoaderRoute: typeof ClientProfileUsernameIndexRouteImport
+    '/_client/events/': {
+      id: '/_client/events/'
+      path: '/events'
+      fullPath: '/events/'
+      preLoaderRoute: typeof ClientEventsIndexRouteImport
       parentRoute: typeof ClientRouteRoute
+    }
+    '/_client/events/$id': {
+      id: '/_client/events/$id'
+      path: '/events/$id'
+      fullPath: '/events/$id'
+      preLoaderRoute: typeof ClientEventsIdRouteImport
+      parentRoute: typeof ClientRouteRoute
+    }
+    '/_client/events/new': {
+      id: '/_client/events/new'
+      path: '/events/new'
+      fullPath: '/events/new'
+      preLoaderRoute: typeof ClientEventsNewRouteImport
+      parentRoute: typeof ClientRouteRoute
+    }
+    '/_client/groups/': {
+      id: '/_client/groups/'
+      path: '/groups'
+      fullPath: '/groups/'
+      preLoaderRoute: typeof ClientGroupsIndexRouteImport
+      parentRoute: typeof ClientRouteRoute
+    }
+    '/_client/groups/new': {
+      id: '/_client/groups/new'
+      path: '/groups/new'
+      fullPath: '/groups/new'
+      preLoaderRoute: typeof ClientGroupsNewRouteImport
+      parentRoute: typeof ClientRouteRoute
+    }
+    '/_client/messages/': {
+      id: '/_client/messages/'
+      path: '/messages'
+      fullPath: '/messages/'
+      preLoaderRoute: typeof ClientMessagesIndexRouteImport
+      parentRoute: typeof ClientRouteRoute
+    }
+    '/_client/messages/$id': {
+      id: '/_client/messages/$id'
+      path: '/messages/$id'
+      fullPath: '/messages/$id'
+      preLoaderRoute: typeof ClientMessagesIdRouteImport
+      parentRoute: typeof ClientRouteRoute
+    }
+    '/_client/pages/$slug': {
+      id: '/_client/pages/$slug'
+      path: '/pages/$slug'
+      fullPath: '/pages/$slug'
+      preLoaderRoute: typeof ClientPagesSlugRouteImport
+      parentRoute: typeof ClientRouteRoute
+    }
+    '/_client/resources/': {
+      id: '/_client/resources/'
+      path: '/resources'
+      fullPath: '/resources/'
+      preLoaderRoute: typeof ClientResourcesIndexRouteImport
+      parentRoute: typeof ClientRouteRoute
+    }
+    '/_client/tags/': {
+      id: '/_client/tags/'
+      path: '/tags'
+      fullPath: '/tags/'
+      preLoaderRoute: typeof ClientTagsIndexRouteImport
+      parentRoute: typeof ClientRouteRoute
+    }
+    '/_client/tags/$slug': {
+      id: '/_client/tags/$slug'
+      path: '/tags/$slug'
+      fullPath: '/tags/$slug'
+      preLoaderRoute: typeof ClientTagsSlugRouteImport
+      parentRoute: typeof ClientRouteRoute
+    }
+    '/_client/threads/': {
+      id: '/_client/threads/'
+      path: '/threads'
+      fullPath: '/threads/'
+      preLoaderRoute: typeof ClientThreadsIndexRouteImport
+      parentRoute: typeof ClientRouteRoute
+    }
+    '/_client/threads/$id': {
+      id: '/_client/threads/$id'
+      path: '/threads/$id'
+      fullPath: '/threads/$id'
+      preLoaderRoute: typeof ClientThreadsIdRouteImport
+      parentRoute: typeof ClientRouteRoute
+    }
+    '/_client/threads/new': {
+      id: '/_client/threads/new'
+      path: '/threads/new'
+      fullPath: '/threads/new'
+      preLoaderRoute: typeof ClientThreadsNewRouteImport
+      parentRoute: typeof ClientRouteRoute
+    }
+    '/api/auth/$': {
+      id: '/api/auth/$'
+      path: '/api/auth/$'
+      fullPath: '/api/auth/$'
+      preLoaderRoute: typeof ApiAuthSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/trpc/$': {
+      id: '/api/trpc/$'
+      path: '/api/trpc/$'
+      fullPath: '/api/trpc/$'
+      preLoaderRoute: typeof ApiTrpcSplatRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_client/groups/$slug/': {
       id: '/_client/groups/$slug/'
@@ -1171,39 +1164,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClientGroupsSlugIndexRouteImport
       parentRoute: typeof ClientRouteRoute
     }
-    '/_client/threads/$id/edit': {
-      id: '/_client/threads/$id/edit'
-      path: '/edit'
-      fullPath: '/threads/$id/edit'
-      preLoaderRoute: typeof ClientThreadsIdEditRouteImport
-      parentRoute: typeof ClientThreadsIdRoute
-    }
-    '/_client/profile/$username/reputation': {
-      id: '/_client/profile/$username/reputation'
-      path: '/profile/$username/reputation'
-      fullPath: '/profile/$username/reputation'
-      preLoaderRoute: typeof ClientProfileUsernameReputationRouteImport
-      parentRoute: typeof ClientRouteRoute
-    }
-    '/_client/profile/$username/edit': {
-      id: '/_client/profile/$username/edit'
-      path: '/profile/$username/edit'
-      fullPath: '/profile/$username/edit'
-      preLoaderRoute: typeof ClientProfileUsernameEditRouteImport
-      parentRoute: typeof ClientRouteRoute
-    }
-    '/_client/profile/$username/badges': {
-      id: '/_client/profile/$username/badges'
-      path: '/profile/$username/badges'
-      fullPath: '/profile/$username/badges'
-      preLoaderRoute: typeof ClientProfileUsernameBadgesRouteImport
-      parentRoute: typeof ClientRouteRoute
-    }
-    '/_client/groups/$slug/settings': {
-      id: '/_client/groups/$slug/settings'
-      path: '/groups/$slug/settings'
-      fullPath: '/groups/$slug/settings'
-      preLoaderRoute: typeof ClientGroupsSlugSettingsRouteImport
+    '/_client/groups/$slug/events': {
+      id: '/_client/groups/$slug/events'
+      path: '/groups/$slug/events'
+      fullPath: '/groups/$slug/events'
+      preLoaderRoute: typeof ClientGroupsSlugEventsRouteImport
       parentRoute: typeof ClientRouteRoute
     }
     '/_client/groups/$slug/members': {
@@ -1213,12 +1178,47 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClientGroupsSlugMembersRouteImport
       parentRoute: typeof ClientRouteRoute
     }
-    '/_client/groups/$slug/events': {
-      id: '/_client/groups/$slug/events'
-      path: '/groups/$slug/events'
-      fullPath: '/groups/$slug/events'
-      preLoaderRoute: typeof ClientGroupsSlugEventsRouteImport
+    '/_client/groups/$slug/settings': {
+      id: '/_client/groups/$slug/settings'
+      path: '/groups/$slug/settings'
+      fullPath: '/groups/$slug/settings'
+      preLoaderRoute: typeof ClientGroupsSlugSettingsRouteImport
       parentRoute: typeof ClientRouteRoute
+    }
+    '/_client/profile/$username/': {
+      id: '/_client/profile/$username/'
+      path: '/profile/$username'
+      fullPath: '/profile/$username/'
+      preLoaderRoute: typeof ClientProfileUsernameIndexRouteImport
+      parentRoute: typeof ClientRouteRoute
+    }
+    '/_client/profile/$username/badges': {
+      id: '/_client/profile/$username/badges'
+      path: '/profile/$username/badges'
+      fullPath: '/profile/$username/badges'
+      preLoaderRoute: typeof ClientProfileUsernameBadgesRouteImport
+      parentRoute: typeof ClientRouteRoute
+    }
+    '/_client/profile/$username/edit': {
+      id: '/_client/profile/$username/edit'
+      path: '/profile/$username/edit'
+      fullPath: '/profile/$username/edit'
+      preLoaderRoute: typeof ClientProfileUsernameEditRouteImport
+      parentRoute: typeof ClientRouteRoute
+    }
+    '/_client/profile/$username/reputation': {
+      id: '/_client/profile/$username/reputation'
+      path: '/profile/$username/reputation'
+      fullPath: '/profile/$username/reputation'
+      preLoaderRoute: typeof ClientProfileUsernameReputationRouteImport
+      parentRoute: typeof ClientRouteRoute
+    }
+    '/_client/threads/$id/edit': {
+      id: '/_client/threads/$id/edit'
+      path: '/edit'
+      fullPath: '/threads/$id/edit'
+      preLoaderRoute: typeof ClientThreadsIdEditRouteImport
+      parentRoute: typeof ClientThreadsIdRoute
     }
     '/_client/groups/$slug/forum/': {
       id: '/_client/groups/$slug/forum/'

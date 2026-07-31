@@ -28,46 +28,75 @@ Foreum is your all-in-one solution for building engaging community spaces. Wheth
 
 Foreum can be deployed on any platform that supports Node.js. Choose your preferred deployment method:
 
-### 🐳 Docker Deployment
+### System Requirements
+
+- Node.js 18 or later
+- PostgreSQL 15 or later
+- SMTP server for email notifications (or Resend API key)
+- 1GB RAM minimum (2GB recommended)
+- 10GB storage space
+
+### Environment Variables
+
+Copy `.env.example` to `.env` and fill in:
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `DATABASE_URL` | Yes | PostgreSQL connection string |
+| `BETTER_AUTH_SECRET` | Yes | Random string for auth encryption (`openssl rand -hex 32`) |
+| `RESEND_API_KEY` | For email | Resend API key for sending emails |
+| `BETTER_AUTH_EMAIL` | For email | From address for outgoing emails |
+| `GOOGLE_CLIENT_ID` | For Google auth | Google OAuth client ID |
+| `GOOGLE_CLIENT_SECRET` | For Google auth | Google OAuth client secret |
+| `DISCORD_CLIENT_ID` | For Discord auth | Discord OAuth client ID |
+| `DISCORD_CLIENT_SECRET` | For Discord auth | Discord OAuth client secret |
+| `BASE_URL` | Yes | Public URL of your forum (e.g. `https://forum.example.com`) |
+| `TRUSTED_ORIGINS` | For multi-domain | Comma-separated allowed CORS origins (default: `http://localhost:3000`) |
+
+### 🐳 Docker Compose (Recommended)
 
 ```bash
-# Pull and run with Docker
-docker pull ghcr.io/abdulkareemoj/foreum:latest
-docker run -p 3000:3000 \
+# Clone and enter the directory
+git clone https://github.com/abdulkareemoj/foreum.git
+cd foreum
+
+# Configure your domain in docker-compose.yml and Caddyfile
+# Set your domain in Caddyfile (replace forum.yourdomain.com)
+
+# Start everything
+docker compose up -d
+
+# Run database migrations (first time only)
+docker compose run --rm app pnpm db:push -- --force
+
+# The app will be available at https://forum.yourdomain.com
+```
+
+The included `docker-compose.yml` bundles:
+- **app** — Foreum server (port 3000)
+- **db** — PostgreSQL 17
+- **caddy** — Automatic TLS via Let's Encrypt, reverse proxy
+
+### 🐳 Docker (Standalone)
+
+```bash
+# Build the image
+docker build -t foreum .
+
+# Run with external Postgres
+docker run -d -p 3000:3000 \
   -e DATABASE_URL="postgresql://user:pass@host:5432/foreum" \
   -e BETTER_AUTH_SECRET="your-secret" \
-  ghcr.io/abdulkareemoj/foreum
+  -e BASE_URL="https://forum.example.com" \
+  -e RESEND_API_KEY="re_..." \
+  -e BETTER_AUTH_EMAIL="noreply@example.com" \
+  foreum
+
+# Run migrations
+docker exec <container-id> pnpm db:push -- --force
 ```
 
-For production deployment with Docker Compose:
-
-```yaml
-# docker-compose.yml
-version: "3.8"
-services:
-  app:
-    image: ghcr.io/abdulkareemoj/foreum:latest
-    ports:
-      - "3000:3000"
-    environment:
-      - NODE_ENV=production
-      - DATABASE_URL=postgresql://foreum:password@db:5432/foreum
-    depends_on:
-      - db
-  db:
-    image: postgres:14-alpine
-    environment:
-      - POSTGRES_USER=foreum
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=foreum
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-volumes:
-  postgres_data:
-```
-
-### 💻 Manual Installation
+### 💻 Manual Installation (VPS / Bare Metal)
 
 ```bash
 # Clone the repository
@@ -79,75 +108,64 @@ pnpm install
 
 # Configure environment
 cp .env.example .env
-# Edit .env with your database and SMTP settings
+# Edit .env with your database and auth settings
 
 # Run migrations
-pnpm db:migrate
+pnpm db:push -- --force
 
 # Build and start
 pnpm build
 pnpm start
 ```
 
-### 🚀 Deployment Options
+#### Process Management (PM2)
 
-#### Cloud Platforms
+```bash
+npm install -g pm2
+pm2 start npm --name "foreum" -- start
+pm2 save
+pm2 startup
+```
 
-- **Railway**
+#### Reverse Proxy (Nginx)
 
-  [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/foreum)
+```nginx
+server {
+    listen 80;
+    server_name forum.yourdomain.com;
 
-- **Digital Ocean**
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+```
 
-  [![Deploy to DigitalOcean](https://www.deploytodo.com/do-btn-blue.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/abdulkareemoj/foreum)
+Then set up Certbot for TLS:
+```bash
+sudo certbot --nginx -d forum.yourdomain.com
+```
 
-- **Render**
+### ☁️ Cloud Platforms
 
-  [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/abdulkareemoj/foreum)
+Foreum (Nitro) supports multiple deployment presets. Add to `vite.config.ts`:
 
-#### Self-Hosted
+```ts
+nitro({
+  preset: 'vercel',    // or 'cloudflare-pages', 'netlify', 'railway'
+}),
+```
 
-##### VPS/Bare Metal Setup
+**Supported presets:** `node-server` (default), `vercel`, `netlify`, `cloudflare-pages`, `railway`, `render-com`, `fly`, `aws-lambda`
 
-1. Install system requirements:
-
-   ```bash
-   # On Ubuntu/Debian
-   apt update && apt install -y nodejs npm postgresql
-   ```
-
-2. Set up process management:
-
-   ```bash
-   # Using PM2
-   npm install -g pm2
-   pm2 start npm --name "foreum" -- start
-   pm2 startup
-   pm2 save
-   ```
-
-3. Configure Nginx (optional):
-
-   ```nginx
-   server {
-       listen 80;
-       server_name your-domain.com;
-
-       location / {
-           proxy_pass http://localhost:3000;
-           proxy_set_header Host $host;
-           proxy_set_header X-Real-IP $remote_addr;
-       }
-   }
-   ```
-
-### System Requirements
-
-- Node.js 18 or later
-- PostgreSQL 13 or later
-- SMTP server for email notifications
-- 1GB RAM minimum (2GB recommended)
-- 10GB storage space
+> **Note:** Serverless platforms require a PostgreSQL provider like Neon or Supabase. File uploads use UploadThing (works on serverless).
 
 ## Features
 
@@ -350,6 +368,49 @@ We’re committed to fostering a welcoming community. Please follow a friendly a
 - Use secure authentication settings
 - Follow security best practices for file uploads
 - Keep dependencies updated
+
+## Roadmap
+
+Prioritized gaps vs. Discourse, based on cost of delay and architectural impact:
+
+### Tier 1 — Do soon, cheap now, expensive later
+
+| Item | Status | Notes |
+|------|--------|-------|
+| **Auth-layer rate limiting** | ✅ Done (Better Auth) | Covers login/signup/2FA. Already wired. |
+| **App-layer rate limiting** | ❌ Missing | tRPC middleware on mutations (post.create, reply.create, like.create, flag.create, message.create). PG-backed counter table — keeps infra simple. |
+| **Watched words / auto-mod** | ❌ Missing | Regex/string match on post create, queue or auto-reject. Cheap to add. |
+| **CSP headers** | ❌ Missing | Config-level, not architectural. |
+
+### Tier 2 — Architectural, decide deliberately
+
+| Item | Status | Notes |
+|------|--------|-------|
+| **Trust-level-aware permissions** | ❌ Flat role system | Seed via a `trustScore`/`canPostFreely` field in rate-limit middleware. Avoids full TL0–4 rebuild later. |
+| **Plugin / theme contract** | ❌ Monolithic | Biggest structural gap vs. Discourse. Decide the shape before code calcifies. |
+
+### Tier 3 — Can wait
+
+i18n, digest emails, backup/restore, sitemap/robots.txt, webhooks, presence indicators, post approval queue, auto badge grants, custom user fields — all additive, low regret to defer.
+
+### Recommended approach for app-layer rate limiting
+
+Given tRPC + Postgres, use a Postgres-backed counter table (same shape as Better Auth's own `rateLimit` schema — `key`, `count`, `lastRequest`). One less piece of infra vs. Redis/Upstash, consistent with how Better Auth already works.
+
+If deploying serverless (Vercel Edge), Upstash is the right call instead.
+
+Middleware pattern:
+```ts
+const rateLimited = (action: string, limits: (user: User) => { window: number; max: number }) =>
+  middleware(async ({ ctx, next }) => {
+    const { window, max } = limits(ctx.user);
+    const key = `${action}:${ctx.user.id}`;
+    // check/increment counter in your store
+    if (exceeded) throw new TRPCError({ code: 'TOO_MANY_REQUESTS' });
+    return next();
+  });
+```
+This composes per-action, per-trust-level limits in one place, and seeds the trust-level system — when TL0–4 is built later, you're just expanding the `limits()` function.
 
 ## License
 

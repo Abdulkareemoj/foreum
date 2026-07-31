@@ -38,7 +38,7 @@ export default function LeftSidebar() {
                 key={cat.id}
                 className="flex cursor-pointer items-center justify-between rounded-lg p-2 hover:bg-accent"
               >
-                <Link to={`/categories/${cat.slug}`} className="text-sm">
+                <Link to="/category/$slug" params={{ slug: cat.slug }} className="text-sm">
                   {cat.name}
                 </Link>
               </div>
@@ -56,7 +56,7 @@ export default function LeftSidebar() {
           {trendingTags && trendingTags.length > 0 ? (
             <div className="flex flex-wrap gap-2">
               {trendingTags.map((tag: any) => (
-                <Link key={tag.id} to={`/tags/${tag.slug}`}>
+                <Link key={tag.id} to="/tags/$slug" params={{ slug: tag.slug }}>
                   <Badge variant="secondary" className="cursor-pointer">
                     <Tag className="mr-1 h-3 w-3" />
                     {tag.name}
@@ -111,7 +111,7 @@ export default function LeftSidebar() {
               {activeDiscussions.map((disc: any) => (
                 <Link
                   key={disc.id}
-                  to="/threads/thread/$id"
+                  to="/threads/$id"
                   params={{ id: disc.id }}
                   className="block"
                 >
@@ -138,7 +138,8 @@ export default function LeftSidebar() {
             {topCategories.slice(0, 5).map((cat: any) => (
               <Link
                 key={cat.id}
-                to={`/categories/${cat.slug}`}
+                to="/category/$slug"
+                params={{ slug: cat.slug }}
                 className="flex justify-between rounded-lg p-2 hover:bg-accent"
               >
                 <span className="text-sm">{cat.name}</span>

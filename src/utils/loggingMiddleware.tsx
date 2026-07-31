@@ -37,19 +37,6 @@ const preLogMiddleware = createMiddleware({ type: 'function' })
 
 export const logMiddleware = createMiddleware({ type: 'function' })
   .middleware([preLogMiddleware])
-  .server(async (ctx) => {
-    const res = await ctx.next()
-    const context = ctx.context as LogContext
-
-    logFn.info(
-      {
-        durationToServer: context.durationToServer,
-      },
-      'server function handled',
-    )
-
-    return res
-  })
   .client(async (ctx) => {
     const res = await ctx.next()
     const context = res.context as LogContext
@@ -62,6 +49,19 @@ export const logMiddleware = createMiddleware({ type: 'function' })
         ? now.getTime() - context.serverTime.getTime()
         : undefined,
     })
+
+    return res
+  })
+  .server(async (ctx) => {
+    const res = await ctx.next()
+    const context = ctx.context as LogContext
+
+    logFn.info(
+      {
+        durationToServer: context.durationToServer,
+      },
+      'server function handled',
+    )
 
     return res
   })

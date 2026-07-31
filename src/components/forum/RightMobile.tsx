@@ -19,10 +19,6 @@ export default function RightMobile({ user }: RightMobileProps) {
     { enabled: open }
   )
 
-  const { data: stats } = trpc.user.stats.useQuery(undefined, {
-    enabled: open
-  })
-
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
@@ -69,7 +65,7 @@ export default function RightMobile({ user }: RightMobileProps) {
                   trendingThreads.map((thread: any) => (
                     <Link
                       key={thread.id}
-                      to="/thread/$id"
+                      to="/threads/$id"
                       params={{ id: thread.id }}
                       onClick={() => setOpen(false)}
                       className="block"
@@ -97,24 +93,7 @@ export default function RightMobile({ user }: RightMobileProps) {
                 <CardTitle className="text-sm">Community Stats</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Active Users</span>
-                  <span className="font-medium">
-                    {stats?.activeUsers?.toLocaleString() || '0'}
-                  </span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Total Threads</span>
-                  <span className="font-medium">
-                    {stats?.totalThreads?.toLocaleString() || '0'}
-                  </span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Total Replies</span>
-                  <span className="font-medium">
-                    {stats?.totalReplies?.toLocaleString() || '0'}
-                  </span>
-                </div>
+                <p className="text-xs text-muted-foreground italic">Stats coming soon</p>
               </CardContent>
             </Card>
           </div>
@@ -146,7 +125,7 @@ function MobileRecentPosts({ onClose, open }: { onClose: () => void, open: boole
           recentPosts.map((post: any) => (
             <Link
               key={post.id}
-              to="/thread/$id"
+              to="/threads/$id"
               params={{ id: post.id }}
               onClick={onClose}
               className="block"

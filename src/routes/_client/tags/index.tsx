@@ -25,7 +25,7 @@ function TagsPage() {
       ) : (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {tags.map((tag: any) => (
-            <Link key={tag.id} to={`/tags/${tag.slug}` as any} className="block group">
+            <Link key={tag.id} to="/tags/$slug" params={{ slug: tag.slug }} className="block group">
               <Card className="flex h-full flex-col justify-between transition-shadow hover:shadow-lg group-hover:border-primary/50">
                 <CardHeader>
                   <div className="flex items-center justify-between">

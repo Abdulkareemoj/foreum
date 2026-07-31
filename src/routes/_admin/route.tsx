@@ -44,7 +44,7 @@ function AdminLayout() {
             </Breadcrumb>
           </div>
           <div className="ml-auto flex items-center gap-2 px-4">
-            <UserDropdown user={user} />
+            <UserDropdown user={user ? { ...user, image: user.image ?? undefined, username: user.username ?? undefined, displayUsername: user.displayUsername ?? undefined } : undefined} />
           </div>
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4">

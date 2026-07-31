@@ -47,7 +47,7 @@ function GroupThreadPage() {
           <h1 className="text-2xl font-bold">{thread.title}</h1>
           <div className="flex items-center gap-3 text-sm text-muted-foreground mt-2">
             <Avatar className="h-6 w-6">
-              <AvatarImage src={thread.author?.image} />
+              <AvatarImage src={thread.author?.image ?? undefined} />
               <AvatarFallback>{thread.author?.name?.[0] || 'U'}</AvatarFallback>
             </Avatar>
             <span>{thread.author?.name}</span>
@@ -77,7 +77,7 @@ function GroupThreadPage() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <Avatar className="h-6 w-6">
-                        <AvatarImage src={reply.author?.image} />
+                        <AvatarImage src={reply.author?.image ?? undefined} />
                         <AvatarFallback>{reply.author?.name?.[0] || 'U'}</AvatarFallback>
                       </Avatar>
                       <span>{reply.author?.name}</span>

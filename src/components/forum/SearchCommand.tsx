@@ -75,11 +75,10 @@ export function SearchCommand({ open, onOpenChange }: SearchCommandProps) {
   const quickActions = [
     { icon: Home, label: 'Home', action: () => navigate({ to: '/threads' }) },
     { icon: MessageSquare, label: 'Messages', action: () => navigate({ to: '/messages' }) },
-    { icon: FolderOpen, label: 'Categories', action: () => navigate({ to: '/categories' }) },
+    { icon: FolderOpen, label: 'Categories', action: () => navigate({ to: '/category' }) },
     { icon: Hash, label: 'Tags', action: () => navigate({ to: '/tags' }) },
     { icon: Users, label: 'Groups', action: () => navigate({ to: '/groups' }) },
     { icon: Calendar, label: 'Events', action: () => navigate({ to: '/events' }) },
-    { icon: TrendingUp, label: 'Trending', action: () => navigate({ to: '/trending' }) },
     { icon: Bookmark, label: 'Bookmarks', action: () => navigate({ to: '/bookmarks' }) },
     { icon: Star, label: 'Reputation', action: () => {
       // Need a way to get current username here if we want to link to own reputation
@@ -123,7 +122,7 @@ export function SearchCommand({ open, onOpenChange }: SearchCommandProps) {
   const getLink = (item: any) => {
     switch (item.type) {
       case 'thread':
-        return { to: '/threads/thread/$id' as const, params: { id: item.id } }
+        return { to: '/threads/$id' as const, params: { id: item.id } }
       case 'user':
         return { to: '/profile/$username' as const, params: { username: item.subtitle || '' } }
       case 'group':

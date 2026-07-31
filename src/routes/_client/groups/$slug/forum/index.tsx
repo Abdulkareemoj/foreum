@@ -42,7 +42,7 @@ function GroupForumPage() {
 
   const handleOpenNew = () => {
     // Navigate using a query parameter for group assignment if thread creation handles it
-    navigate({ to: '/_client/threads' as any, search: { group: slug } }) // adjust to the correct route for new thread
+    navigate({ to: '/threads' })
   }
 
   return (

@@ -54,18 +54,18 @@ function GroupSlugPage() {
       {/* Header */}
       <div className="flex items-center gap-4">
         <Avatar className="h-16 w-16">
-          <AvatarImage src={group.avatarUrl} />
+          <AvatarImage src={group.avatarImage ?? undefined} />
           <AvatarFallback>{group.name?.slice(0, 2).toUpperCase()}</AvatarFallback>
         </Avatar>
         <div className="min-w-0 flex-1">
           <h1 className="text-2xl font-bold">{group.name}</h1>
           <p className="text-sm text-muted-foreground">
-            {group.memberCount ?? 0} members • {group.privacy}
+            {group.memberCount ?? 0} members
           </p>
         </div>
 
         <div className="flex items-center gap-2">
-          {group.isMember ? (
+          {group.membership ? (
             <Button
               variant="outline"
               onClick={() => leaveGroup.mutate({ groupId: group.id })}
@@ -81,8 +81,8 @@ function GroupSlugPage() {
               Join
             </Button>
           )}
-          {group.isModerator && (
-            <Link to={`/groups/${group.id}/settings` as any}>
+          {group.isOwner && (
+            <Link to="/groups/$slug/settings" params={{ slug: group.slug }}>
               <Button variant="outline">Manage</Button>
             </Link>
           )}
@@ -118,10 +118,10 @@ function GroupSlugPage() {
                   ) : (
                     <div className="space-y-4">
                       {recentThreads.map((t) => (
-                        <Link key={t.id} to={`/threads/${t.id}` as any} className="block rounded p-3 hover:bg-muted/30">
+                        <Link key={t.id} to="/threads/$id" params={{ id: t.id }} className="block rounded p-3 hover:bg-muted/30">
                           <div className="font-medium">{t.title}</div>
                           <div className="text-sm text-muted-foreground">
-                            {t.replyCount ?? 0} replies • {new Date(t.createdAt).toLocaleString()}
+                            {t.replyCount ?? 0} replies • {t.createdAt ? new Date(t.createdAt).toLocaleString() : ''}
                           </div>
                         </Link>
                       ))}
@@ -133,25 +133,11 @@ function GroupSlugPage() {
 
             <div className="space-y-4">
               <Card>
-                <CardHeader>Rules</CardHeader>
-                <CardContent>
-                  {group.rules ? (
-                    <div 
-                      className="text-sm text-muted-foreground"
-                      dangerouslySetInnerHTML={{ __html: renderTipTap(group.rules) }}
-                    />
-                  ) : (
-                    <p className="text-sm text-muted-foreground">No rules posted.</p>
-                  )}
-                </CardContent>
-              </Card>
-
-              <Card>
                 <CardHeader>Members</CardHeader>
                 <CardContent>
                   <div className="flex items-center gap-2">
                     <div className="text-sm">{group.memberCount ?? 0} members</div>
-                    <Link to={`/groups/${group.id}/members` as any} className="ml-auto text-sm text-primary">
+                    <Link to="/groups/$slug/members" params={{ slug: group.slug }} className="ml-auto text-sm text-primary">
                       See all
                     </Link>
                   </div>
@@ -163,7 +149,7 @@ function GroupSlugPage() {
 
         <TabsContent value="forum">
           <div>
-            <Link className="mb-4 inline-block" to={`/groups/${group.id}/forum` as any}>
+            <Link className="mb-4 inline-block" to="/groups/$slug/forum" params={{ slug: group.slug }}>
               <Button>Open group forum</Button>
             </Link>
             <p className="text-sm text-muted-foreground">
@@ -174,7 +160,7 @@ function GroupSlugPage() {
 
         <TabsContent value="members">
           <div>
-            <Link to={`/groups/${group.id}/members` as any}>
+            <Link to="/groups/$slug/members" params={{ slug: group.slug }}>
               <Button>View members</Button>
             </Link>
           </div>

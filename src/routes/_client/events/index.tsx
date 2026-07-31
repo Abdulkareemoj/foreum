@@ -31,10 +31,10 @@ function EventsPage() {
   )
 
   useEffect(() => {
-    if (data) {
-      setAllEvents(data)
-      setUpcomingEvents(data.filter((e: any) => !isPast(new Date(e.endsAt))))
-      setPastEvents(data.filter((e: any) => isPast(new Date(e.endsAt))))
+    if (data?.items) {
+      setAllEvents(data.items)
+      setUpcomingEvents(data.items.filter((e: any) => !isPast(new Date(e.endsAt))))
+      setPastEvents(data.items.filter((e: any) => isPast(new Date(e.endsAt))))
     }
   }, [data])
 
@@ -112,7 +112,7 @@ function EventsPage() {
             ) : (
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {upcomingEvents.map((event) => (
-                  <Link key={event.id} to={`/events/${event.id}`} className="block transition hover:opacity-75">
+                  <Link key={event.id} to="/events/$id" params={{ id: event.id }} className="block transition hover:opacity-75">
                     <EventCardContent event={event} getEventTypeColor={getEventTypeColor} />
                   </Link>
                 ))}
@@ -131,7 +131,7 @@ function EventsPage() {
             ) : (
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {pastEvents.map((event) => (
-                  <Link key={event.id} to={`/events/${event.id}`} className="block opacity-75 transition hover:opacity-100">
+                  <Link key={event.id} to="/events/$id" params={{ id: event.id }} className="block opacity-75 transition hover:opacity-100">
                     <EventCardContent event={event} getEventTypeColor={getEventTypeColor} isPastEvent />
                   </Link>
                 ))}
@@ -150,7 +150,7 @@ function EventsPage() {
             ) : (
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {allEvents.map((event) => (
-                  <Link key={event.id} to={`/events/${event.id}`} className="block transition hover:opacity-75">
+                  <Link key={event.id} to="/events/$id" params={{ id: event.id }} className="block transition hover:opacity-75">
                     <EventCardContent event={event} getEventTypeColor={getEventTypeColor} />
                   </Link>
                 ))}

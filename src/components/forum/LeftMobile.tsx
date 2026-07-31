@@ -19,10 +19,10 @@ export default function LeftMobile({ user }: LeftMobileProps) {
 
   const navigation = [
     { name: 'Home', href: '/threads', icon: Home },
-    { name: 'Threads', href: '/thread', icon: MessageSquare },
-    { name: 'Trending', href: '/trending', icon: TrendingUp },
+    { name: 'Threads', href: '/threads', icon: MessageSquare },
+    { name: 'Tags', href: '/tags', icon: TrendingUp },
     { name: 'Bookmarks', href: '/bookmarks', icon: Bookmark },
-    { name: 'Communities', href: '/communities', icon: Users },
+    { name: 'Groups', href: '/groups', icon: Users },
     { name: 'Settings', href: '/settings', icon: Settings },
   ]
 
@@ -137,7 +137,8 @@ function MobileCategories({ onClose }: { onClose: () => void }) {
       {categories.map((cat: any) => (
         <Link
           key={cat.id}
-          to={`/category${cat.slug}`}
+          to="/category/$slug"
+          params={{ slug: cat.slug }}
           onClick={onClose}
           className="block rounded-md px-3 py-2 text-sm hover:bg-accent transition-colors"
         >
@@ -169,7 +170,8 @@ function MobileTags({ onClose }: { onClose: () => void }) {
       {tags.map((tag: any) => (
         <Link
           key={tag.id}
-          to={`/tags/${tag.slug}`}
+          to="/tags/$slug"
+          params={{ slug: tag.slug }}
           onClick={onClose}
           className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80"
         >

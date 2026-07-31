@@ -52,7 +52,7 @@ export default function ThreadCard({ thread }: ThreadCardProps) {
           <div className="flex-1 min-w-0">
 
 <Link
-  to="/threads/thread/$id"
+  to="/threads/$id"
   params={{ id: thread.id }}
   className="hover:underline"
 >

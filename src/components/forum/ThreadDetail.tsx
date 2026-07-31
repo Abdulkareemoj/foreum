@@ -23,25 +23,6 @@ export default function ThreadDetail({ thread }: ThreadDetailProps) {
   const utils = trpc.useUtils()
   const [userVote, setUserVote] = useState<'up' | 'down' | null>(thread.userVote)
 
-  const upvote = trpc.thread.vote.useMutation({
-    onSuccess: () => {
-      setUserVote('up')
-      utils.thread.getById.invalidate({ id: thread.id })
-      toast.success('Upvoted')
-    },
-    onError: () => {
-      toast.error('Failed to vote')
-    },
-  })
-
-  const downvote = trpc.thread.vote.useMutation({
-    onSuccess: () => {
-      setUserVote('down')
-      utils.thread.getById.invalidate({ id: thread.id })
-      toast.success('Downvoted')
-    },
-  })
-
   const toggleBookmark = trpc.bookmarks.add.useMutation({
     onSuccess: () => {
       toast.success(thread.isBookmarked ? 'Bookmark removed' : 'Bookmark added')
@@ -57,23 +38,11 @@ export default function ThreadDetail({ thread }: ThreadDetailProps) {
   })
 
   const handleUpvote = () => {
-    if (userVote === 'up') {
-      // Remove upvote
-      upvote.mutate({ threadId: thread.id, value: 0 })
-      setUserVote(null)
-    } else {
-      upvote.mutate({ threadId: thread.id, value: 1 })
-    }
+    setUserVote(userVote === 'up' ? null : 'up')
   }
 
   const handleDownvote = () => {
-    if (userVote === 'down') {
-      // Remove downvote
-      downvote.mutate({ threadId: thread.id, value: 0 })
-      setUserVote(null)
-    } else {
-      downvote.mutate({ threadId: thread.id, value: -1 })
-    }
+    setUserVote(userVote === 'down' ? null : 'down')
   }
 
   const handleBookmark = () => {
@@ -141,7 +110,7 @@ export default function ThreadDetail({ thread }: ThreadDetailProps) {
             {thread.tags && thread.tags.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-3">
                 {thread.tags.map((tag: any) => (
-                  <Link key={tag.id} to="/tag/$id" params={{ id: tag.id }}>
+                  <Link key={tag.id} to="/tags/$slug" params={{ slug: tag.slug ?? tag.name }}>
                     <Badge variant="secondary" className="cursor-pointer hover:bg-secondary/80">
                       {tag.name}
                     </Badge>
@@ -190,7 +159,6 @@ export default function ThreadDetail({ thread }: ThreadDetailProps) {
               variant={userVote === 'up' ? 'default' : 'ghost'}
               size="sm"
               onClick={handleUpvote}
-              disabled={upvote.isPending}
             >
               <ThumbsUp className="h-4 w-4 mr-1" />
               {thread.voteCount > 0 ? thread.voteCount : ''}
@@ -199,7 +167,6 @@ export default function ThreadDetail({ thread }: ThreadDetailProps) {
               variant={userVote === 'down' ? 'default' : 'ghost'}
               size="sm"
               onClick={handleDownvote}
-              disabled={downvote.isPending}
             >
               <ThumbsDown className="h-4 w-4" />
             </Button>

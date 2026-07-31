@@ -26,13 +26,13 @@ export function NewConversationDialog() {
     { enabled: search.length > 0 }
   )
 
-  const createConversation = trpc.messages.createConversation.useMutation({
-    onSuccess: (data) => {
+  const createConversation = trpc.messaging.createConversation.useMutation({
+    onSuccess: (data: { id: string; existing: boolean }) => {
       toast.success(data.existing ? 'Opening conversation' : 'Conversation created')
       setOpen(false)
       navigate({ to: '/messages/$id', params: { id: data.id } })
     },
-    onError: (error) => {
+    onError: (error: { message?: string }) => {
       toast.error(error.message || 'Failed to create conversation')
     },
   })

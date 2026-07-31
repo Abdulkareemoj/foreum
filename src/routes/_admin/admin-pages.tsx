@@ -45,7 +45,7 @@ function AdminPagesPage() {
 		setNewPublished(false)
 	}
 
-	function startEdit(page: typeof pages extends (infer U)[] ? U : never) {
+	function startEdit(page: any) {
 		if (!page) return
 		setEditingId(page.id)
 		setNewTitle(page.title)

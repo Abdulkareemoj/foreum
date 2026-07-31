@@ -1,7 +1,7 @@
 import { Card, CardContent } from '~/components/ui/card'
 import { Button } from '~/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
-import { ThumbsUp, ThumbsDown, MessageSquare, Flag, MoreVertical } from 'lucide-react'
+import { MessageSquare, Flag, MoreVertical } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import { Link } from '@tanstack/react-router'
 import { trpc } from '~/lib/trpc'
@@ -22,44 +22,8 @@ interface ReplyItemProps {
 }
 
 export default function ReplyItem({ reply, threadId, depth = 0 }: ReplyItemProps) {
-  const utils = trpc.useUtils()
   const { openReplyModal } = useUIStore()
-  const [userVote, setUserVote] = useState<'up' | 'down' | null>(reply.userVote)
   const [showReplies, setShowReplies] = useState(false)
-
-  const upvote = trpc.reply.vote.useMutation({
-    onSuccess: () => {
-      setUserVote('up')
-      utils.reply.getByThreadId.invalidate({ threadId })
-      toast.success('Upvoted')
-    },
-  })
-
-  const downvote = trpc.reply.vote.useMutation({
-    onSuccess: () => {
-      setUserVote('down')
-      utils.reply.getByThreadId.invalidate({ threadId })
-      toast.success('Downvoted')
-    },
-  })
-
-  const handleUpvote = () => {
-    if (userVote === 'up') {
-      upvote.mutate({ replyId: reply.id, value: 0 })
-      setUserVote(null)
-    } else {
-      upvote.mutate({ replyId: reply.id, value: 1 })
-    }
-  }
-
-  const handleDownvote = () => {
-    if (userVote === 'down') {
-      downvote.mutate({ replyId: reply.id, value: 0 })
-      setUserVote(null)
-    } else {
-      downvote.mutate({ replyId: reply.id, value: -1 })
-    }
-  }
 
   const handleReply = () => {
     openReplyModal(threadId, reply.id)
@@ -136,27 +100,6 @@ export default function ReplyItem({ reply, threadId, depth = 0 }: ReplyItemProps
 
               {/* Action Bar */}
               <div className="flex items-center gap-2">
-                {/* Vote Buttons */}
-                <div className="flex items-center gap-1">
-                  <Button
-                    variant={userVote === 'up' ? 'default' : 'ghost'}
-                    size="sm"
-                    onClick={handleUpvote}
-                    disabled={upvote.isPending}
-                  >
-                    <ThumbsUp className="h-3 w-3 mr-1" />
-                    {reply.voteCount > 0 ? reply.voteCount : ''}
-                  </Button>
-                  <Button
-                    variant={userVote === 'down' ? 'default' : 'ghost'}
-                    size="sm"
-                    onClick={handleDownvote}
-                    disabled={downvote.isPending}
-                  >
-                    <ThumbsDown className="h-3 w-3" />
-                  </Button>
-                </div>
-
                 {/* Reply Button */}
                 {!isMaxDepth && (
                   <Button variant="ghost" size="sm" onClick={handleReply}>

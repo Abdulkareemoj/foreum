@@ -34,7 +34,7 @@ function GroupForumPage() {
   }, [search])
 
   const { data: threadsData, isLoading } = trpc.groups.threads.useQuery({ 
-    groupId: slug, 
+    slug, 
     limit: 30 
   })
 

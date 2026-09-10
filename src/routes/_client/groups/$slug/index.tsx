@@ -11,12 +11,6 @@ export const Route = createFileRoute('/_client/groups/$slug/')({
   component: GroupSlugPage,
 })
 
-// Quick HTML renderer stub for Tiptap structure
-function renderTipTap(text: string | null) {
-  if (!text) return ''
-  return `<p>${text}</p>`
-}
-
 function GroupSlugPage() {
   const { slug } = Route.useParams()
   const navigate = useNavigate()
@@ -24,7 +18,7 @@ function GroupSlugPage() {
   const [activeTab, setActiveTab] = useState<'overview' | 'forum' | 'members'>('overview')
 
   const { data: group, isLoading, refetch } = trpc.groups.bySlug.useQuery({ slug })
-  const { data: recentThreadsData } = trpc.groups.threads.useQuery({ groupId: slug, limit: 5 })
+  const { data: recentThreadsData } = trpc.groups.threads.useQuery({ slug, limit: 5 })
 
   const recentThreads = recentThreadsData?.items ?? []
 
@@ -103,10 +97,9 @@ function GroupSlugPage() {
               <Card>
                 <CardHeader>About</CardHeader>
                 <CardContent>
-                  <div 
-                    className="prose dark:prose-invert max-w-none"
-                    dangerouslySetInnerHTML={{ __html: renderTipTap(group.description) }}
-                  />
+                  <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                    {group.description || 'No description provided.'}
+                  </p>
                 </CardContent>
               </Card>
 

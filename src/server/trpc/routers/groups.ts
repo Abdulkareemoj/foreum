@@ -317,20 +317,34 @@ export const groupsRouter = router({
   threads: publicProcedure
     .input(
       z.object({
-        groupId: z.string(),
+        slug: z.string(),
         limit: z.number().default(20),
         cursor: z.string().optional(),
       })
     )
     .query(async ({ input }) => {
       try {
-        // Get threads associated with this group
-        // This assumes you have a groupId field in threads table
-        // If not, you might need to add it or use a different approach
+        // Look up group by slug to get the UUID
+        const [group] = await db
+          .select({ id: groups.id })
+          .from(groups)
+          .where(eq(groups.slug, input.slug))
+
+        if (!group) {
+          throw new TRPCError({ code: 'NOT_FOUND', message: 'Group not found' })
+        }
+
+        const conditions = [eq(thread.groupId, group.id)]
+
+        if (input.cursor) {
+          conditions.push(sql`${thread.id} < ${input.cursor}`)
+        }
+
         const items = await db
           .select()
           .from(thread)
-          .where(eq(thread.groupId, input.groupId))
+          .where(and(...conditions))
+          .orderBy(sql`${thread.createdAt} DESC`)
           .limit(input.limit + 1)
 
         let nextCursor: string | undefined = undefined
@@ -341,6 +355,7 @@ export const groupsRouter = router({
 
         return { items, nextCursor }
       } catch (error) {
+        if (error instanceof TRPCError) throw error
         console.error('[groups.threads]', error)
         throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Failed to fetch threads' })
       }

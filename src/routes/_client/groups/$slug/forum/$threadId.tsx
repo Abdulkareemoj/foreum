@@ -1,19 +1,13 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Card, CardContent, CardHeader } from '~/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
-import ReplyForm from '~/components/forum/ReplyForm'  
+import ReplyForm from '~/components/forum/ReplyForm'
 import { trpc } from '~/lib/trpc'
+import { PlateViewer } from '~/components/ui/plate/editor-static'
 
 export const Route = createFileRoute('/_client/groups/$slug/forum/$threadId')({
   component: GroupThreadPage,
 })
-
-// Stub for HTML content
-const renderTipTap = (content: unknown) => {
-  if (!content) return ''
-  if (typeof content === 'string') return `<p>${content}</p>`
-  return `<p>${JSON.stringify(content)}</p>`
-}
 
 function GroupThreadPage() {
   const { threadId } = Route.useParams()
@@ -57,10 +51,9 @@ function GroupThreadPage() {
         </CardHeader>
 
         <CardContent>
-          <div 
-            className="prose dark:prose-invert max-w-none" 
-            dangerouslySetInnerHTML={{ __html: renderTipTap(thread.content) }}
-          />
+          <div className="prose dark:prose-invert max-w-none">
+            <PlateViewer content={thread.content} />
+          </div>
         </CardContent>
       </Card>
 
@@ -87,10 +80,9 @@ function GroupThreadPage() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div 
-                    className="prose dark:prose-invert max-w-none"
-                    dangerouslySetInnerHTML={{ __html: renderTipTap(reply.content) }}
-                  />
+                  <div className="prose dark:prose-invert max-w-none">
+                    <PlateViewer content={reply.content} />
+                  </div>
                 </CardContent>
               </Card>
             ))}

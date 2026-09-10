@@ -4,7 +4,7 @@ import { and, asc, count, desc, eq, inArray, like, sql } from 'drizzle-orm'
 import { z } from 'zod'
 import { db } from '~/server/db'
 import { user } from '~/server/db/schema/auth-schema'
-import { threadTag } from '~/server/db/schema/tag-schema'
+import { tag, tagCount, threadTag } from '~/server/db/schema/tag-schema'
 import { category, reply, thread } from '~/server/db/schema/thread-schema'
 import { protectedProcedure, publicProcedure, router } from '~/server/trpc/init'
 
@@ -187,11 +187,51 @@ export const threadRouter = router({
           .values({
             id: crypto.randomUUID(),
             title: input.title,
-            content: input.content, // Store as JSONB
+            content: input.content,
             categoryId: input.categoryId,
             authorId: ctx.user.id,
           })
           .returning()
+
+        // Assign tags
+        if (input.tags && input.tags.length > 0) {
+          const validTags = await db
+            .select({ id: tag.id })
+            .from(tag)
+            .where(inArray(tag.id, input.tags))
+
+          if (validTags.length > 0) {
+            await db
+              .insert(threadTag)
+              .values(
+                validTags.map((t) => ({
+                  threadId: newThread.id,
+                  tagId: t.id,
+                }))
+              )
+
+            // Increment thread counts for each tag
+            for (const t of validTags) {
+              const existing = await db
+                .select()
+                .from(tagCount)
+                .where(eq(tagCount.tagId, t.id))
+                .limit(1)
+
+              if (existing[0]) {
+                await db
+                  .update(tagCount)
+                  .set({ threadCount: (existing[0].threadCount ?? 0) + 1 })
+                  .where(eq(tagCount.tagId, t.id))
+              } else {
+                await db.insert(tagCount).values({
+                  tagId: t.id,
+                  threadCount: 1,
+                })
+              }
+            }
+          }
+        }
 
         return newThread
       } catch (error) {

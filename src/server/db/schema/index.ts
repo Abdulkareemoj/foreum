@@ -13,3 +13,4 @@ export * from './settings-schema';
 export * from './tag-schema';
 export * from './theme-preset-schema';
 export * from './thread-schema';
+export * from './vote-schema';

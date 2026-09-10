@@ -19,6 +19,8 @@ import { tagRouter } from './tag';
 import { themeRouter } from './theme';
 import { threadRouter } from './thread';
 import { userRouter } from './user';
+import { reactionsRouter } from './reaction';
+import { voteRouter } from './vote';
 
 export const appRouter = router({
 	analytics: analyticsRouter,
@@ -39,7 +41,9 @@ export const appRouter = router({
 	reputation: reputationRouter,
 	search: searchRouter,
 	theme: themeRouter,
-	pages: pagesRouter
+	pages: pagesRouter,
+	reactions: reactionsRouter,
+	votes: voteRouter
 });
 
 export type AppRouter = typeof appRouter;

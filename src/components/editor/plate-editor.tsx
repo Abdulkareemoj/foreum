@@ -1,7 +1,7 @@
 import { Plate, usePlateEditor } from 'platejs/react';
 import type { Value } from 'platejs';
 import { EditorKit } from '~/components/editor/editor-kit';
-import { Editor, EditorContainer } from '~/components/ui/editor';
+import { Editor, EditorContainer } from '~/components/ui/plate/editor';
 
 interface PlateEditorProps {
   value?: Value;

@@ -4,8 +4,11 @@ import type { VariantProps } from 'class-variance-authority';
 
 import { cva } from 'class-variance-authority';
 import { type PlateStaticProps, PlateStatic } from 'platejs/static';
+import { createPlateEditor } from 'platejs/react';
+import type { Value } from 'platejs';
 
 import { cn } from '~/lib/utils';
+import { EditorKit } from '~/components/editor/editor-kit';
 
 export const editorVariants = cva(
   cn(
@@ -50,6 +53,40 @@ export function EditorStatic({
     <PlateStatic
       className={cn(editorVariants({ variant }), className)}
       {...props}
+    />
+  );
+}
+
+export function PlateViewer({
+  content,
+  className,
+}: {
+  content: unknown;
+  className?: string;
+}) {
+  const value: Value = React.useMemo(() => {
+    if (!content) return [{ children: [{ text: '' }], type: 'p' }];
+    if (typeof content === 'string') {
+      try {
+        const parsed = JSON.parse(content);
+        return Array.isArray(parsed) ? parsed : [{ children: [{ text: content }], type: 'p' }];
+      } catch {
+        return [{ children: [{ text: content }], type: 'p' }];
+      }
+    }
+    return Array.isArray(content) ? content : [{ children: [{ text: '' }], type: 'p' }];
+  }, [content]);
+
+  const editor = createPlateEditor({
+    plugins: EditorKit,
+    value,
+  });
+
+  return (
+    <PlateStatic
+      editor={editor}
+      value={value}
+      className={cn(editorVariants({ variant: 'none' }), className)}
     />
   );
 }

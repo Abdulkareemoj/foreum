@@ -20,7 +20,7 @@ import {
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu';
 
-import { ToolbarButton } from './toolbar';
+import { ToolbarButton } from '../toolbar';
 
 const items = [
   {

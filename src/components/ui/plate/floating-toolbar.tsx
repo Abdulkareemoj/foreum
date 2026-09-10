@@ -18,7 +18,7 @@ import type * as React from 'react';
 
 import { cn } from '~/lib/utils';
 
-import { Toolbar } from './toolbar';
+import { Toolbar } from '../toolbar';
 
 export function FloatingToolbar({
   children,

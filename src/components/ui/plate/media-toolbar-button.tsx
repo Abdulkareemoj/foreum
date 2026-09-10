@@ -39,7 +39,7 @@ import {
   ToolbarSplitButton,
   ToolbarSplitButtonPrimary,
   ToolbarSplitButtonSecondary,
-} from './toolbar';
+} from '../toolbar';
 
 const MEDIA_CONFIG: Record<
   string,

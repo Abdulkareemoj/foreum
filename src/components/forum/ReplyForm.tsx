@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
-import { RichTextEditor } from "~/components/ui/rich-text-editor";
+import { RichTextEditor } from "~/components/ui/plate/rich-text-editor";
 import { Card, CardContent } from "~/components/ui/card";
 import { trpc } from "~/lib/trpc";
 import { toast } from "sonner";

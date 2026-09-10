@@ -104,7 +104,7 @@ import {
   ToolbarButton,
   ToolbarGroup,
   ToolbarMenuGroup,
-} from './toolbar';
+} from '../toolbar';
 
 type TableResizeDirection = 'bottom' | 'left' | 'right';
 

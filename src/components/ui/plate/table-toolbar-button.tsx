@@ -31,7 +31,7 @@ import {
 } from '~/components/ui/dropdown-menu';
 import { cn } from '~/lib/utils';
 
-import { ToolbarButton } from './toolbar';
+import { ToolbarButton } from '../toolbar';
 
 export function TableToolbarButton(props: React.ComponentProps<typeof DropdownMenuPrimitive.Root>) {
   const tableSelected = useEditorSelector(

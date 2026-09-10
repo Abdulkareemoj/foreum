@@ -18,7 +18,7 @@ import {
   mediaResizeHandleVariants,
   Resizable,
   ResizeHandle,
-} from './resize-handle';
+} from '../resize-handle';
 
 export const MediaEmbedElement = withHOC(
   ResizableProvider,

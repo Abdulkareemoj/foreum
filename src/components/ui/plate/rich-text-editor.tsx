@@ -18,7 +18,7 @@ import {
 } from "slate-react";
 import { withHistory, HistoryEditor } from "slate-history";
 import { cn } from "~/lib/utils";
-import { Button } from "./button";
+import { Button } from "../button";
 import {
   Bold,
   Italic,
@@ -35,8 +35,8 @@ import {
   Undo,
   Redo,
 } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip";
-import { Separator } from "./separator";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../tooltip";
+import { Separator } from "../separator";
 
 declare module "slate" {
   interface CustomTypes {

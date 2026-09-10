@@ -1,8 +1,8 @@
 
 
 import { createPlatePlugin } from 'platejs/react';
-import { BlockDiscussion } from '~/components/ui/block-discussion';
-import type { TComment } from '~/components/ui/comment';
+import { BlockDiscussion } from '~/components/ui/plate/block-discussion';
+import type { TComment } from '~/components/ui/plate/comment';
 
 export type TDiscussion = {
   id: string;

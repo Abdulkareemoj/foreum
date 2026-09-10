@@ -61,6 +61,7 @@ export const userRouter = router({
 						role: user.role,
 						banned: user.banned,
 						banReason: user.banReason,
+						banExpires: user.banExpires,
 						emailVerified: user.emailVerified,
 						createdAt: user.createdAt,
 					})
@@ -90,14 +91,28 @@ export const userRouter = router({
 		}),
 
 	banUser: adminProcedure
-		.input(z.object({ userId: z.string(), reason: z.string().optional() }))
+		.input(
+			z.object({
+				userId: z.string(),
+				reason: z.string().optional(),
+				durationMinutes: z.number().min(1).optional(), // undefined = permanent
+			})
+		)
 		.mutation(async ({ input }) => {
 			try {
+				const banExpires = input.durationMinutes
+					? new Date(Date.now() + input.durationMinutes * 60 * 1000)
+					: null;
+
 				await db
 					.update(user)
-					.set({ banned: true, banReason: input.reason ?? null, banExpires: null })
+					.set({
+						banned: true,
+						banReason: input.reason ?? null,
+						banExpires,
+					})
 					.where(eq(user.id, input.userId));
-				return { success: true };
+				return { success: true, banExpires };
 			} catch (error) {
 				logger.error({ err: error }, 'Failed to ban user')
 				throw apiError('INTERNAL_SERVER_ERROR', 'Failed to ban user')

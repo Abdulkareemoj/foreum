@@ -49,6 +49,7 @@ type User = {
   role: string | null
   banned: boolean | null
   banReason: string | null
+  banExpires: Date | null
   createdAt: Date
 }
 
@@ -139,15 +140,31 @@ function UsersListPage() {
       header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
       cell: ({ row }) => {
         const banned = row.getValue('banned')
-        return banned ? (
+        const banExpires = row.original.banExpires
+        if (!banned) {
+          return (
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="size-3.5 text-emerald-500" />
+              <span className="text-sm text-emerald-500">Active</span>
+            </div>
+          )
+        }
+        if (banExpires) {
+          const expiresAt = new Date(banExpires)
+          const isExpired = expiresAt <= new Date()
+          return (
+            <div className="flex items-center gap-2">
+              <Ban className="size-3.5 text-destructive" />
+              <span className="text-sm text-destructive">
+                {isExpired ? 'Banned (expired)' : `Banned until ${expiresAt.toLocaleDateString()}`}
+              </span>
+            </div>
+          )
+        }
+        return (
           <div className="flex items-center gap-2">
             <Ban className="size-3.5 text-destructive" />
-            <span className="text-sm text-destructive">Banned</span>
-          </div>
-        ) : (
-          <div className="flex items-center gap-2">
-            <CheckCircle2 className="size-3.5 text-emerald-500" />
-            <span className="text-sm text-emerald-500">Active</span>
+            <span className="text-sm text-destructive">Banned (permanent)</span>
           </div>
         )
       },
@@ -203,9 +220,24 @@ function UsersListPage() {
                   <CheckCircle2 className="size-4 text-emerald-500" /> Unban User
                 </DropdownMenuItem>
               ) : (
-                <DropdownMenuItem onClick={() => banMutation.mutate({ userId: u.id, reason: 'Banned by admin' })}>
-                  <Ban className="size-4 text-destructive" /> Ban User
-                </DropdownMenuItem>
+                <>
+                  <DropdownMenuLabel className="text-xs text-muted-foreground mt-1">Ban Duration</DropdownMenuLabel>
+                  <DropdownMenuItem onClick={() => banMutation.mutate({ userId: u.id, reason: 'Banned by admin', durationMinutes: 60 })}>
+                    <Ban className="size-4 text-destructive" /> 1 Hour
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => banMutation.mutate({ userId: u.id, reason: 'Banned by admin', durationMinutes: 1440 })}>
+                    <Ban className="size-4 text-destructive" /> 24 Hours
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => banMutation.mutate({ userId: u.id, reason: 'Banned by admin', durationMinutes: 10080 })}>
+                    <Ban className="size-4 text-destructive" /> 7 Days
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => banMutation.mutate({ userId: u.id, reason: 'Banned by admin', durationMinutes: 43200 })}>
+                    <Ban className="size-4 text-destructive" /> 30 Days
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => banMutation.mutate({ userId: u.id, reason: 'Banned by admin' })}>
+                    <Ban className="size-4 text-destructive" /> Permanent
+                  </DropdownMenuItem>
+                </>
               )}
             </DropdownMenuContent>
           </DropdownMenu>

@@ -7,7 +7,7 @@ import { Speaker } from "lucide-react";
 import { useState } from "react";
 import { trpc } from "~/lib/trpc";
 import { toast } from "sonner";
-import { RichTextEditor } from "~/components/ui/rich-text-editor";
+import { RichTextEditor } from "~/components/ui/plate/rich-text-editor";
 import { Field, FieldGroup, FieldLabel } from "~/components/ui/field";
 import { seo } from "~/utils/seo";
 

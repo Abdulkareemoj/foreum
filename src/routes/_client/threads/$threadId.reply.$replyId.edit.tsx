@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { Button } from "~/components/ui/button";
-import { RichTextEditor } from "~/components/ui/rich-text-editor";
+import { RichTextEditor } from "~/components/ui/plate/rich-text-editor";
 import { Label } from "~/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { trpc } from "~/lib/trpc";

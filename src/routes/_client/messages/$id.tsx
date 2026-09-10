@@ -9,7 +9,7 @@ import {
   EmojiPickerSearch,
   EmojiPickerContent,
   EmojiPickerFooter,
-} from '~/components/ui/emoji-picker'
+} from '~/components/ui/plate/emoji-picker'
 import { Phone, Info, Video, SmilePlus, Send, ArrowLeft } from 'lucide-react'
 import { trpc } from '~/lib/trpc'
 import { cn } from '~/lib/utils'

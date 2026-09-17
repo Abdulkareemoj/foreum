@@ -21,6 +21,11 @@ import { threadRouter } from './thread';
 import { userRouter } from './user';
 import { reactionsRouter } from './reaction';
 import { voteRouter } from './vote';
+import { trustLevelRouter } from './trust-level';
+import { trustLevelConfigRouter } from './trust-level-config';
+import { draftRouter } from './draft';
+import { subscriptionRouter } from './subscription';
+import { moderationConfigRouter } from './moderation-config';
 
 export const appRouter = router({
 	analytics: analyticsRouter,
@@ -43,7 +48,12 @@ export const appRouter = router({
 	theme: themeRouter,
 	pages: pagesRouter,
 	reactions: reactionsRouter,
-	votes: voteRouter
+	votes: voteRouter,
+	trustLevel: trustLevelRouter,
+	trustLevelConfig: trustLevelConfigRouter,
+	drafts: draftRouter,
+	subscriptions: subscriptionRouter,
+	moderationConfig: moderationConfigRouter
 });
 
 export type AppRouter = typeof appRouter;

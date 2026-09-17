@@ -2,7 +2,6 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 
 import * as authSchema from "./schema/auth-schema";
-import * as bookmarkSchema from "./schema/bookmark-schema";
 import * as customPageSchema from "./schema/custom-page-schema";
 import * as eventsSchema from "./schema/events-schema";
 import * as groupsSchema from "./schema/groups-schema";
@@ -31,7 +30,6 @@ export const schema = {
   ...themePresetSchema,
   ...notificationSchema,
   ...profileSchema,
-  ...bookmarkSchema,
   ...customPageSchema,
   ...eventsSchema,
   ...groupsSchema,

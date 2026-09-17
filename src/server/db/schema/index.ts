@@ -1,5 +1,6 @@
 export * from './auth-schema';
-export * from './bookmark-schema';
+export * from './announcement-schema';
+export * from './custom-page-schema';
 export * from './events-schema';
 export * from './groups-schema';
 export * from './messaging-schema';
@@ -14,3 +15,7 @@ export * from './tag-schema';
 export * from './theme-preset-schema';
 export * from './thread-schema';
 export * from './vote-schema';
+export * from './trust-level-schema';
+export * from './draft-schema';
+export * from './subscription-schema';
+export * from './moderation-rule-schema';

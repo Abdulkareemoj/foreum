@@ -49,6 +49,7 @@ function SearchPage() {
 
   const totalResults =
     (data?.threads?.length || 0) +
+    (data?.replies?.length || 0) +
     (data?.users?.length || 0) +
     (data?.categories?.length || 0) +
     (data?.tags?.length || 0)
@@ -124,6 +125,9 @@ function SearchPage() {
               <TabsTrigger value="threads">
                 Threads ({data?.threads?.length || 0})
               </TabsTrigger>
+              <TabsTrigger value="replies">
+                Replies ({data?.replies?.length || 0})
+              </TabsTrigger>
               <TabsTrigger value="users">
                 Users ({data?.users?.length || 0})
               </TabsTrigger>
@@ -144,6 +148,9 @@ function SearchPage() {
             <TabsContent value="all" className="space-y-6 mt-6">
               {data?.threads && data.threads.length > 0 && (
                 <ThreadResults threads={data.threads} />
+              )}
+              {data?.replies && data.replies.length > 0 && (
+                <ReplyResults replies={data.replies} />
               )}
               {data?.users && data.users.length > 0 && (
                 <UserResults users={data.users} />
@@ -167,6 +174,14 @@ function SearchPage() {
                 <ThreadResults threads={data.threads} />
               ) : (
                 <p className="text-center text-muted-foreground py-12">No threads found</p>
+              )}
+            </TabsContent>
+
+            <TabsContent value="replies" className="mt-6">
+              {data?.replies && data.replies.length > 0 ? (
+                <ReplyResults replies={data.replies} />
+              ) : (
+                <p className="text-center text-muted-foreground py-12">No replies found</p>
               )}
             </TabsContent>
 
@@ -230,9 +245,49 @@ function ThreadResults({ threads }: { threads: any[] }) {
           <Card className="hover:shadow-md transition-shadow cursor-pointer">
             <CardContent className="py-4">
               <h3 className="font-medium line-clamp-1">{thread.title}</h3>
-              <p className="text-sm text-muted-foreground mt-1">
+              {thread.snippet && (
+                <p
+                  className="text-sm text-muted-foreground mt-1 line-clamp-2"
+                  dangerouslySetInnerHTML={{ __html: thread.snippet }}
+                />
+              )}
+              <p className="text-xs text-muted-foreground mt-2">
                 by {thread.author?.name} •{' '}
                 {format(new Date(thread.createdAt), 'MMM d, yyyy')}
+              </p>
+            </CardContent>
+          </Card>
+        </Link>
+      ))}
+    </div>
+  )
+}
+
+function ReplyResults({ replies }: { replies: any[] }) {
+  return (
+    <div className="space-y-3">
+      <h2 className="text-lg font-semibold flex items-center gap-2">
+        <MessageSquare className="h-5 w-5" />
+        Replies
+      </h2>
+      {replies.map((reply) => (
+        <Link key={reply.id} to="/threads/$id" params={{ id: reply.threadId }}>
+          <Card className="hover:shadow-md transition-shadow cursor-pointer">
+            <CardContent className="py-4">
+              {reply.thread && (
+                <p className="text-sm font-medium text-muted-foreground mb-1">
+                  in: {reply.thread.title}
+                </p>
+              )}
+              {reply.snippet && (
+                <p
+                  className="text-sm line-clamp-2"
+                  dangerouslySetInnerHTML={{ __html: reply.snippet }}
+                />
+              )}
+              <p className="text-xs text-muted-foreground mt-2">
+                by {reply.author?.name} •{' '}
+                {format(new Date(reply.createdAt), 'MMM d, yyyy')}
               </p>
             </CardContent>
           </Card>

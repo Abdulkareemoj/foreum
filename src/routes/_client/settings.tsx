@@ -52,7 +52,7 @@ function SettingsPage() {
       <div className="flex gap-8 md:flex-row flex-col">
         <nav className="flex shrink-0 gap-1 md:w-48 md:flex-col">
           {sections.map((s) => (
-            <button
+            <Button
               type="button"
               key={s.key}
               onClick={() => setActive(s.key)}
@@ -65,7 +65,7 @@ function SettingsPage() {
             >
               <s.icon className="size-4" />
               {s.label}
-            </button>
+                </Button>
           ))}
         </nav>
 

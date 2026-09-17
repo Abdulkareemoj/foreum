@@ -6,6 +6,10 @@ import { z } from 'zod';
 import { db } from '~/server/db';
 import { user } from '~/server/db/schema/auth-schema';
 import { reply, thread } from '~/server/db/schema/thread-schema';
+import { threadSubscription } from '~/server/db/schema/subscription-schema';
+import { notification } from '~/server/db/schema/notification-schema';
+import { hasTrustPermission, type TrustLevel } from '~/server/lib/trust-levels';
+import { checkModeration } from '~/server/lib/moderation';
 import { protectedProcedure, publicProcedure, router } from '~/server/trpc/init';
 
 export const replyRouter = router({
@@ -56,6 +60,25 @@ export const replyRouter = router({
 		)
 		.mutation(async ({ ctx, input }) => {
 			try {
+				// Trust level check: must have reply.create permission
+				const trustLevel = ((ctx.user as any).trustLevel ?? 0) as TrustLevel
+				if (!hasTrustPermission(trustLevel, 'reply.create')) {
+					throw new TRPCError({
+						code: 'FORBIDDEN',
+						message: 'Your trust level does not allow replying yet. Keep participating to earn more permissions!',
+					})
+				}
+
+				// Auto-moderation check
+				const contentStr = typeof input.content === 'string' ? input.content : JSON.stringify(input.content)
+				const modResult = await checkModeration(contentStr, undefined, 'content')
+				if (modResult.blocked) {
+					throw new TRPCError({
+						code: 'FORBIDDEN',
+						message: modResult.message ?? 'Your content was blocked by moderation rules',
+					})
+				}
+
 				const threadExists = await db
 					.select({ locked: thread.locked })
 					.from(thread)
@@ -85,6 +108,43 @@ export const replyRouter = router({
 					.update(thread)
 					.set({ replyCount: sql`${thread.replyCount} + 1` })
 					.where(eq(thread.id, input.threadId));
+
+				// Notify subscribers (except the reply author)
+				try {
+					const subscribers = await db
+						.select({ userId: threadSubscription.userId })
+						.from(threadSubscription)
+						.where(eq(threadSubscription.threadId, input.threadId))
+
+					const [threadData] = await db
+						.select({ title: thread.title })
+						.from(thread)
+						.where(eq(thread.id, input.threadId))
+						.limit(1)
+
+					const [replyAuthor] = await db
+						.select({ name: user.name })
+						.from(user)
+						.where(eq(user.id, ctx.user!.id))
+						.limit(1)
+
+					const authorName = replyAuthor?.name ?? 'Someone'
+					const threadTitle = threadData?.title ?? 'a thread'
+
+					for (const sub of subscribers) {
+						if (sub.userId === ctx.user!.id) continue // Don't notify self
+						await db.insert(notification).values({
+							id: crypto.randomUUID(),
+							userId: sub.userId,
+							type: 'reply',
+							title: `New reply in "${threadTitle}"`,
+							message: `${authorName} replied to the thread you're following.`,
+							link: `/threads/${input.threadId}`,
+						})
+					}
+				} catch {
+					// Don't fail the reply if notification fails
+				}
 
 				return newReply;
 			} catch (error) {
@@ -154,13 +214,6 @@ export const replyRouter = router({
 
 			return { success: true };
 		}),
-	byThread: publicProcedure.input(z.object({ threadId: z.string() })).query(async ({ input }) => {
-		return db
-			.select()
-			.from(reply)
-			.where(eq(reply.threadId, input.threadId))
-			.orderBy(desc(reply.createdAt));
-	}),
 	getById: publicProcedure.input(z.object({ id: z.string() })).query(async ({ input }) => {
 		const [result] = await db
 			.select()
@@ -169,21 +222,4 @@ export const replyRouter = router({
 			.limit(1);
 		return result;
 	}),
-
-	add: protectedProcedure
-		.input(
-			z.object({
-				threadId: z.string(),
-				content: z.any()
-			})
-		)
-		.mutation(async ({ ctx, input }) => {
-			await db.insert(reply).values({
-				id: crypto.randomUUID(),
-				threadId: input.threadId,
-				authorId: ctx.user.id,
-				content: input.content
-			});
-			return { success: true };
-		})
 });

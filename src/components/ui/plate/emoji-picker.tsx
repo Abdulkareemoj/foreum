@@ -60,7 +60,7 @@ function EmojiPickerEmoji({
   ...props
 }: EmojiPickerListEmojiProps) {
   return (
-    <button
+    <Button
       {...props}
       className={cn(
         "data-[active]:bg-accent flex size-7 items-center justify-center rounded-sm text-base",
@@ -69,7 +69,7 @@ function EmojiPickerEmoji({
       data-slot="emoji-picker-emoji"
     >
       {emoji.emoji}
-    </button>
+        </Button>
   );
 }
 

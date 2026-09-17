@@ -11,6 +11,7 @@ import { ArrowLeft, ArrowRight, Download, Minus, Plus, X } from 'lucide-react';
 import { useEditorRef } from 'platejs/react';
 
 import { cn } from '~/lib/utils';
+import { Button } from '~/components/ui/button';
 
 const buttonVariants = cva('rounded bg-[rgba(0,0,0,0.5)] px-1', {
   defaultVariants: {
@@ -69,7 +70,7 @@ export function MediaPreviewDialog() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex gap-1">
-              <button
+              <Button
                 {...prevProps}
                 className={cn(
                   buttonVariants({
@@ -79,9 +80,9 @@ export function MediaPreviewDialog() {
                 type="button"
               >
                 <ArrowLeft />
-              </button>
+                  </Button>
               {(currentUrlIndex ?? 0) + 1}
-              <button
+              <Button
                 {...nextProps}
                 className={cn(
                   buttonVariants({
@@ -91,10 +92,10 @@ export function MediaPreviewDialog() {
                 type="button"
               >
                 <ArrowRight />
-              </button>
+                  </Button>
             </div>
             <div className="flex">
-              <button
+              <Button
                 className={cn(
                   buttonVariants({
                     variant: zoomOutDisabled ? 'disabled' : 'default',
@@ -104,7 +105,7 @@ export function MediaPreviewDialog() {
                 type="button"
               >
                 <Minus className="size-4" />
-              </button>
+                  </Button>
               <div className="mx-px">
                 {isEditingScale ? (
                   <>
@@ -115,7 +116,7 @@ export function MediaPreviewDialog() {
                   <span {...scaleTextProps}>{`${scale * 100}%`}</span>
                 )}
               </div>
-              <button
+              <Button
                 className={cn(
                   buttonVariants({
                     variant: zoomInDisabled ? 'disabled' : 'default',
@@ -125,19 +126,19 @@ export function MediaPreviewDialog() {
                 type="button"
               >
                 <Plus className="size-4" />
-              </button>
+                  </Button>
             </div>
             {/* TODO: downLoad the image */}
-            <button className={cn(buttonVariants())} type="button">
+            <Button className={cn(buttonVariants())} type="button">
               <Download className="size-4" />
-            </button>
-            <button
+                </Button>
+            <Button
               {...closeProps}
               className={cn(buttonVariants())}
               type="button"
             >
               <X className="size-4" />
-            </button>
+                </Button>
           </div>
         </div>
       </div>

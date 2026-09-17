@@ -173,7 +173,7 @@ const EmojiButton = React.memo(function EmojiButton({
   onSelect: (emoji: Emoji) => void;
 }) {
   return (
-    <button
+    <Button
       aria-label={emoji.skins[0].native}
       className="group relative flex size-9 cursor-pointer items-center justify-center border-none bg-transparent text-2xl leading-none"
       data-index={index}
@@ -197,7 +197,7 @@ const EmojiButton = React.memo(function EmojiButton({
       >
         {emoji.skins[0].native}
       </span>
-    </button>
+        </Button>
   );
 });
 

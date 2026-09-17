@@ -26,7 +26,7 @@ import {
 } from 'platejs/react';
 import * as React from 'react';
 
-import { buttonVariants } from '~/components/ui/button';
+import { Button, buttonVariants } from '~/components/ui/button';
 import { Separator } from '~/components/ui/separator';
 
 const popoverVariants = cva(
@@ -128,13 +128,13 @@ export function LinkFloatingToolbar({
     input
   ) : (
     <div className="box-content flex items-center">
-      <button
+      <Button
         className={buttonVariants({ size: 'sm', variant: 'ghost' })}
         type="button"
         {...editButtonProps}
       >
         Edit link
-      </button>
+          </Button>
 
       <Separator orientation="vertical" />
 
@@ -142,7 +142,7 @@ export function LinkFloatingToolbar({
 
       <Separator orientation="vertical" />
 
-      <button
+      <Button
         className={buttonVariants({
           size: 'sm',
           variant: 'ghost',
@@ -151,7 +151,7 @@ export function LinkFloatingToolbar({
         {...unlinkButtonProps}
       >
         <Unlink width={18} />
-      </button>
+          </Button>
     </div>
   );
 

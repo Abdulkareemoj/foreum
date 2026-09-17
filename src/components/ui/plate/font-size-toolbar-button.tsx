@@ -15,7 +15,8 @@ import {
 } from '~/components/ui/popover';
 import { cn } from '~/lib/utils';
 
-import { ToolbarButton } from '../toolbar';
+import { ToolbarButton } from '~/components/ui/toolbar';
+import { Button } from '~/components/ui/button';
 
 const DEFAULT_FONT_SIZE = '16';
 
@@ -126,7 +127,7 @@ export function FontSizeToolbarButton() {
           onOpenAutoFocus={(e) => e.preventDefault()}
         >
           {FONT_SIZES.map((size) => (
-            <button
+            <Button
               className={cn(
                 'flex h-8 w-full items-center justify-center text-sm hover:bg-accent data-[highlighted=true]:bg-accent'
               )}
@@ -139,7 +140,7 @@ export function FontSizeToolbarButton() {
               type="button"
             >
               {size}
-            </button>
+                </Button>
           ))}
         </PopoverContent>
       </Popover>

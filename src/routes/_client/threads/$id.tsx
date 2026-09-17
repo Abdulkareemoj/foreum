@@ -21,8 +21,9 @@ function ThreadPage() {
   const navigate = useNavigate()
 
   const { data: thread, isLoading: threadLoading } = trpc.thread.getById.useQuery({ id })
-  const { data: replies, isLoading: repliesLoading } = trpc.reply.byThread.useQuery({
+  const { data: replies, isLoading: repliesLoading } = trpc.reply.list.useQuery({
     threadId: id,
+    sortBy: 'oldest',
   })
 
   if (threadLoading) {

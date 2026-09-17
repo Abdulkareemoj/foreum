@@ -37,7 +37,7 @@ function EditReplyPage() {
   const updateReply = trpc.reply.update.useMutation({
     onSuccess: () => {
       toast.success("Reply updated successfully");
-      utils.reply.byThread.invalidate({ threadId });
+      utils.reply.list.invalidate({ threadId });
       navigate({ to: "/threads/$id", params: { id: threadId } });
     },
     onError: (error) => {

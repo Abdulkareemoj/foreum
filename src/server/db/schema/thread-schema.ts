@@ -18,6 +18,7 @@ export const category = pgTable('category', {
 	name: text('name').notNull().unique(),
 	slug: text('slug').notNull().unique(),
 	description: text('description'),
+	parentCategoryId: text('parent_category_id').references((): any => category.id, { onDelete: 'set null' }),
 	createdAt: timestamp('created_at').defaultNow()
 });
 
@@ -32,6 +33,7 @@ export const thread = pgTable('thread', {
 	authorId: text('author_id')
 		.notNull()
 		.references(() => user.id, { onDelete: 'cascade' }),
+	bestAnswerId: text('best_answer_id').references(() => reply.id, { onDelete: 'set null' }),
 	pinned: boolean('pinned').default(false),
 	locked: boolean('locked').default(false),
 	groupId: uuid('group_id').references(() => groups.id),

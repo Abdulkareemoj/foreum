@@ -6,6 +6,8 @@ import { db } from '~/server/db'
 import { user } from '~/server/db/schema/auth-schema'
 import { tag, tagCount, threadTag } from '~/server/db/schema/tag-schema'
 import { category, reply, thread } from '~/server/db/schema/thread-schema'
+import { hasTrustPermission, type TrustLevel } from '~/server/lib/trust-levels'
+import { checkModeration } from '~/server/lib/moderation'
 import { protectedProcedure, publicProcedure, router } from '~/server/trpc/init'
 
 export const threadRouter = router({
@@ -59,6 +61,7 @@ export const threadRouter = router({
             content: thread.content,
             pinned: thread.pinned,
             locked: thread.locked,
+            bestAnswerId: thread.bestAnswerId,
             createdAt: thread.createdAt,
             updatedAt: thread.updatedAt,
             author: {
@@ -108,6 +111,7 @@ export const threadRouter = router({
             content: thread.content,
             pinned: thread.pinned,
             locked: thread.locked,
+            bestAnswerId: thread.bestAnswerId,
             createdAt: thread.createdAt,
             updatedAt: thread.updatedAt,
             author: {
@@ -172,6 +176,24 @@ export const threadRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       try {
+        // Trust level check: must have thread.create permission
+        const trustLevel = ((ctx.user as any).trustLevel ?? 0) as TrustLevel
+        if (!hasTrustPermission(trustLevel, 'thread.create')) {
+          throw new TRPCError({
+            code: 'FORBIDDEN',
+            message: 'Your trust level does not allow creating threads yet. Keep participating to earn more permissions!',
+          })
+        }
+
+        // Auto-moderation check
+        const modResult = await checkModeration(input.content, input.title, 'both')
+        if (modResult.blocked) {
+          throw new TRPCError({
+            code: 'FORBIDDEN',
+            message: modResult.message ?? 'Your content was blocked by moderation rules',
+          })
+        }
+
         const categoryExists = await db
           .select({ id: category.id })
           .from(category)
@@ -376,6 +398,66 @@ export const threadRouter = router({
         if (error instanceof TRPCError) throw error
         console.error('[thread.toggleLock]', error)
         throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Failed to toggle lock' })
+      }
+    }),
+
+  markBestAnswer: protectedProcedure
+    .input(
+      z.object({
+        threadId: z.string(),
+        replyId: z.string().nullable(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        // Only thread author or admin/mod can mark best answer
+        const [targetThread] = await db
+          .select({ authorId: thread.authorId })
+          .from(thread)
+          .where(eq(thread.id, input.threadId))
+
+        if (!targetThread) {
+          throw new TRPCError({ code: 'NOT_FOUND', message: 'Thread not found' })
+        }
+
+        const isAdmin = ctx.user.role === 'admin' || ctx.user.role === 'moderator'
+        const isAuthor = targetThread.authorId === ctx.user.id
+
+        if (!isAdmin && !isAuthor) {
+          throw new TRPCError({
+            code: 'FORBIDDEN',
+            message: 'Only the thread author or a moderator can mark the best answer',
+          })
+        }
+
+        // If setting a best answer, verify the reply exists and belongs to this thread
+        if (input.replyId) {
+          const [targetReply] = await db
+            .select({ id: reply.id })
+            .from(reply)
+            .where(
+              and(
+                eq(reply.id, input.replyId),
+                eq(reply.threadId, input.threadId)
+              )
+            )
+
+          if (!targetReply) {
+            throw new TRPCError({ code: 'NOT_FOUND', message: 'Reply not found in this thread' })
+          }
+        }
+
+        const [updated] = await db
+          .update(thread)
+          .set({ bestAnswerId: input.replyId, updatedAt: new Date() })
+          .where(eq(thread.id, input.threadId))
+          .returning()
+
+        return updated
+      } catch (error) {
+        if (error instanceof TRPCError) throw error
+        console.error('[thread.markBestAnswer]', error)
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Failed to mark best answer' })
       }
     }),
 

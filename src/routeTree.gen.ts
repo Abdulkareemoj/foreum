@@ -22,8 +22,10 @@ import { Route as AdminAdminPagesRouteImport } from './routes/_admin/admin-pages
 import { Route as AdminAdminSettingsRouteImport } from './routes/_admin/admin-settings'
 import { Route as AdminAnnouncementsRouteImport } from './routes/_admin/announcements'
 import { Route as AdminAppearanceRouteImport } from './routes/_admin/appearance'
+import { Route as AdminAutoModerationRouteImport } from './routes/_admin/auto-moderation'
 import { Route as AdminHelpRouteImport } from './routes/_admin/help'
 import { Route as AdminReportsSummaryRouteImport } from './routes/_admin/reports-summary'
+import { Route as AdminTrustLevelsRouteImport } from './routes/_admin/trust-levels'
 import { Route as AdminUsersListRouteImport } from './routes/_admin/users-list'
 import { Route as AuthForgotPasswordRouteImport } from './routes/_auth/forgot-password'
 import { Route as AuthResetPasswordRouteImport } from './routes/_auth/reset-password'
@@ -134,6 +136,11 @@ const AdminAppearanceRoute = AdminAppearanceRouteImport.update({
   path: '/appearance',
   getParentRoute: () => AdminRouteRoute,
 } as any)
+const AdminAutoModerationRoute = AdminAutoModerationRouteImport.update({
+  id: '/auto-moderation',
+  path: '/auto-moderation',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
 const AdminHelpRoute = AdminHelpRouteImport.update({
   id: '/help',
   path: '/help',
@@ -142,6 +149,11 @@ const AdminHelpRoute = AdminHelpRouteImport.update({
 const AdminReportsSummaryRoute = AdminReportsSummaryRouteImport.update({
   id: '/reports-summary',
   path: '/reports-summary',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminTrustLevelsRoute = AdminTrustLevelsRouteImport.update({
+  id: '/trust-levels',
+  path: '/trust-levels',
   getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminUsersListRoute = AdminUsersListRouteImport.update({
@@ -409,8 +421,10 @@ export interface FileRoutesByFullPath {
   '/admin-settings': typeof AdminAdminSettingsRoute
   '/announcements': typeof AdminAnnouncementsRoute
   '/appearance': typeof AdminAppearanceRoute
+  '/auto-moderation': typeof AdminAutoModerationRoute
   '/help': typeof AdminHelpRoute
   '/reports-summary': typeof AdminReportsSummaryRoute
+  '/trust-levels': typeof AdminTrustLevelsRoute
   '/users-list': typeof AdminUsersListRoute
   '/forgot-password': typeof AuthForgotPasswordRoute
   '/reset-password': typeof AuthResetPasswordRoute
@@ -470,8 +484,10 @@ export interface FileRoutesByTo {
   '/admin-settings': typeof AdminAdminSettingsRoute
   '/announcements': typeof AdminAnnouncementsRoute
   '/appearance': typeof AdminAppearanceRoute
+  '/auto-moderation': typeof AdminAutoModerationRoute
   '/help': typeof AdminHelpRoute
   '/reports-summary': typeof AdminReportsSummaryRoute
+  '/trust-levels': typeof AdminTrustLevelsRoute
   '/users-list': typeof AdminUsersListRoute
   '/forgot-password': typeof AuthForgotPasswordRoute
   '/reset-password': typeof AuthResetPasswordRoute
@@ -537,8 +553,10 @@ export interface FileRoutesById {
   '/_admin/admin-settings': typeof AdminAdminSettingsRoute
   '/_admin/announcements': typeof AdminAnnouncementsRoute
   '/_admin/appearance': typeof AdminAppearanceRoute
+  '/_admin/auto-moderation': typeof AdminAutoModerationRoute
   '/_admin/help': typeof AdminHelpRoute
   '/_admin/reports-summary': typeof AdminReportsSummaryRoute
+  '/_admin/trust-levels': typeof AdminTrustLevelsRoute
   '/_admin/users-list': typeof AdminUsersListRoute
   '/_auth/forgot-password': typeof AuthForgotPasswordRoute
   '/_auth/reset-password': typeof AuthResetPasswordRoute
@@ -600,8 +618,10 @@ export interface FileRouteTypes {
     | '/admin-settings'
     | '/announcements'
     | '/appearance'
+    | '/auto-moderation'
     | '/help'
     | '/reports-summary'
+    | '/trust-levels'
     | '/users-list'
     | '/forgot-password'
     | '/reset-password'
@@ -661,8 +681,10 @@ export interface FileRouteTypes {
     | '/admin-settings'
     | '/announcements'
     | '/appearance'
+    | '/auto-moderation'
     | '/help'
     | '/reports-summary'
+    | '/trust-levels'
     | '/users-list'
     | '/forgot-password'
     | '/reset-password'
@@ -727,8 +749,10 @@ export interface FileRouteTypes {
     | '/_admin/admin-settings'
     | '/_admin/announcements'
     | '/_admin/appearance'
+    | '/_admin/auto-moderation'
     | '/_admin/help'
     | '/_admin/reports-summary'
+    | '/_admin/trust-levels'
     | '/_admin/users-list'
     | '/_auth/forgot-password'
     | '/_auth/reset-password'
@@ -884,6 +908,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAppearanceRouteImport
       parentRoute: typeof AdminRouteRoute
     }
+    '/_admin/auto-moderation': {
+      id: '/_admin/auto-moderation'
+      path: '/auto-moderation'
+      fullPath: '/auto-moderation'
+      preLoaderRoute: typeof AdminAutoModerationRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
     '/_admin/help': {
       id: '/_admin/help'
       path: '/help'
@@ -896,6 +927,13 @@ declare module '@tanstack/react-router' {
       path: '/reports-summary'
       fullPath: '/reports-summary'
       preLoaderRoute: typeof AdminReportsSummaryRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/_admin/trust-levels': {
+      id: '/_admin/trust-levels'
+      path: '/trust-levels'
+      fullPath: '/trust-levels'
+      preLoaderRoute: typeof AdminTrustLevelsRouteImport
       parentRoute: typeof AdminRouteRoute
     }
     '/_admin/users-list': {
@@ -1252,8 +1290,10 @@ interface AdminRouteRouteChildren {
   AdminAdminSettingsRoute: typeof AdminAdminSettingsRoute
   AdminAnnouncementsRoute: typeof AdminAnnouncementsRoute
   AdminAppearanceRoute: typeof AdminAppearanceRoute
+  AdminAutoModerationRoute: typeof AdminAutoModerationRoute
   AdminHelpRoute: typeof AdminHelpRoute
   AdminReportsSummaryRoute: typeof AdminReportsSummaryRoute
+  AdminTrustLevelsRoute: typeof AdminTrustLevelsRoute
   AdminUsersListRoute: typeof AdminUsersListRoute
 }
 
@@ -1265,8 +1305,10 @@ const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminAdminSettingsRoute: AdminAdminSettingsRoute,
   AdminAnnouncementsRoute: AdminAnnouncementsRoute,
   AdminAppearanceRoute: AdminAppearanceRoute,
+  AdminAutoModerationRoute: AdminAutoModerationRoute,
   AdminHelpRoute: AdminHelpRoute,
   AdminReportsSummaryRoute: AdminReportsSummaryRoute,
+  AdminTrustLevelsRoute: AdminTrustLevelsRoute,
   AdminUsersListRoute: AdminUsersListRoute,
 }
 

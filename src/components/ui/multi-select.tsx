@@ -465,7 +465,7 @@ const MultipleSelector = ({
                 data-disabled={disabled || undefined}
               >
                 {option.label}
-                <button
+                <Button
                   className='text-muted-foreground/80 hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute -inset-y-px -right-px flex size-7 items-center justify-center rounded-r-md border border-transparent p-0 outline-hidden transition-[color,box-shadow] outline-none focus-visible:ring-[3px]'
                   onKeyDown={e => {
                     if (e.key === 'Enter') {
@@ -480,7 +480,7 @@ const MultipleSelector = ({
                   aria-label='Remove'
                 >
                   <XIcon size={14} aria-hidden='true' />
-                </button>
+                    </Button>
               </div>
             )
           })}
@@ -521,7 +521,7 @@ const MultipleSelector = ({
               inputProps?.className
             )}
           />
-          <button
+          <Button
             type='button'
             onClick={() => {
               setSelected(selected.filter(s => s.fixed))
@@ -538,7 +538,7 @@ const MultipleSelector = ({
             aria-label='Clear all'
           >
             <XIcon size={16} aria-hidden='true' />
-          </button>
+              </Button>
         </div>
       </div>
       <div className='relative'>

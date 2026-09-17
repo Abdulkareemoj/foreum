@@ -143,7 +143,7 @@ export function FontPicker({
                   const isSelected = currentFontName === font.name;
                   const isFontLoaded = loadedFonts.has(font.name);
                   return (
-                    <button
+                    <Button
                       key={font.name}
                       type="button"
                       onClick={() => handleFontSelect(font.name)}
@@ -170,7 +170,7 @@ export function FontPicker({
                           </span>
                         )}
                       </div>
-                    </button>
+                        </Button>
                   );
                 })
               )}

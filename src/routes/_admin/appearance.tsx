@@ -181,7 +181,7 @@ function PreviewPanel() {
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-2">
-          <button
+          <Button
             className="px-3 py-1.5 text-xs font-medium rounded-[var(--radius)] transition-opacity hover:opacity-90"
             style={{
               background: "var(--primary)",
@@ -189,8 +189,8 @@ function PreviewPanel() {
             }}
           >
             Primary
-          </button>
-          <button
+              </Button>
+          <Button
             className="px-3 py-1.5 text-xs font-medium rounded-[var(--radius)] border transition-opacity hover:opacity-90"
             style={{
               background: "var(--secondary)",
@@ -199,8 +199,8 @@ function PreviewPanel() {
             }}
           >
             Secondary
-          </button>
-          <button
+              </Button>
+          <Button
             className="px-3 py-1.5 text-xs font-medium rounded-[var(--radius)] transition-opacity hover:opacity-90"
             style={{
               background: "var(--destructive)",
@@ -208,8 +208,8 @@ function PreviewPanel() {
             }}
           >
             Destructive
-          </button>
-          <button
+              </Button>
+          <Button
             className="px-3 py-1.5 text-xs font-medium rounded-[var(--radius)] border transition-opacity hover:opacity-90"
             style={{
               background: "var(--accent)",
@@ -218,7 +218,7 @@ function PreviewPanel() {
             }}
           >
             Accent
-          </button>
+              </Button>
         </CardContent>
         <CardFooter className="gap-2 flex-wrap">
           <Badge>Default</Badge>

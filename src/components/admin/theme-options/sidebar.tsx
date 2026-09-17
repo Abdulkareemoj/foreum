@@ -77,7 +77,7 @@ function ColorRow({
   onClick: () => void;
 }) {
   return (
-    <button
+    <Button
       type="button"
       onClick={onClick}
       className="flex w-full items-center gap-3 py-2 px-2 cursor-pointer hover:bg-muted rounded-md text-left"
@@ -100,7 +100,7 @@ function ColorRow({
           {value}
         </div>
       </div>
-    </button>
+        </Button>
   );
 }
 

@@ -68,7 +68,7 @@ export function NewConversationDialog() {
               <p className="text-sm text-muted-foreground text-center py-4">Searching...</p>
             ) : users && users.length > 0 ? (
               users.map((user: any) => (
-                <button
+                <Button
                   key={user.id}
                   onClick={() => handleSelectUser(user.id)}
                   className="flex items-center gap-3 w-full p-2 rounded-lg hover:bg-muted transition-colors"
@@ -82,7 +82,7 @@ export function NewConversationDialog() {
                     <p className="font-medium">{user.name}</p>
                     <p className="text-xs text-muted-foreground">{user.email}</p>
                   </div>
-                </button>
+                    </Button>
               ))
             ) : search ? (
               <p className="text-sm text-muted-foreground text-center py-4">No users found</p>

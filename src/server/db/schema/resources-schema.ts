@@ -1,4 +1,6 @@
-import { pgTable, primaryKey,text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
+import { pgTable, primaryKey, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
+
+import { user } from './auth-schema';
 
 // Resources
 export const resources = pgTable('resources', {
@@ -6,14 +8,19 @@ export const resources = pgTable('resources', {
 	title: varchar('title', { length: 200 }).notNull(),
 	url: varchar('url', { length: 300 }).notNull(),
 	description: text('description'),
-	createdBy: text('created_by').notNull(),
-	createdAt: timestamp('created_at').defaultNow()
+	createdBy: text('created_by')
+		.notNull()
+		.references(() => user.id, { onDelete: 'cascade' }),
+	createdAt: timestamp('created_at').defaultNow(),
+	updatedAt: timestamp('updated_at').defaultNow()
 });
 
 export const resourceTags = pgTable(
 	'resource_tags',
 	{
-		resourceId: uuid('resource_id').notNull(),
+		resourceId: uuid('resource_id')
+			.notNull()
+			.references(() => resources.id, { onDelete: 'cascade' }),
 		tagId: uuid('tag_id').notNull()
 	},
 	(t) => ({

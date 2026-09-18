@@ -4,6 +4,7 @@ import type { RenderStaticNodeWrapper, TListElement } from 'platejs';
 import type { SlateRenderElementProps } from 'platejs/static';
 import type * as React from 'react';
 
+import { Button } from '~/components/ui/button';
 import { cn } from '~/lib/utils';
 
 const config: Record<

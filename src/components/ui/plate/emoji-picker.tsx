@@ -1,5 +1,4 @@
 ;
-
 import {
   type EmojiPickerListCategoryHeaderProps,
   type EmojiPickerListEmojiProps,
@@ -9,6 +8,7 @@ import {
 import { LoaderIcon, SearchIcon } from "lucide-react";
 import type * as React from "react";
 
+import { Button } from '~/components/ui/button';
 import { cn } from "~/lib/utils";
 
 function EmojiPicker({

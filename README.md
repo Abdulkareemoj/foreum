@@ -326,7 +326,6 @@ Your contributions are welcome, whether filing issues, suggesting features, cont
 1. Fork the repo and create a branch for your change.
 2. Write clear, focused commits and include tests where possible.
 3. Open a PR with a description of your changes and the motivation.
-4. Be responsive to review comments, we aim for respectful, constructive reviews.
 
 ### Code style & PR tips
 

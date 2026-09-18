@@ -215,6 +215,19 @@ export const threadRouter = router({
           })
           .returning()
 
+        // Run plugin hooks
+        try {
+          const { runHooks } = await import('~/server/lib/plugin')
+          await runHooks('thread:afterCreate', {
+            thread: newThread,
+            title: input.title,
+            content: input.content,
+            categoryId: input.categoryId,
+          }, { user: ctx.user as any, db })
+        } catch {
+          // Don't fail thread creation if hooks fail
+        }
+
         // Assign tags
         if (input.tags && input.tags.length > 0) {
           const validTags = await db

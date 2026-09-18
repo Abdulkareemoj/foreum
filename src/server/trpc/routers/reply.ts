@@ -103,6 +103,18 @@ export const replyRouter = router({
 					})
 					.returning();
 
+				// Run plugin hooks
+				try {
+					const { runHooks } = await import('~/server/lib/plugin')
+					await runHooks('reply:afterCreate', {
+						reply: newReply,
+						threadId: input.threadId,
+						content: input.content,
+					}, { user: ctx.user as any, db })
+				} catch {
+					// Don't fail reply creation if hooks fail
+				}
+
 				// Increment replyCount
 				await db
 					.update(thread)

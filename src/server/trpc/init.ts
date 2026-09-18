@@ -27,7 +27,7 @@ const logMiddleware = t.middleware(async ({ path, next, type }) => {
   }
 })
 
-// Rate limit middleware — runs before auth to block early
+// Rate limit middleware, runs before auth to block early
 const rateLimitMiddleware = t.middleware(async ({ ctx, next }) => {
   const identifier = getIdentifier(ctx)
 

@@ -10,6 +10,21 @@ import { getDefaultShadcnTheme, parseShadcnThemeFromJson, zShadcnTheme } from '~
 
 const THEME_KEY = 'theme_config_v2'
 
+/**
+ * Theme manifest format for import/export.
+ * Includes metadata, color tokens, fonts, radius, and optional component overrides.
+ */
+const zThemeManifest = z.object({
+	$name: z.string(),
+	$version: z.string().default('1.0.0'),
+	$description: z.string().optional(),
+	$author: z.string().optional(),
+	theme: zShadcnTheme,
+	componentOverrides: z.record(z.string(), z.string()).optional(),
+})
+
+export type ThemeManifest = z.infer<typeof zThemeManifest>
+
 export const themeRouter = router({
 	getGlobal: publicProcedure.query(async () => {
 		try {
@@ -182,5 +197,81 @@ export const themeRouter = router({
 				console.error('[theme.applyPreset] Failed:', error)
 				throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Failed to apply preset' })
 			}
-		})
+		}),
+
+	// --- Theme Manifest (Export/Import) ---
+
+	/**
+	 * Export the current global theme as a ThemeManifest JSON.
+	 */
+	exportManifest: adminProcedure.query(async () => {
+		try {
+			const [setting] = await db
+				.select()
+				.from(globalSetting)
+				.where(eq(globalSetting.key, THEME_KEY))
+
+			const themeData = setting
+				? parseShadcnThemeFromJson(JSON.parse(setting.value))
+				: getDefaultShadcnTheme()
+
+			const manifest: ThemeManifest = {
+				$name: themeData.name || 'Exported Theme',
+				$version: '1.0.0',
+				theme: themeData,
+			}
+
+			return manifest
+		} catch (error) {
+			console.error('[theme.exportManifest] Failed:', error)
+			throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Failed to export theme' })
+		}
+	}),
+
+	/**
+	 * Import a ThemeManifest JSON, replacing the global theme.
+	 */
+	importManifest: adminProcedure
+		.input(zThemeManifest)
+		.mutation(async ({ input }) => {
+			try {
+				const value = JSON.stringify(input.theme)
+				await db
+					.insert(globalSetting)
+					.values({ key: THEME_KEY, value })
+					.onConflictDoUpdate({ target: globalSetting.key, set: { value } })
+
+				// If component overrides are included, store them
+				if (input.componentOverrides) {
+					const overridesKey = 'theme_component_overrides'
+					const overridesValue = JSON.stringify(input.componentOverrides)
+					await db
+						.insert(globalSetting)
+						.values({ key: overridesKey, value: overridesValue })
+						.onConflictDoUpdate({ target: globalSetting.key, set: { value: overridesValue } })
+				}
+
+				return { success: true, name: input.$name }
+			} catch (error) {
+				console.error('[theme.importManifest] Failed:', error)
+				throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Failed to import theme' })
+			}
+		}),
+
+	/**
+	 * Get component overrides (component → replacement mapping).
+	 */
+	getComponentOverrides: publicProcedure.query(async () => {
+		try {
+			const [setting] = await db
+				.select()
+				.from(globalSetting)
+				.where(eq(globalSetting.key, 'theme_component_overrides'))
+
+			if (!setting) return {}
+			return JSON.parse(setting.value) as Record<string, string>
+		} catch {
+			return {}
+		}
+	}),
 })

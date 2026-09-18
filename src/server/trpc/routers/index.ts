@@ -1,4 +1,3 @@
-// server/trpc/routers/index.ts
 import { router } from '../init';
 import { analyticsRouter } from './analytics';
 import { announcementRouter } from './announcement';
@@ -26,6 +25,7 @@ import { trustLevelConfigRouter } from './trust-level-config';
 import { draftRouter } from './draft';
 import { subscriptionRouter } from './subscription';
 import { moderationConfigRouter } from './moderation-config';
+import { pluginRouter } from './plugin';
 
 export const appRouter = router({
 	analytics: analyticsRouter,
@@ -53,7 +53,8 @@ export const appRouter = router({
 	trustLevelConfig: trustLevelConfigRouter,
 	drafts: draftRouter,
 	subscriptions: subscriptionRouter,
-	moderationConfig: moderationConfigRouter
+	moderationConfig: moderationConfigRouter,
+	plugins: pluginRouter
 });
 
 export type AppRouter = typeof appRouter;

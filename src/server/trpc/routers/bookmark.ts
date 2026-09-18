@@ -2,7 +2,7 @@ import { TRPCError } from '@trpc/server'
 import { and, desc, eq, lt } from 'drizzle-orm'
 import { z } from 'zod'
 import { db } from '~/server/db'
-import { bookmark } from '~/server/db/schema/bookmark-schema'
+import { threadBookmark } from '~/server/db/schema/thread-schema'
 import { protectedProcedure, router } from '~/server/trpc/init'
 
 export const bookmarksRouter = router({
@@ -19,14 +19,14 @@ export const bookmarksRouter = router({
 
         const results = await db
           .select()
-          .from(bookmark)
+          .from(threadBookmark)
           .where(
             and(
-              eq(bookmark.userId, ctx.user.id),
-              cursor ? lt(bookmark.createdAt, cursor) : undefined
+              eq(threadBookmark.userId, ctx.user.id),
+              cursor ? lt(threadBookmark.createdAt, cursor) : undefined
             )
           )
-          .orderBy(desc(bookmark.createdAt))
+          .orderBy(desc(threadBookmark.createdAt))
           .limit(limit + 1)
 
         let nextCursor: Date | null = null
@@ -49,7 +49,8 @@ export const bookmarksRouter = router({
     .input(z.object({ threadId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       try {
-        await db.insert(bookmark).values({
+        await db.insert(threadBookmark).values({
+          id: crypto.randomUUID(),
           userId: ctx.user.id,
           threadId: input.threadId,
         })
@@ -68,11 +69,11 @@ export const bookmarksRouter = router({
     .mutation(async ({ ctx, input }) => {
       try {
         await db
-          .delete(bookmark)
+          .delete(threadBookmark)
           .where(
             and(
-              eq(bookmark.userId, ctx.user.id),
-              eq(bookmark.threadId, input.threadId)
+              eq(threadBookmark.userId, ctx.user.id),
+              eq(threadBookmark.threadId, input.threadId)
             )
           )
         return { success: true }

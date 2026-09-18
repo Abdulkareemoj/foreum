@@ -2,6 +2,8 @@
 
 @plugin "tailwind-scrollbar-hide";
 @import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/geist";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -19,7 +21,7 @@
 	--secondary-foreground: oklch(0.205 0 0);
 	--muted: oklch(0.97 0 0);
 	--muted-foreground: oklch(0.556 0 0);
-	--accent: oklch(0.95 0.05 162.48);
+--accent: oklch(0.95 0.05 162.48);
 	--accent-foreground: oklch(0.205 0 0);
 	--destructive: oklch(0.577 0.245 27.325);
    --destructive-foreground: oklch(0.577 0.245 27.325);
@@ -31,7 +33,7 @@
 	--chart-3: oklch(0.398 0.07 227.392);
 	--chart-4: oklch(0.828 0.189 84.429);
 	--chart-5: oklch(0.769 0.188 70.08);
-	--sidebar: oklch(0.985 0 0);
+  	--sidebar: oklch(0.985 0 0);
 	--sidebar-foreground: oklch(0.145 0 0);
 	--sidebar-primary: oklch(0.498 0.155 162.48);
 	--sidebar-primary-foreground: oklch(0.985 0 0);
@@ -51,7 +53,7 @@
 	--popover: oklch(0.205 0 0);
 	--popover-foreground: oklch(0.985 0 0);
 	--primary: oklch(0.696 0.17 162.48);
-	--primary-foreground: oklch(0.145 0 0);
+	--primary-foreground: oklch(0.205 0 0);
 	--secondary: oklch(0.269 0 0);
 	--secondary-foreground: oklch(0.985 0 0);
 	--muted: oklch(0.269 0 0);
@@ -70,8 +72,8 @@
 	--chart-5: oklch(0.645 0.246 16.439);
 	--sidebar: oklch(0.205 0 0);
 	--sidebar-foreground: oklch(0.985 0 0);
-	--sidebar-primary: oklch(0.696 0.17 162.48);
-	--sidebar-primary-foreground: oklch(0.145 0 0);
+		--sidebar-primary: oklch(0.696 0.17 162.48);
+	--sidebar-primary-foreground: oklch(0.985 0 0);
 	--sidebar-accent: oklch(0.269 0 0);
 	--sidebar-accent-foreground: oklch(0.985 0 0);
 	--sidebar-border: oklch(1 0 0 / 10%);
@@ -119,6 +121,11 @@
   --color-sidebar-ring: var(--sidebar-ring);
   --color-brand: var(--brand);
   --color-highlight: var(--highlight);
+  --font-heading: var(--font-sans);
+  --font-sans: 'Geist Variable', sans-serif;
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
 /* ── transitions.dev: shared variables ── */
@@ -266,4 +273,7 @@
   body {
     @apply bg-background text-foreground;
   }
+  html {
+    @apply font-sans;
+ 	}
 }

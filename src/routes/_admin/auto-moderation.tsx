@@ -239,7 +239,7 @@ function AutoModerationPage() {
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
                     {ACTIONS.map((a) => (
-                      <SelectItem key={a.value} value={a.value}>{a.label} — {a.description}</SelectItem>
+                      <SelectItem key={a.value} value={a.value}>{a.label}, {a.description}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -322,7 +322,7 @@ function AutoModerationPage() {
                       </div>
                       <p className="text-xs text-muted-foreground mt-1">
                         Pattern: <code className="bg-muted px-1 rounded">{rule.pattern}</code>
-                        {rule.message && <> — {rule.message}</>}
+                        {rule.message && <>, {rule.message}</>}
                       </p>
                     </div>
                   </div>

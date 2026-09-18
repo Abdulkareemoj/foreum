@@ -178,7 +178,7 @@ function AdminSettingsPage() {
 									) : (
 										<div className="flex items-center gap-3 text-muted-foreground">
 											<ImageIcon />
-											<span className="text-sm">No logo set — showing text badge</span>
+											<span className="text-sm">No logo set, showing text badge</span>
 										</div>
 									)}
 								</div>

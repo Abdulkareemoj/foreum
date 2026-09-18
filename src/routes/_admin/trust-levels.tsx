@@ -176,7 +176,7 @@ function TrustLevelsPage() {
             <p>
               Users automatically advance through trust levels based on their account age and post count.
               Higher levels unlock new participation abilities (posting links, uploading files, creating polls).
-              Trust levels do NOT grant moderation powers — those remain with admin and moderator roles.
+              Trust levels do NOT grant moderation powers, those remain with admin and moderator roles.
             </p>
           </div>
         </CardContent>
@@ -194,7 +194,7 @@ function TrustLevelsPage() {
                   <div>
                     <CardTitle className="text-lg">{level.name}</CardTitle>
                     <CardDescription>
-                      Level {level.level} — requires {level.minDays} days + {level.minPosts} posts
+                      Level {level.level}, requires {level.minDays} days + {level.minPosts} posts
                     </CardDescription>
                   </div>
                 </div>

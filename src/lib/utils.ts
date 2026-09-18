@@ -1,9 +1,5 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+export { cn } from "cn"
 
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
-}
 
 
 export const verificationTemplate = `<!DOCTYPE html>  
@@ -49,27 +45,27 @@ export const resetTemplate = `<!DOCTYPE html>
 
 export const resetConfirmTemplate = `<!doctype html>
 <html>
-	<head>
-		<meta charset="utf-8" />
-		<title>Password Reset Successful</title>
-	</head>
-	<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px">
-		<div
-			style="
-				max-width: 600px;
-				margin: 0 auto;
-				background-color: white;
-				padding: 20px;
-				border-radius: 8px;
-			"
-		>
-			<h1 style="color: #333; text-align: center">Password Reset Successful</h1>
-			<p>Hello {{username}},</p>
-			<p>Your password has been successfully reset. You can now sign in with your new password.</p>
-			<p style="color: #999; font-size: 12px">
-				If you didn't make this change, please contact support immediately.
-			</p>
-		</div>
-	</body>
+    <head>
+        <meta charset="utf-8" />
+        <title>Password Reset Successful</title>
+    </head>
+    <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px">
+        <div
+            style="
+                max-width: 600px;
+                margin: 0 auto;
+                background-color: white;
+                padding: 20px;
+                border-radius: 8px;
+            "
+        >
+            <h1 style="color: #333; text-align: center">Password Reset Successful</h1>
+            <p>Hello {{username}},</p>
+            <p>Your password has been successfully reset. You can now sign in with your new password.</p>
+            <p style="color: #999; font-size: 12px">
+                If you didn't make this change, please contact support immediately.
+            </p>
+        </div>
+    </body>
 </html>
 `;

@@ -170,7 +170,7 @@ export function SearchCommand({ open, onOpenChange }: SearchCommandProps) {
                 <div key={type}>
                   {index > 0 && <CommandSeparator />}
                   <CommandGroup heading={type.charAt(0).toUpperCase() + type.slice(1) + 's'}>
-                    {items.map((item: any) => (
+                    {(items as any[]).map((item: any) => (
                       <CommandItem
                         key={`${type}-${item.id}`}
                         value={`${type}-${item.id}-${item.title}`}

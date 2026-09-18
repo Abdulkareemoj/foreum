@@ -7,6 +7,7 @@ import { useEffect } from 'react'
 import { Command as CommandPrimitive, useCommandState } from 'cmdk'
 import { XIcon } from 'lucide-react'
 
+import { Button } from '~/components/ui/button'
 import { Command, CommandGroup, CommandItem, CommandList } from '~/components/ui/command'
 import { cn } from '~/lib/utils'
 

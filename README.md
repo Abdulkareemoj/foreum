@@ -3,14 +3,13 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 
-> A powerful, modern forum platform built with React, TanStack Router, tRPC, and Drizzle ORM — designed for both developers and community managers.
+> A powerful, modern forum platform built with React, TanStack Router, tRPC, and Drizzle ORM, designed for both developers and community managers.
 
 ## 🌟 Why Foreum?
 
 Foreum is your all-in-one solution for building engaging community spaces. Whether you're creating a product support forum, an internal discussion board, or a vibrant community platform, Foreum provides everything you need out of the box:
 
 - 🔒 **Enterprise-grade Authentication** with Better Auth
-- 🎨 **Beautiful UI** powered by shadcn/ui components
 - 🚄 **Lightning-fast Performance** with React and TanStack Router
 - 🔧 **Type-safe Backend** using tRPC and Drizzle ORM
 - 📱 **Responsive Design** for all devices
@@ -69,13 +68,13 @@ docker compose up -d
 # Run database migrations (first time only)
 docker compose run --rm app pnpm db:push -- --force
 
-# The app will be available at https://forum.yourdomain.com
+# The app will be available at https://foreum.yourdomain.com
 ```
 
 The included `docker-compose.yml` bundles:
-- **app** — Foreum server (port 3000)
-- **db** — PostgreSQL 17
-- **caddy** — Automatic TLS via Let's Encrypt, reverse proxy
+- **app**, Foreum server (port 3000)
+- **db**, PostgreSQL 17
+- **caddy**, Automatic TLS via Let's Encrypt, reverse proxy
 
 ### 🐳 Docker (Standalone)
 
@@ -172,38 +171,54 @@ nitro({
 ### Core Features
 
 - 🔐 **Advanced Authentication**
-  - Email/Password with username support
+  - Email/password with username support
   - Email verification & password reset
-  - OAuth/SSO integration ready
+  - Google OAuth + Discord OAuth
+  - RBAC with user/moderator/admin roles
+  - Trust levels (TL0-TL4) with admin-configurable names, requirements, and permissions
 
 - 📝 **Rich Discussion Tools**
-  - Markdown/Rich text editor
-  - Thread categories and tags
-  - Upvotes and reactions
-  - File attachments
+  - Plate.js rich text editor with several plugins (mentions, emojis, code blocks, tables, etc.)
+  - Thread categories and tags (with subcategory support)
+  - Reactions (like, heart, laugh)
+  - Upvotes/downvotes (Reddit-style scoring)
+  - File/image uploads via UploadThing
+  - Thread pinning and locking (admin)
+  - Bookmarks
 
 - 👥 **User Management**
-  - Customizable profiles
-  - Role-based permissions
-  - Moderation tools
+  - Customizable profiles (bio, avatar, website)
+  - Role-based permissions (user, moderator, admin)
+  - Reputation points and badge system
   - Activity tracking
+
+- 🗂️ **Community Features**
+  - Groups with forums, events, and membership
+  - Events with RSVP (physical/virtual/hybrid)
+  - Direct messaging between users
+  - Notifications (in-app)
+  - Custom pages (admin-managed)
+
+- 🛡️ **Moderation & Admin**
+  - Report system with audit logs
+  - Content moderation tools
+  - Admin dashboard with analytics (Recharts)
+  - Global settings (maintenance mode, custom CSS/JS)
+  - Announcement system
+  - Full theme editor (OKLCH colors, Google Fonts, border radius, presets)
 
 ### Technical Features
 
 - ⚡ **Performance-First Architecture**
-  - Server-side rendering with React and TanStack Router
-  - Type-safe APIs with tRPC
+  - Server-side rendering with TanStack Start
+  - Type-safe APIs with tRPC v11
   - Efficient database queries with Drizzle ORM
+  - Rate limiting (sliding window, tiered by role)
+  - Structured logging (Pino)
 
-- **Modern UI/UX** Responsive design with customizable Dark/light themes and Loading states & animations
+- **Modern UI/UX**, Responsive design, customizable dark/light themes, skeleton loaders, mobile-friendly navbar with collapsible sidebars, 147 shadcn/ui components
 
-- **Modern stack**: React + TanStack Router + tRPC + Drizzle + Better Auth, great DX and strong type-safety across the stack.
-  - **Plug-and-play authentication**: email/password with optional username support, email OTP for verification and reset flows, and social sign-in support hooks.
-  - **User profiles & settings**: per-user settings (theme, privacy, notification preferences) with Drizzle schemas and a router to manage them.
-  - **Bookmarks & Notifications**: built-in systems with pagination/infinite scroll and server-side routers.
-  - **Excellent UX**: skeleton loaders, mobile-friendly navbar that collapses sidebars into a single sheet, avatar uploader, toast + alert patterns for different message types.
-  - **Extensible design**: clearly split components (LeftSidebar, Mainbar, RightSidebar, ThreadCard, etc.) to make adding features easy and localized.
-  - **Open-source friendly**: intentionally readable code, helpful comments and a focus on community contribution.
+- **Modern stack**: React 19 + TanStack Router + tRPC v11 + Drizzle ORM + Better Auth v1.6 + Plate.js v53 + Tailwind CSS v4, great DX and strong type-safety across the stack.
 
 ## Use Cases
 
@@ -229,11 +244,7 @@ Foreum can be used for:
 2. **Install dependencies**
 
    ```bash
-   npm install
-
-   # or
-
-   npm install
+   pnpm install
    ```
 
 3. **Environment**
@@ -253,26 +264,15 @@ Foreum can be used for:
    If you use Drizzle migrations or Better Auth CLI, run the migration commands needed to create tables (users, accounts, sessions, profile, settings, bookmarks, notifications, etc.). Example command placeholders:
 
    ```bash
-
-   # Drizzle (if configured)
-
-   npx drizzle-kit generate:migration
-   npx drizzle-kit migrate
-
-   # If using Better Auth CLI for plugin migrations
-
-   npx @better-auth/cli migrate
+   pnpm db:push -- --force
    ```
 
-   (Adjust according to your setup — Foreum includes Drizzle schema files for auth, profile, settings, bookmark, notification, etc.)
+   (Adjust according to your setup, Foreum includes Drizzle schema files for auth, profile, settings, bookmark, notification, etc.)
 
 5. **Run the dev server**
 
    ```bash
-   npm run dev
-
-   # typically runs the React development server with Vite
-
+   pnpm dev
    ```
 
 6. **Open the app**
@@ -319,14 +319,14 @@ pnpm lint        # Run linters
 
 ## Contribution Guidelines
 
-We’d love your help — whether you’re filing issues, suggesting features, contributing code, or improving docs!
+Your contributions are welcome, whether filing issues, suggesting features, contributing code, or improving docs!
 
 ### How to contribute
 
 1. Fork the repo and create a branch for your change.
 2. Write clear, focused commits and include tests where possible.
 3. Open a PR with a description of your changes and the motivation.
-4. Be responsive to review comments — we aim for respectful, constructive reviews.
+4. Be responsive to review comments, we aim for respectful, constructive reviews.
 
 ### Code style & PR tips
 
@@ -337,7 +337,7 @@ We’d love your help — whether you’re filing issues, suggesting features, c
 
 ### Reporting bugs & feature requests
 
-Please open an issue — include steps to reproduce, expected vs actual behavior, and (if possible) a minimal repro.
+Please open an issue, include steps to reproduce, expected vs actual behavior, and (if possible) a minimal repro.
 
 ### Code of conduct
 
@@ -371,46 +371,47 @@ We’re committed to fostering a welcoming community. Please follow a friendly a
 
 ## Roadmap
 
-Prioritized gaps vs. Discourse, based on cost of delay and architectural impact:
+### Completed
 
-### Tier 1 — Do soon, cheap now, expensive later
+| Feature | Status |
+|---------|--------|
+| Auth (email/password, Google, Discord, OTP) | ✅ |
+| RBAC (user/moderator/admin) | ✅ |
+| Thread CRUD with categories and tags | ✅ |
+| Categories with subcategory hierarchy | ✅ |
+| Thread drafts (auto-save) | ✅ |
+| Rich text editor (Plate.js v53, 53 plugins) | ✅ |
+| Reactions (like/heart/laugh toggle) | ✅ |
+| Upvotes/downvotes (separate from reactions) | ✅ |
+| Bookmarks | ✅ |
+| Best answer / solved threads | ✅ |
+| User profiles + reputation/badges | ✅ |
+| Groups (forums, events, membership) | ✅ |
+| Events with RSVP | ✅ |
+| Direct messaging | ✅ |
+| Notifications (in-app) | ✅ |
+| Thread subscriptions (follow for updates) | ✅ |
+| Reports + moderation audit logs | ✅ |
+| Admin dashboard + analytics | ✅ |
+| Admin theme editor (OKLCH, fonts, presets) | ✅ |
+| Global settings (maintenance, custom CSS/JS) | ✅ |
+| Announcements | ✅ |
+| Custom pages | ✅ |
+| Rate limiting (tiered by role) | ✅ |
+| Trust levels (TL0-TL4 progressive permissions) | ✅ |
+| Time-limited bans (1h, 24h, 7d, 30d, permanent) | ✅ |
+| Auto-moderation (regex/string filtering) | ✅ |
+| Full-text search (PostgreSQL tsvector) | ✅ |
+| Docker deployment (app + Postgres + Caddy) | ✅ |
+| Cloud deployment (Vercel, Netlify, Railway, etc.) | ✅ |
 
-| Item | Status | Notes |
-|------|--------|-------|
-| **Auth-layer rate limiting** | ✅ Done (Better Auth) | Covers login/signup/2FA. Already wired. |
-| **App-layer rate limiting** | ❌ Missing | tRPC middleware on mutations (post.create, reply.create, like.create, flag.create, message.create). PG-backed counter table — keeps infra simple. |
-| **Watched words / auto-mod** | ❌ Missing | Regex/string match on post create, queue or auto-reject. Cheap to add. |
-| **CSP headers** | ❌ Missing | Config-level, not architectural. |
+### Planned
 
-### Tier 2 — Architectural, decide deliberately
-
-| Item | Status | Notes |
-|------|--------|-------|
-| **Trust-level-aware permissions** | ❌ Flat role system | Seed via a `trustScore`/`canPostFreely` field in rate-limit middleware. Avoids full TL0–4 rebuild later. |
-| **Plugin / theme contract** | ❌ Monolithic | Biggest structural gap vs. Discourse. Decide the shape before code calcifies. |
-
-### Tier 3 — Can wait
-
-i18n, digest emails, backup/restore, sitemap/robots.txt, webhooks, presence indicators, post approval queue, auto badge grants, custom user fields — all additive, low regret to defer.
-
-### Recommended approach for app-layer rate limiting
-
-Given tRPC + Postgres, use a Postgres-backed counter table (same shape as Better Auth's own `rateLimit` schema — `key`, `count`, `lastRequest`). One less piece of infra vs. Redis/Upstash, consistent with how Better Auth already works.
-
-If deploying serverless (Vercel Edge), Upstash is the right call instead.
-
-Middleware pattern:
-```ts
-const rateLimited = (action: string, limits: (user: User) => { window: number; max: number }) =>
-  middleware(async ({ ctx, next }) => {
-    const { window, max } = limits(ctx.user);
-    const key = `${action}:${ctx.user.id}`;
-    // check/increment counter in your store
-    if (exceeded) throw new TRPCError({ code: 'TOO_MANY_REQUESTS' });
-    return next();
-  });
-```
-This composes per-action, per-trust-level limits in one place, and seeds the trust-level system — when TL0–4 is built later, you're just expanding the `limits()` function.
+| Priority | Feature | Notes |
+|----------|---------|-------|
+| Medium | Email digests | Periodic summary emails |
+| Low | WebSocket/SSE | Real-time notifications and messaging |
+| Low | Plugin/theme contract | Extensibility system |
 
 ## License
 
@@ -428,10 +429,6 @@ Foreum is open-source software licensed under the [MIT license](https://opensour
 
 Join our community and help make Foreum even better!
 
-## License
-
-This project is open-source and released under the MIT License — free to use, modify and distribute. Contributions are welcomed under the same license.
-
 ## Final Notes
 
 Foreum is meant to be a friendly, practical starting point for building a community product. Whether you are product-minded (designers, founders) or developer-minded (engineers, contributors), Foreum tries to make adding value straightforward:
@@ -440,4 +437,4 @@ Foreum is meant to be a friendly, practical starting point for building a commun
 - Type-safe backend (tRPC + Drizzle) keeps runtime surprises down.
 - Auth and user flows are built with common real-world needs in mind (username support, OTP, email verification).
 
-If you like what you see — ⭐ star the repo, open an issue, or submit a PR. Let’s build a vibrant community together!
+If you like what you see ⭐ star the repo, open an issue, or submit a PR. Let’s build a vibrant community together!

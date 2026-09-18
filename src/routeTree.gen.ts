@@ -24,6 +24,7 @@ import { Route as AdminAnnouncementsRouteImport } from './routes/_admin/announce
 import { Route as AdminAppearanceRouteImport } from './routes/_admin/appearance'
 import { Route as AdminAutoModerationRouteImport } from './routes/_admin/auto-moderation'
 import { Route as AdminHelpRouteImport } from './routes/_admin/help'
+import { Route as AdminPluginsRouteImport } from './routes/_admin/plugins'
 import { Route as AdminReportsSummaryRouteImport } from './routes/_admin/reports-summary'
 import { Route as AdminTrustLevelsRouteImport } from './routes/_admin/trust-levels'
 import { Route as AdminUsersListRouteImport } from './routes/_admin/users-list'
@@ -144,6 +145,11 @@ const AdminAutoModerationRoute = AdminAutoModerationRouteImport.update({
 const AdminHelpRoute = AdminHelpRouteImport.update({
   id: '/help',
   path: '/help',
+  getParentRoute: () => AdminRouteRoute,
+} as any)
+const AdminPluginsRoute = AdminPluginsRouteImport.update({
+  id: '/plugins',
+  path: '/plugins',
   getParentRoute: () => AdminRouteRoute,
 } as any)
 const AdminReportsSummaryRoute = AdminReportsSummaryRouteImport.update({
@@ -423,6 +429,7 @@ export interface FileRoutesByFullPath {
   '/appearance': typeof AdminAppearanceRoute
   '/auto-moderation': typeof AdminAutoModerationRoute
   '/help': typeof AdminHelpRoute
+  '/plugins': typeof AdminPluginsRoute
   '/reports-summary': typeof AdminReportsSummaryRoute
   '/trust-levels': typeof AdminTrustLevelsRoute
   '/users-list': typeof AdminUsersListRoute
@@ -486,6 +493,7 @@ export interface FileRoutesByTo {
   '/appearance': typeof AdminAppearanceRoute
   '/auto-moderation': typeof AdminAutoModerationRoute
   '/help': typeof AdminHelpRoute
+  '/plugins': typeof AdminPluginsRoute
   '/reports-summary': typeof AdminReportsSummaryRoute
   '/trust-levels': typeof AdminTrustLevelsRoute
   '/users-list': typeof AdminUsersListRoute
@@ -555,6 +563,7 @@ export interface FileRoutesById {
   '/_admin/appearance': typeof AdminAppearanceRoute
   '/_admin/auto-moderation': typeof AdminAutoModerationRoute
   '/_admin/help': typeof AdminHelpRoute
+  '/_admin/plugins': typeof AdminPluginsRoute
   '/_admin/reports-summary': typeof AdminReportsSummaryRoute
   '/_admin/trust-levels': typeof AdminTrustLevelsRoute
   '/_admin/users-list': typeof AdminUsersListRoute
@@ -620,6 +629,7 @@ export interface FileRouteTypes {
     | '/appearance'
     | '/auto-moderation'
     | '/help'
+    | '/plugins'
     | '/reports-summary'
     | '/trust-levels'
     | '/users-list'
@@ -683,6 +693,7 @@ export interface FileRouteTypes {
     | '/appearance'
     | '/auto-moderation'
     | '/help'
+    | '/plugins'
     | '/reports-summary'
     | '/trust-levels'
     | '/users-list'
@@ -751,6 +762,7 @@ export interface FileRouteTypes {
     | '/_admin/appearance'
     | '/_admin/auto-moderation'
     | '/_admin/help'
+    | '/_admin/plugins'
     | '/_admin/reports-summary'
     | '/_admin/trust-levels'
     | '/_admin/users-list'
@@ -920,6 +932,13 @@ declare module '@tanstack/react-router' {
       path: '/help'
       fullPath: '/help'
       preLoaderRoute: typeof AdminHelpRouteImport
+      parentRoute: typeof AdminRouteRoute
+    }
+    '/_admin/plugins': {
+      id: '/_admin/plugins'
+      path: '/plugins'
+      fullPath: '/plugins'
+      preLoaderRoute: typeof AdminPluginsRouteImport
       parentRoute: typeof AdminRouteRoute
     }
     '/_admin/reports-summary': {
@@ -1292,6 +1311,7 @@ interface AdminRouteRouteChildren {
   AdminAppearanceRoute: typeof AdminAppearanceRoute
   AdminAutoModerationRoute: typeof AdminAutoModerationRoute
   AdminHelpRoute: typeof AdminHelpRoute
+  AdminPluginsRoute: typeof AdminPluginsRoute
   AdminReportsSummaryRoute: typeof AdminReportsSummaryRoute
   AdminTrustLevelsRoute: typeof AdminTrustLevelsRoute
   AdminUsersListRoute: typeof AdminUsersListRoute
@@ -1307,6 +1327,7 @@ const AdminRouteRouteChildren: AdminRouteRouteChildren = {
   AdminAppearanceRoute: AdminAppearanceRoute,
   AdminAutoModerationRoute: AdminAutoModerationRoute,
   AdminHelpRoute: AdminHelpRoute,
+  AdminPluginsRoute: AdminPluginsRoute,
   AdminReportsSummaryRoute: AdminReportsSummaryRoute,
   AdminTrustLevelsRoute: AdminTrustLevelsRoute,
   AdminUsersListRoute: AdminUsersListRoute,

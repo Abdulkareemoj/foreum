@@ -4,7 +4,7 @@ import { user } from './auth-schema';
 import { thread } from './thread-schema';
 
 /**
- * Thread subscriptions — users follow threads to receive notifications on new replies.
+ * Thread subscriptions, users follow threads to receive notifications on new replies.
  */
 export const threadSubscription = pgTable(
 	'thread_subscription',

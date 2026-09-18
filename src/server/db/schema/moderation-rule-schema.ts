@@ -1,7 +1,7 @@
 import { boolean, jsonb, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 
 /**
- * Auto-moderation rules — filter content based on patterns.
+ * Auto-moderation rules, filter content based on patterns.
  * Actions: 'block' (reject), 'flag' (allow but flag for review), 'replace' (censor matched text)
  */
 export const moderationRule = pgTable('moderation_rule', {

@@ -22,6 +22,19 @@ export const category = pgTable('category', {
 	createdAt: timestamp('created_at').defaultNow()
 });
 
+export const reply = pgTable('reply', {
+	id: text('id').primaryKey(),
+	content: jsonb('content').notNull(),
+	threadId: text('thread_id')
+		.notNull()
+		.references(() => thread.id, { onDelete: 'cascade' }),
+	authorId: text('author_id')
+		.notNull()
+		.references(() => user.id, { onDelete: 'cascade' }),
+	createdAt: timestamp('created_at').defaultNow(),
+	updatedAt: timestamp('updated_at').defaultNow()
+});
+
 export const thread = pgTable('thread', {
 	id: text('id').primaryKey(),
 	title: text('title').notNull(),
@@ -33,23 +46,10 @@ export const thread = pgTable('thread', {
 	authorId: text('author_id')
 		.notNull()
 		.references(() => user.id, { onDelete: 'cascade' }),
-	bestAnswerId: text('best_answer_id').references(() => reply.id, { onDelete: 'set null' }),
+	bestAnswerId: text('best_answer_id').references((): any => reply.id, { onDelete: 'set null' }),
 	pinned: boolean('pinned').default(false),
 	locked: boolean('locked').default(false),
 	groupId: uuid('group_id').references(() => groups.id),
-	createdAt: timestamp('created_at').defaultNow(),
-	updatedAt: timestamp('updated_at').defaultNow()
-});
-
-export const reply = pgTable('reply', {
-	id: text('id').primaryKey(),
-	content: jsonb('content').notNull(),
-	threadId: text('thread_id')
-		.notNull()
-		.references(() => thread.id, { onDelete: 'cascade' }),
-	authorId: text('author_id')
-		.notNull()
-		.references(() => user.id, { onDelete: 'cascade' }),
 	createdAt: timestamp('created_at').defaultNow(),
 	updatedAt: timestamp('updated_at').defaultNow()
 });

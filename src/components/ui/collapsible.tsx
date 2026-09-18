@@ -1,6 +1,3 @@
-
-
-import { cn } from "~/lib/utils"
 import { Collapsible as CollapsiblePrimitive } from "radix-ui"
 
 function Collapsible({
@@ -21,13 +18,11 @@ function CollapsibleTrigger({
 }
 
 function CollapsibleContent({
-  className,
   ...props
 }: React.ComponentProps<typeof CollapsiblePrimitive.CollapsibleContent>) {
   return (
     <CollapsiblePrimitive.CollapsibleContent
       data-slot="collapsible-content"
-      className={cn("t-panel-slide", className)}
       {...props}
     />
   )

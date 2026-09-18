@@ -3,7 +3,7 @@ import { jsonb, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 import { user } from './auth-schema';
 
 /**
- * Thread drafts — auto-saved unpublished content.
+ * Thread drafts, auto-saved unpublished content.
  * One active draft per user (upserted on each save).
  */
 export const threadDraft = pgTable('thread_draft', {

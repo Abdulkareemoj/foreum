@@ -1,5 +1,6 @@
 import {
 	boolean,
+	index,
 	integer,
 	json,
 	jsonb,
@@ -33,7 +34,11 @@ export const reply = pgTable('reply', {
 		.references(() => user.id, { onDelete: 'cascade' }),
 	createdAt: timestamp('created_at').defaultNow(),
 	updatedAt: timestamp('updated_at').defaultNow()
-});
+}, (t) => [
+	index('idx_reply_thread_id').on(t.threadId),
+	index('idx_reply_author_id').on(t.authorId),
+	index('idx_reply_created_at').on(t.createdAt),
+]);
 
 export const thread = pgTable('thread', {
 	id: text('id').primaryKey(),
@@ -52,7 +57,12 @@ export const thread = pgTable('thread', {
 	groupId: uuid('group_id').references(() => groups.id),
 	createdAt: timestamp('created_at').defaultNow(),
 	updatedAt: timestamp('updated_at').defaultNow()
-});
+}, (t) => [
+	index('idx_thread_category_id').on(t.categoryId),
+	index('idx_thread_author_id').on(t.authorId),
+	index('idx_thread_created_at').on(t.createdAt),
+	index('idx_thread_group_id').on(t.groupId),
+]);
 
 export const threadView = pgTable(
 	'thread_view',

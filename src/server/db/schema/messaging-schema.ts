@@ -1,4 +1,6 @@
-import { integer, pgTable, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
+import { integer, pgTable, text, timestamp, uuid, varchar, index } from 'drizzle-orm/pg-core';
+
+import { user } from './auth-schema';
 
 export const conversations = pgTable('conversations', {
 	id: uuid('id').primaryKey().defaultRandom(),
@@ -9,20 +11,32 @@ export const conversations = pgTable('conversations', {
 export const conversationParticipants = pgTable('conversation_participants', {
 	conversationId: uuid('conversation_id')
 		.notNull()
-		.references(() => conversations.id),
-	userId: text('user_id').notNull() // references users table
-});
+		.references(() => conversations.id, { onDelete: 'cascade' }),
+	userId: text('user_id')
+		.notNull()
+		.references(() => user.id, { onDelete: 'cascade' })
+}, (t) => [
+	index('idx_cp_user_id').on(t.userId),
+	index('idx_cp_conversation_id').on(t.conversationId),
+]);
+
 export const messages = pgTable('messages', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	conversationId: uuid('conversation_id')
 		.notNull()
 		.references(() => conversations.id, { onDelete: 'cascade' }),
-	senderId: text('sender_id').notNull(),
+	senderId: text('sender_id')
+		.notNull()
+		.references(() => user.id, { onDelete: 'cascade' }),
 	message: text('message').notNull(),
 	content: text('content').notNull(),
 	createdAt: timestamp('created_at').defaultNow(),
 	readAt: timestamp('read_at') // NULL = unread
-});
+}, (t) => [
+	index('idx_messages_conversation_id').on(t.conversationId),
+	index('idx_messages_sender_id').on(t.senderId),
+	index('idx_messages_created_at').on(t.createdAt),
+]);
 
 export const messageAttachments = pgTable('message_attachments', {
 	id: uuid('id').primaryKey().defaultRandom(),

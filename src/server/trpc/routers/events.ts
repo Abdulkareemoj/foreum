@@ -1,6 +1,6 @@
 import { TRPCError } from '@trpc/server'
 import crypto from 'crypto'
-import { and, desc, eq, gt, ilike, lt } from 'drizzle-orm'
+import { and, count, desc, eq, gt, ilike, lt, sql } from 'drizzle-orm'
 import { z } from 'zod'
 import { db } from '~/server/db'
 import { eventAttendees, events } from '~/server/db/schema/events-schema'
@@ -125,18 +125,23 @@ export const eventsRouter = router({
           throw new TRPCError({ code: 'NOT_FOUND', message: 'Event not found' })
         }
 
-        const attendees = await db
-          .select()
+        const attendeeCounts = await db
+          .select({
+            status: eventAttendees.status,
+            count: count(),
+          })
           .from(eventAttendees)
           .where(eq(eventAttendees.eventId, input.eventId))
+          .groupBy(eventAttendees.status)
+
+        const countMap = Object.fromEntries(attendeeCounts.map(r => [r.status, Number(r.count)]))
 
         return {
           ...event,
-          attendees,
           counts: {
-            going: attendees.filter((a) => a.status === 'going').length,
-            maybe: attendees.filter((a) => a.status === 'maybe').length,
-            notGoing: attendees.filter((a) => a.status === 'not_going').length,
+            going: countMap['going'] ?? 0,
+            maybe: countMap['maybe'] ?? 0,
+            notGoing: countMap['not_going'] ?? 0,
           },
         }
       } catch (error) {
@@ -299,7 +304,7 @@ export const eventsRouter = router({
     }),
 
   attendees: publicProcedure
-    .input(z.object({ eventId: z.string() }))
+    .input(z.object({ eventId: z.string(), limit: z.number().min(1).max(200).default(50) }))
     .query(async ({ input }) => {
       try {
         return db
@@ -315,6 +320,7 @@ export const eventsRouter = router({
           .from(eventAttendees)
           .leftJoin(user, eq(eventAttendees.userId, user.id))
           .where(eq(eventAttendees.eventId, input.eventId))
+          .limit(input.limit)
       } catch (error) {
         console.error('[events.attendees]', error)
         throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Failed to fetch attendees' })

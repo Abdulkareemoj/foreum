@@ -71,26 +71,23 @@ export const messagesRouter = router({
         .where(sql`${conversations.id} IN ${conversationIds}`)
         .orderBy(desc(conversations.lastMessageAt))
 
-      // Get unread counts
-      const unreadCounts = await Promise.all(
-        result.map(async (convo) => {
-          const [count] = await db
-            .select({ count: sql<number>`count(*)` })
+      // Get unread counts with a single GROUP BY query
+      const unreadCounts = conversationIds.length > 0
+        ? await db
+            .select({
+              conversationId: messages.conversationId,
+              unreadCount: sql<number>`count(*)::int`,
+            })
             .from(messages)
             .where(
               and(
-                eq(messages.conversationId, convo.id),
+                sql`${messages.conversationId} IN ${conversationIds}`,
                 isNull(messages.readAt),
                 ne(messages.senderId, ctx.user.id)
               )
             )
-
-          return {
-            conversationId: convo.id,
-            unreadCount: Number(count?.count || 0),
-          }
-        })
-      )
+            .groupBy(messages.conversationId)
+        : []
 
       return result.map((convo) => ({
         ...convo,

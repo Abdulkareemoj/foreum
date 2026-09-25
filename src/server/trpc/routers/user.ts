@@ -255,7 +255,7 @@ export const userRouter = router({
 		}),
 
 	getThreads: publicProcedure
-		.input(z.object({ userId: z.string(), limit: z.number().default(10) }))
+		.input(z.object({ userId: z.string(), limit: z.number().min(1).max(100).default(10) }))
 		.query(async ({ input }) => {
 			try {
 				return db
@@ -270,7 +270,7 @@ export const userRouter = router({
 		}),
 
 	topContributors: publicProcedure
-		.input(z.object({ limit: z.number().default(5) }))
+		.input(z.object({ limit: z.number().min(1).max(100).default(5) }))
 		.query(async ({ input }) => {
 			try {
 				const threadCount = count(thread.id)

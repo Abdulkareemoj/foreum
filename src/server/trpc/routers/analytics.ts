@@ -24,21 +24,22 @@ export const analyticsRouter = router({
 			.select({ total: sql<number>`COALESCE(SUM(${reactionSummary.totalReactions}), 0)::int` })
 			.from(reactionSummary);
 
-		const [threadAuthors, replyAuthors] = await Promise.all([
-			db.select({ authorId: thread.authorId }).from(thread),
-			db.select({ authorId: reply.authorId }).from(reply),
-		]);
-		const uniqueAuthors = new Set([
-			...threadAuthors.map(r => r.authorId),
-			...replyAuthors.map(r => r.authorId),
-		]);
+		const [{ total: activeUsers } = { total: 0 }] = await db
+			.select({ total: sql<number>`(
+				SELECT COUNT(DISTINCT author_id) FROM (
+					SELECT author_id FROM thread
+					UNION ALL
+					SELECT author_id FROM reply
+				) AS all_authors
+			)::int` })
+			.from(thread);
 
 		return {
 			totalUsers: Number(totalUsers),
 			totalThreads: Number(totalThreads),
 			totalReplies: Number(totalReplies),
 			totalReactions,
-			activeUsers: uniqueAuthors.size,
+			activeUsers: Number(activeUsers),
 		};
 	}),
 

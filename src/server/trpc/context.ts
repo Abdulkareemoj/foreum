@@ -1,10 +1,14 @@
 import type { FetchCreateContextFnOptions } from '@trpc/server/adapters/fetch'
-import { count, eq } from 'drizzle-orm'
+import { count, eq, sql } from 'drizzle-orm'
 import { auth } from '~/server/auth'
 import { db } from '~/server/db'
 import { user } from '~/server/db/schema/auth-schema'
 import { reply, thread } from '~/server/db/schema/thread-schema'
 import { calculateTrustLevel, loadTrustLevelConfig } from '~/server/lib/trust-levels'
+
+// Throttle trust level checks to once per 15 minutes per user
+const trustLevelCheckCache = new Map<string, number>()
+const TRUST_LEVEL_THROTTLE_MS = 15 * 60 * 1000
 
 export async function createContext(opts: FetchCreateContextFnOptions) {
   const session = await auth.api.getSession({
@@ -30,39 +34,45 @@ export async function createContext(opts: FetchCreateContextFnOptions) {
     }
   }
 
-  // Trust level auto-promotion check (runs once per session, throttled by DB writes)
+  // Trust level auto-promotion check (throttled to once per 15 minutes per user)
   if (session?.user?.id) {
-    try {
-      // Count total posts (threads + replies)
-      const [threadCount] = await db
-        .select({ count: count() })
-        .from(thread)
-        .where(eq(thread.authorId, session.user.id))
+    const now = Date.now()
+    const lastCheck = trustLevelCheckCache.get(session.user.id) ?? 0
+    if (now - lastCheck > TRUST_LEVEL_THROTTLE_MS) {
+      trustLevelCheckCache.set(session.user.id, now)
+      try {
+        // Use a single query with coalesced count
+        // Use a single subquery to count threads + replies
+        const userId = session.user.id
+        const [threadCount] = await db
+          .select({ count: count() })
+          .from(thread)
+          .where(eq(thread.authorId, userId))
+        const [replyCount] = await db
+          .select({ count: count() })
+          .from(reply)
+          .where(eq(reply.authorId, userId))
+        const totalPosts = (threadCount?.count ?? 0) + (replyCount?.count ?? 0)
 
-      const [replyCount] = await db
-        .select({ count: count() })
-        .from(reply)
-        .where(eq(reply.authorId, session.user.id))
+        const createdAt = session.user.createdAt instanceof Date
+          ? session.user.createdAt
+          : new Date(session.user.createdAt as string)
 
-      const totalPosts = (threadCount?.count ?? 0) + (replyCount?.count ?? 0)
-      const createdAt = session.user.createdAt instanceof Date
-        ? session.user.createdAt
-        : new Date(session.user.createdAt as string)
+        const config = await loadTrustLevelConfig()
+        const expectedLevel = calculateTrustLevel(createdAt, totalPosts, config)
+        const currentUser = session.user as any
+        const currentLevel = (currentUser.trustLevel as number) ?? 0
 
-      const config = await loadTrustLevelConfig()
-      const expectedLevel = calculateTrustLevel(createdAt, totalPosts, config)
-      const currentUser = session.user as any
-      const currentLevel = (currentUser.trustLevel as number) ?? 0
-
-      if (expectedLevel > currentLevel) {
-        await db
-          .update(user)
-          .set({ trustLevel: expectedLevel })
-          .where(eq(user.id, session.user.id))
-        currentUser.trustLevel = expectedLevel
+        if (expectedLevel > currentLevel) {
+          await db
+            .update(user)
+            .set({ trustLevel: expectedLevel })
+            .where(eq(user.id, session.user.id))
+          currentUser.trustLevel = expectedLevel
+        }
+      } catch {
+        // Don't fail requests over trust level promotion
       }
-    } catch {
-      // Don't fail requests over trust level promotion
     }
   }
 

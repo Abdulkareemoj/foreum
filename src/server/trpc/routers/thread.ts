@@ -245,26 +245,15 @@ export const threadRouter = router({
                 }))
               )
 
-            // Increment thread counts for each tag
-            for (const t of validTags) {
-              const existing = await db
-                .select()
-                .from(tagCount)
-                .where(eq(tagCount.tagId, t.id))
-                .limit(1)
-
-              if (existing[0]) {
-                await db
-                  .update(tagCount)
-                  .set({ threadCount: (existing[0].threadCount ?? 0) + 1 })
-                  .where(eq(tagCount.tagId, t.id))
-              } else {
-                await db.insert(tagCount).values({
-                  tagId: t.id,
-                  threadCount: 1,
-                })
-              }
-            }
+            // Batch update thread counts for all tags in a single query
+            const tagIds = validTags.map((t) => t.id)
+            await db
+              .insert(tagCount)
+              .values(tagIds.map((id) => ({ tagId: id, threadCount: 1 })))
+              .onConflictDoUpdate({
+                target: tagCount.tagId,
+                set: { threadCount: sql`${tagCount.threadCount} + 1` },
+              })
           }
         }
 

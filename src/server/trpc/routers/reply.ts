@@ -55,7 +55,10 @@ export const replyRouter = router({
 		.input(
 			z.object({
 				threadId: z.string(),
-				content: z.any()
+				content: z.union([
+					z.string().min(1, 'Content cannot be empty').max(100000, 'Content is too large'),
+					z.array(z.record(z.string(), z.unknown())).min(1, 'Content cannot be empty'),
+				])
 			})
 		)
 		.mutation(async ({ ctx, input }) => {

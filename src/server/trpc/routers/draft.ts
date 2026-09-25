@@ -32,7 +32,10 @@ export const draftRouter = router({
     .input(
       z.object({
         title: z.string().max(200).optional(),
-        content: z.any().optional(),
+        content: z.union([
+          z.string().max(100000, 'Content is too large'),
+          z.array(z.record(z.string(), z.unknown())).max(50000, 'Content is too large'),
+        ]).optional(),
         categoryId: z.string().optional(),
         tags: z.array(z.string()).optional(),
         groupId: z.string().optional(),

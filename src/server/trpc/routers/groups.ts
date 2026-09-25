@@ -1,6 +1,6 @@
 import { TRPCError } from '@trpc/server'
 import crypto from 'crypto'
-import { and, eq, sql } from 'drizzle-orm'
+import { and, count, eq, sql } from 'drizzle-orm'
 import { z } from 'zod'
 import { db } from '~/server/db'
 import { groupMembers, groups } from '~/server/db/schema/groups-schema'
@@ -89,9 +89,9 @@ export const groupsRouter = router({
           throw new TRPCError({ code: 'NOT_FOUND', message: 'Group not found' })
         }
 
-        // Get member count
-        const members = await db
-          .select()
+        // Get member count with COUNT query
+        const [{ count: memberCount } = { count: 0 }] = await db
+          .select({ count: count() })
           .from(groupMembers)
           .where(eq(groupMembers.groupId, group.id))
 
@@ -112,7 +112,7 @@ export const groupsRouter = router({
 
         return {
           ...group,
-          memberCount: members.length,
+          memberCount: Number(memberCount),
           membership,
           isOwner: ctx.user?.id === group.createdBy,
         }
@@ -291,7 +291,7 @@ export const groupsRouter = router({
     }),
 
   members: publicProcedure
-    .input(z.object({ groupId: z.string() }))
+    .input(z.object({ groupId: z.string(), limit: z.number().min(1).max(200).default(50) }))
     .query(async ({ input }) => {
       try {
         return db
@@ -308,6 +308,7 @@ export const groupsRouter = router({
           .from(groupMembers)
           .leftJoin(user, eq(groupMembers.userId, user.id))
           .where(eq(groupMembers.groupId, input.groupId))
+          .limit(input.limit)
       } catch (error) {
         console.error('[groups.members]', error)
         throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Failed to fetch members' })

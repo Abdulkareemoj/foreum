@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
 import { Badge } from '~/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs'
+import { sanitizeSnippet } from '~/lib/sanitize'
 import {
   Search as SearchIcon,
   MessageSquare,
@@ -248,7 +249,7 @@ function ThreadResults({ threads }: { threads: any[] }) {
               {thread.snippet && (
                 <p
                   className="text-sm text-muted-foreground mt-1 line-clamp-2"
-                  dangerouslySetInnerHTML={{ __html: thread.snippet }}
+                  dangerouslySetInnerHTML={{ __html: sanitizeSnippet(thread.snippet) }}
                 />
               )}
               <p className="text-xs text-muted-foreground mt-2">
@@ -282,7 +283,7 @@ function ReplyResults({ replies }: { replies: any[] }) {
               {reply.snippet && (
                 <p
                   className="text-sm line-clamp-2"
-                  dangerouslySetInnerHTML={{ __html: reply.snippet }}
+                  dangerouslySetInnerHTML={{ __html: sanitizeSnippet(reply.snippet) }}
                 />
               )}
               <p className="text-xs text-muted-foreground mt-2">

@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
 import { trpc } from '~/lib/trpc'
 import { format } from 'date-fns'
 import { useState, useEffect } from 'react'
+import { sanitizeHTML } from '~/lib/sanitize'
 
 export const Route = createFileRoute('/_client/events/$id')({
   component: EventDetailPage,
@@ -126,7 +127,7 @@ function EventDetailPage() {
 
             <div 
               className="prose dark:prose-invert max-w-none" 
-              dangerouslySetInnerHTML={{ __html: renderTipTap(event.description) }} 
+              dangerouslySetInnerHTML={{ __html: sanitizeHTML(renderTipTap(event.description)) }} 
             />
 
             <div className="mt-6">

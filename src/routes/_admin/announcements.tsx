@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { RichTextEditor } from "~/components/ui/plate/rich-text-editor";
 import { Field, FieldGroup, FieldLabel } from "~/components/ui/field";
 import { seo } from "~/utils/seo";
+import { sanitizeHTML } from '~/lib/sanitize';
 
 export const Route = createFileRoute("/_admin/announcements")({
   head: () => ({
@@ -95,7 +96,7 @@ function AdminAnnouncements() {
                   <p className="font-medium">{ann.title}</p>
                   <div
                     className="text-sm text-muted-foreground"
-                    dangerouslySetInnerHTML={{ __html: ann.content }}
+                    dangerouslySetInnerHTML={{ __html: sanitizeHTML(ann.content) }}
                   />
                 </div>
                 <Switch
